@@ -28,6 +28,7 @@ class EgivemoAdminPanelProvider extends PanelProvider
             ->path('law-sched-admin')
             ->login()
             // ->registration()
+            ->profile()
             ->colors([
                 'primary' => Color::Amber,
             ])
