@@ -145,22 +145,21 @@
                                         ]"
                                         option-label="region_description"
                                         option-value="region_description"
-                                        option-description="region_description"
+                                        {{-- option-description="region_description" --}}
                                         
                                     />
-
                                     @if (!$region)
                                         <x-select
                                             label="Select City/Province"
                                             wire:model.blur="province"
                                             placeholder="Ex: CITY OF MANILA"
-                                            :async-data="route('api.provinces.index')"
+                                            {{-- :async-data="route('location.region', ['regionCode' => $regionCode])" --}}
                                             :template="[
                                                 'province_description'   => 'user-option',
                                             ]"
                                             option-label="province_description"
                                             option-value="province_description"
-                                            option-description="province_description"
+                                            {{-- option-description="province_description" --}}
                                             disabled
                                         />
                                     @else
@@ -168,31 +167,32 @@
                                             label="Select City/Province"
                                             wire:model.blur="province"
                                             placeholder="Ex: CITY OF MANILA"
-                                            :async-data="route('api.provinces.index')"
+                                            :async-data="route('location.province', ['regionCode' => $regionCode])"
                                             :template="[
                                                 'province_description'   => 'user-option',
                                             ]"
                                             option-label="province_description"
                                             option-value="province_description"
-                                            option-description="province_description"
+                                            {{-- option-description="province_description" --}}
                                         />
                                     @endif
+
                                 </div>
 
                                 <div class="w-full flex flex-col md:flex-row gap-5 mt-5 mb-4">
-
-                                    @if (!$region || !$province)
+                                    @if (!$province)
+                                    
                                         <x-select
                                             label="Select Municipality"
                                             wire:model.blur="municipality"
                                             placeholder="Ex: ATIMONAN"
-                                            :async-data="route('api.municipalities.index')"
+                                            {{-- :async-data="route('location.province', ['provinceCode' => $provinceCode])" --}}
                                             :template="[
                                                 'city_municipality_description'   => 'user-option',
                                             ]"
                                             option-label="city_municipality_description"
                                             option-value="city_municipality_description"
-                                            option-description="city_municipality_description"
+                                            {{-- option-description="city_municipality_description" --}}
                                             disabled
                                         />
                                     @else
@@ -200,13 +200,13 @@
                                             label="Select Municipality"
                                             wire:model.blur="municipality"
                                             placeholder="Ex: ATIMONAN"
-                                            :async-data="route('api.municipalities.index')"
+                                            :async-data="route('location.municipality', ['provinceCode' => $provinceCode])"
                                             :template="[
                                                 'city_municipality_description'   => 'user-option',
                                             ]"
                                             option-label="city_municipality_description"
                                             option-value="city_municipality_description"
-                                            option-description="city_municipality_description"
+                                            {{-- option-description="city_municipality_description" --}}
                                         />
                                     @endif
                                     
@@ -215,13 +215,13 @@
                                             label="Select Barangay"
                                             wire:model.blur="barangay"
                                             placeholder="Ex: Poblacion II"
-                                            :async-data="route('api.barangays.index')"
+                                            {{-- :async-data="route('api.barangays.index')" --}}
                                             :template="[
                                                 'barangay_description'   => 'user-option',
                                             ]"
                                             option-label="barangay_description"
                                             option-value="barangay_description"
-                                            option-description="barangay_description"
+                                            {{-- option-description="barangay_description" --}}
                                             disabled
                                         />
                                     @else
@@ -229,13 +229,13 @@
                                             label="Select Barangay"
                                             wire:model.blur="barangay"
                                             placeholder="Ex: Poblacion II"
-                                            :async-data="route('api.barangays.index')"
+                                            :async-data="route('location.barangay', ['municipalityCode' => $municipalityCode])"
                                             :template="[
                                                 'barangay_description'   => 'user-option',
                                             ]"
                                             option-label="barangay_description"
                                             option-value="barangay_description"
-                                            option-description="barangay_description"
+                                            {{-- option-description="barangay_description" --}}
                                         />
                                     @endif
 

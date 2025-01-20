@@ -64,6 +64,10 @@ class ClientPage extends Component
 
     public $selectedClientFullDetails;
 
+    public $regionCode;
+    public $provinceCode;
+    public $municipalityCode;
+    
     public function mount(){
         $this->initialData();
     }
@@ -355,6 +359,36 @@ class ClientPage extends Component
         }
 
         return response()->json($barangays);
+    }
+
+    public function updatedRegion($value)
+    {
+        $this->getRegionCode();
+    }
+    public function getRegionCode(){
+        if($this->region){
+            $this->regionCode = PHRegions::where('region_description', $this->region)->value('region_code');
+        }
+    }
+
+    public function updatedProvince($value)
+    {
+        $this->getProvinceCode();
+    }
+    public function getProvinceCode(){
+        if($this->province){
+            $this->provinceCode = PHProvinces::where('province_description', $this->province)->value('province_code');
+        }
+    }
+
+    public function updatedMunicipality($value)
+    {
+        $this->getMunicipalityCode();
+    }
+    public function getMunicipalityCode(){
+        if($this->municipality){
+            $this->municipalityCode = PHCities::where('city_municipality_description', $this->municipality)->value('city_municipality_code');
+        }
     }
 
     public function render()

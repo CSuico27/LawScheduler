@@ -41,6 +41,9 @@ class RegisterPage extends Component
     public bool $isFinishedStepOne;
     public bool $isFinishedStepTwo;
 
+    public $regionCode;
+    public $provinceCode;
+    public $municipalityCode;
 
     public function mount(){
         $this->initialData();
@@ -117,6 +120,36 @@ class RegisterPage extends Component
             return redirect()->intended();
         } catch (\Exception $e) {
             Log::error('Error registering user: ' . $e->getMessage());
+        }
+    }
+
+    public function updatedRegion($value)
+    {
+        $this->getRegionCode();
+    }
+    public function getRegionCode(){
+        if($this->region){
+            $this->regionCode = PHRegions::where('region_description', $this->region)->value('region_code');
+        }
+    }
+
+    public function updatedProvince($value)
+    {
+        $this->getProvinceCode();
+    }
+    public function getProvinceCode(){
+        if($this->province){
+            $this->provinceCode = PHProvinces::where('province_description', $this->province)->value('province_code');
+        }
+    }
+
+    public function updatedMunicipality($value)
+    {
+        $this->getMunicipalityCode();
+    }
+    public function getMunicipalityCode(){
+        if($this->municipality){
+            $this->municipalityCode = PHCities::where('city_municipality_description', $this->municipality)->value('city_municipality_code');
         }
     }
 

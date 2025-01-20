@@ -57,6 +57,28 @@ class ApiController extends Controller
         return response()->json($provinces);
     }
 
+    public function getProvincesByRegion(Request $request, $regionCode){
+        $search = $request->input('search');
+        $selected = $request->input('selected');
+        
+        if ($search && $regionCode) {
+            $provinces = PHProvinces::where('province_description', 'like', '%' . $search . '%' )
+                ->where('region_code', $regionCode)
+                ->get();
+        } elseif ($selected && $regionCode) {
+
+            $selectedProvince = PHProvinces::where('province_description', $selected)
+                ->where('region_code', $regionCode)
+                ->get();
+            return response()->json($selectedProvince);
+            
+        } else {
+            $provinces = PHProvinces::where('region_code', $regionCode)->get();
+        }
+
+        return response()->json($provinces);
+    }
+
     public function getMunicipalities(Request $request){
         $search = $request->input('search');
         $selected = $request->input('selected');
@@ -75,6 +97,28 @@ class ApiController extends Controller
         return response()->json($municipalities);
     }
 
+    public function getMunicipalitiesByProvince(Request $request, $provinceCode){
+        $search = $request->input('search');
+        $selected = $request->input('selected');
+        
+        if ($search && $provinceCode) {
+            $municipalities = PHCities::where('city_municipality_description', 'like', '%' . $search . '%' )
+                ->where('province_code', $provinceCode)
+                ->get();
+        } elseif ($selected && $provinceCode) {
+
+            $selectedMunicipality = PHCities::where('city_municipality_description', $selected)
+                ->where('province_code', $provinceCode)
+                ->get();
+            return response()->json($selectedMunicipality);
+            
+        } else {
+            $municipalities = PHCities::where('province_code', $provinceCode)->get();
+        }
+
+        return response()->json($municipalities);
+    }
+
     public function getBarangays(Request $request){
         $search = $request->input('search');
         $selected = $request->input('selected');
@@ -88,6 +132,48 @@ class ApiController extends Controller
             
         } else {
             $barangays = PHBarangays::take(10)->get();
+        }
+
+        return response()->json($barangays);
+    }
+
+    // $search = $request->input('search');
+    //     $selected = $request->input('selected');
+        
+    //     if ($search && $provinceCode) {
+    //         $municipalities = PHCities::where('city_municipality_description', 'like', '%' . $search . '%' )
+    //             ->where('province_code', $provinceCode)
+    //             ->get();
+    //     } elseif ($selected && $provinceCode) {
+
+    //         $selectedMunicipality = PHCities::where('city_municipality_description', $selected)
+    //             ->where('province_code', $provinceCode)
+    //             ->get();
+    //         return response()->json($selectedMunicipality);
+            
+    //     } else {
+    //         $municipalities = PHCities::where('province_code', $provinceCode)->get();
+    //     }
+
+    //     return response()->json($municipalities);
+
+    public function getBarangaysByMunicipality(Request $request, $municipalityCode){
+        $search = $request->input('search');
+        $selected = $request->input('selected');
+        
+        if ($search && $municipalityCode) {
+            $barangays = PHBarangays::where('barangay_description', 'like', '%' . $search . '%')
+                ->where('city_municipality_code', $municipalityCode)
+                ->get();
+        } elseif ($selected && $municipalityCode) {
+
+            $selectedBarangay = PHBarangays::where('barangay_description', $selected)
+                ->where('city_municipality_code', $municipalityCode)
+                ->get();
+            return response()->json($selectedBarangay);
+            
+        } else {
+            $barangays = PHBarangays::where('city_municipality_code', $municipalityCode)->get();
         }
 
         return response()->json($barangays);

@@ -66,3 +66,7 @@ Route::get('/api/services', [ApiController::class, 'getServices'])->name('api.se
 // Route::get('/zoom/authorize', [AppointmentPage::class, 'redirectToZoom'])->name('zoom.authorize');
 // Route::get('/zoom/callback', [AppointmentPage::class, 'handleZoomCallback']);
 // Route::post('/zoom-meetings', [AppointmentPage::class, 'createMeeting']);
+
+Route::get('/location/province/{regionCode}', [ApiController::class, 'getProvincesByRegion'])->name('location.province');
+Route::get('/location/municipalities/{provinceCode}', [ApiController::class, 'getMunicipalitiesByProvince'])->name('location.municipality');
+Route::get('/location/barangay/{municipalityCode}', [ApiController::class, 'getBarangaysByMunicipality'])->name('location.barangay');
