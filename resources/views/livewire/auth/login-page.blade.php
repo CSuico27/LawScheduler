@@ -27,7 +27,7 @@
                         </div>
                     </div>
                     <div class="flex justify-end">
-                        <a href="#" class="underline">Forgot password</a>
+                        <a href="{{ route('password.request') }}" class="underline">Forgot password</a>
                     </div>
                 </div>
             </div>
