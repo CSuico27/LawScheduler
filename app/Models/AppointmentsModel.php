@@ -11,6 +11,7 @@ class AppointmentsModel extends Model
     protected $fillable = [
         'title',
         'description', 
-        'date'
+        'date',
+        'is_active'
     ];
 }

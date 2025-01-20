@@ -1,13 +1,13 @@
-<div class="container dashed-container">
+<div class="container dashed-container md:flex block">
     <div class="container">
-        <div class="container">
+        <div class="container md:justify-start justify-center">
             <button wire:click="goToPreviousMonth" type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 mr-3">
                 <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5H1m0 0 4 4M1 5l4-4"/>
                 </svg>
                 <span class="sr-only">Icon description</span>
             </button>
-            <h1 class="header-text">{{ $endsAt->format('F, Y') }}</h1>
+            <h1 class="header-text md:text-[24px] text-base">{{ $endsAt->format('F, Y') }}</h1>
             <button wire:click="goToNextMonth" type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 ml-3">
                 <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
@@ -17,7 +17,7 @@
             <button wire:click="goToCurrentMonth" type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-1.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 ml-1">Current Month</button>
         </div>
     </div>
-    <div class="w-full flex justify-end items-center">
+    <div class="w-full flex md:justify-end md:mt-0 items-center justify-center mt-3 ">
         <button type="button" wire:loading.attr="disabled" wire:loading.class="!cursor-wait" onclick="$openModal('cardModal')" class="text-white bg-[#4285F4] hover:bg-[#4285F4]/90 focus:ring-4 focus:outline-none focus:ring-[#4285F4]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-[#4285F4]/55">
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
             New Appointment
@@ -64,6 +64,9 @@
                 </div>
                 <div class="col-span-1 sm:col-span-2">
                     <x-textarea label="Description" placeholder="write appointment desctiption" wire:model="editDescription" />
+                </div>
+                <div class="col-span-1 sm:col-span-2">
+                    <x-toggle lg wire:model="isActive" left-label="Is Active" />
                 </div>
             </div>
             <x-slot name="footer">

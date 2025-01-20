@@ -22,6 +22,7 @@ class AppointmentPage extends LivewireCalendar
     // EDIT
     public $editTitle;
     public $editDescription;
+    public bool $isActive;
     public $eventID;
     public $cardModal;
     public $selectedEvent;
@@ -39,9 +40,7 @@ class AppointmentPage extends LivewireCalendar
             'date' => $this->date
         ]);
 
-        $this->title = "";
-        $this->description = "";
-        $this->date = "";
+        $this->reset();
         
         $this->dispatch('reload');
 
@@ -54,7 +53,8 @@ class AppointmentPage extends LivewireCalendar
 
         $this->selectedEvent->update([
             'title' => $this->editTitle,
-            'description' => $this->editDescription
+            'description' => $this->editDescription,
+            'is_active' => $this->isActive,
         ]);
 
         $this->dispatch('reload');
@@ -72,10 +72,12 @@ class AppointmentPage extends LivewireCalendar
                 $this->editTitle => $event->title,
                 $this->editDescription => $event->description,
                 $this->eventID => $event->id,
+                $this->isActive = $event->is_active,
             ]);
             $this->editTitle = $event->title;
             $this->editDescription = $event->description;
             $this->eventID = $event->id;
+            $this->isActive = $event->is_active;
         }
     }
     public function deleteConfirmation($id, $eventTitle){
