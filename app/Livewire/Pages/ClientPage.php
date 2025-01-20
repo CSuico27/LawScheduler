@@ -78,7 +78,8 @@ class ClientPage extends Component
 
         $user = User::create([
             'name' => $this->lastName . ", " . $this->firstName,
-            'email' => $this->email
+            'email' => $this->email,
+            'role' => 'user',
         ]);
 
         // Generate the avatar

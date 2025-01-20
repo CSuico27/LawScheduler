@@ -12,4 +12,9 @@ class CourtPage extends Page
     protected static ?int $navigationSort = 4;
     protected static ?string $navigationLabel = 'Court';
     protected static ?string $title = 'Court';
+
+    public static function shouldRegisterNavigation(): bool
+    {
+        return auth()->user()->role == 'admin';
+    }
 }

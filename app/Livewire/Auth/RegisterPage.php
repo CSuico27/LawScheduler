@@ -87,6 +87,7 @@ class RegisterPage extends Component
             $user = User::create([
                 'name' => $this->lastName . ", " . $this->firstName,
                 'email' => $this->email,
+                'role' => 'user',
                 'password' => Hash::make($this->password)
             ]);
 

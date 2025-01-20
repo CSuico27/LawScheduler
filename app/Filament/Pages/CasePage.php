@@ -11,4 +11,9 @@ class CasePage extends Page
     protected static ?string $title = 'Case';
     protected static ?int $navigationSort = 1;
     protected static string $view = 'filament.pages.case-page';
+
+    public static function shouldRegisterNavigation(): bool
+    {
+        return auth()->user()->role == 'admin';
+    }
 }
