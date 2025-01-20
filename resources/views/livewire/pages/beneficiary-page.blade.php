@@ -28,16 +28,13 @@
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
                     <th scope="col" class="px-6 py-3">
-                        Product name
+                        Full name
                     </th>
                     <th scope="col" class="px-6 py-3">
-                        Color
+                        Address
                     </th>
                     <th scope="col" class="px-6 py-3">
-                        Category
-                    </th>
-                    <th scope="col" class="px-6 py-3">
-                        Price
+                        Contact
                     </th>
                     <th scope="col" class="px-6 py-3">
                         <span class="sr-only">Edit</span>
@@ -45,57 +42,22 @@
                 </tr>
             </thead>
             <tbody>
-                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                        Apple MacBook Pro 17"
-                    </th>
-                    <td class="px-6 py-4">
-                        Silver
-                    </td>
-                    <td class="px-6 py-4">
-                        Laptop
-                    </td>
-                    <td class="px-6 py-4">
-                        $2999
-                    </td>
-                    <td class="px-6 py-4 text-right">
-                        <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-                    </td>
-                </tr>
-                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                        Microsoft Surface Pro
-                    </th>
-                    <td class="px-6 py-4">
-                        White
-                    </td>
-                    <td class="px-6 py-4">
-                        Laptop PC
-                    </td>
-                    <td class="px-6 py-4">
-                        $1999
-                    </td>
-                    <td class="px-6 py-4 text-right">
-                        <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-                    </td>
-                </tr>
-                <tr class="bg-white dark:bg-gray-800">
-                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                        Magic Mouse 2
-                    </th>
-                    <td class="px-6 py-4">
-                        Black
-                    </td>
-                    <td class="px-6 py-4">
-                        Accessories
-                    </td>
-                    <td class="px-6 py-4">
-                        $99
-                    </td>
-                    <td class="px-6 py-4 text-right">
-                        <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-                    </td>
-                </tr>
+                @foreach ($beneficiariesList as $beneficiary)
+                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                            {{ $beneficiary->last_name }}, {{ $beneficiary->first_name }}
+                        </th>
+                        <td class="px-6 py-4">
+                            {{ $beneficiary->barangay }} {{ $beneficiary->street_address }}, {{ $beneficiary->city }}({{ $beneficiary->zip_code }}) - {{ $beneficiary->state }}
+                        </td>
+                        <td class="px-6 py-4">
+                            {{ $beneficiary->phone }} / {{ $beneficiary->email }}
+                        </td>
+                        <td class="px-6 py-4 text-right">
+                            <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
+                        </td>
+                    </tr>
+                @endforeach
             </tbody>
         </table>
     </div>
@@ -104,9 +66,9 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div class="col-span-1 sm:col-span-2">
                 <div class="grid grid-cols-3 gap-3">
-                    <x-input label="First name" placeholder="Your full name" wire:model="firstName" />
-                    <x-input label="Middle name" placeholder="USA phone" wire:model="middleName" />
-                    <x-input label="Last name" placeholder="USA phone" wire:model="lastName" />
+                    <x-input label="First name" placeholder="Your first name" wire:model="firstName" />
+                    <x-input label="Middle name" placeholder="Your middle name" wire:model="middleName" />
+                    <x-input label="Last name" placeholder="Your last name" wire:model="lastName" />
                 </div>
             </div>
 
@@ -171,9 +133,7 @@
         </div>
      
         <x-slot name="footer">
-            <div class="flex justify-between gap-x-4">
-                <x-button flat negative label="Delete" wire:click="delete" />
-     
+            <div class="flex justify-end gap-x-4">
                 <div class="flex">
                     <x-button flat label="Cancel" x-on:click="close" />
                     <x-button primary label="Save" wire:click="addNewBeneficiary" />

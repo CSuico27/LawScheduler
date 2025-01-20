@@ -3,12 +3,14 @@
 namespace App\Livewire\Pages;
 
 use App\Models\AppointmentsModel;
+use App\Models\BeneficiariesModel;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 use WireUi\Traits\Actions;
 use Omnia\LivewireCalendar\LivewireCalendar;
+use Twilio\Rest\Client;
 
 class AppointmentPage extends LivewireCalendar
 {
@@ -27,7 +29,12 @@ class AppointmentPage extends LivewireCalendar
     public $cardModal;
     public $selectedEvent;
 
+    public $recipients = [];
+
     public function newEvent(){
+
+        $this->recipients = BeneficiariesModel::pluck('phone')->toArray();
+        
         $this->validate([ 
             'title' => 'required|max:255',
             'description' => 'required|max:255',
@@ -40,8 +47,12 @@ class AppointmentPage extends LivewireCalendar
             'date' => $this->date
         ]);
 
-        $this->reset();
-        
+        $this->sendSingleSMS($this->title, $this->date);
+
+        $this->title = "";
+        $this->description = "";
+        $this->date = "";
+    
         $this->dispatch('reload');
 
         return redirect()->back();
@@ -100,10 +111,80 @@ class AppointmentPage extends LivewireCalendar
     public function onEventDropped($eventId, $year, $month, $day)
     {   
         AppointmentsModel::where('id', $eventId)->update(['date' => $year . '-' . $month . '-' . $day]);
+        $event = AppointmentsModel::where('id',  $eventId)->first();
+
+        $this->sendSingleUpdatedSMS($event->title, $event->date);
+        
     }
     public function events() : Collection
     {
         return AppointmentsModel::whereNotNull('date')->get();
     }
 
+    public function sendSMS($eventTitle, $eventDate, $mobileNumbers){
+        $sid = env('TWILIO_SID');
+        $token = env('TWILIO_TOKEN');
+        $twilioNumber = env('TWILIO_FROM');
+
+        $client = new Client($sid, $token);
+
+        foreach ($mobileNumbers as $number) {
+
+            if (!preg_match('/^09\d{9}$/', $number)) {
+                Log::error("Invalid phone number format: $number");
+                continue; // Skip invalid numbers
+            }
+
+            $formattedNumber = '+63' . ltrim($number, '0');
+
+            $message = "CSWD - City Social Welfare Departmen(Tayabas City) \n
+                    There's an upcoming program titled '{$eventTitle}'. This program will be held in Tayabas City Municipal Covered Court \n 
+                    Date: {$eventDate} \n
+                    
+                    For more info visit: https://egive-mo.com";
+            $client->messages->create(
+                '+63 930 655 8025',
+                [
+                    'from' => $twilioNumber,
+                    'body' => $message
+                ]
+            );
+        }
+    }
+
+    public function sendSingleSMS($eventTitle, $eventDate){
+        $sid = env('TWILIO_SID');
+        $token = env('TWILIO_TOKEN');
+        $twilioNumber = env('TWILIO_FROM');
+
+        $client = new Client($sid, $token);
+         $message = "CSWD - City Social Welfare Departmen(Tayabas City) \n
+                    There's an upcoming program titled '{$eventTitle}'. This program will be held in Tayabas City Municipal Covered Court \n 
+                    Date: {$eventDate} \n
+                    
+                    For more info visit: https://egive-mo.com";
+        $client->messages->create(
+            '+63 930 655 8025',
+            [
+                'from' => $twilioNumber,
+                'body' => $message
+            ]
+        ); 
+    }
+
+    public function sendSingleUpdatedSMS($eventTitle, $eventDate){
+        $sid = env('TWILIO_SID');
+        $token = env('TWILIO_TOKEN');
+        $twilioNumber = env('TWILIO_FROM');
+
+        $client = new Client($sid, $token);
+        $message = "CSWD\nThere's an upcoming program titled '{$eventTitle}' \n Date: {$eventDate}";
+        $client->messages->create(
+            '+63 930 655 8025',
+            [
+                'from' => $twilioNumber,
+                'body' => $message
+            ]
+        ); 
+    }
 }

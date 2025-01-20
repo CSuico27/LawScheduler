@@ -41,8 +41,8 @@ class BeneficiaryPage extends Component
 
         $beneficiary = BeneficiariesModel::create([
             'first_name' => $this->firstName,
-            'middle_name' => $this->lastName,
-            'last_name' => $this->middleName,
+            'middle_name' => $this->middleName,
+            'last_name' => $this->lastName,
             'phone' => $this->phone,
             'email' => $this->email,
             'street_address' => $this->streetAddress,
