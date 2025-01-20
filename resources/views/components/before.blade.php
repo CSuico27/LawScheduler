@@ -312,7 +312,7 @@
                 <x-slot name="footer">
                     <div class="flex justify-end gap-x-4">
                         <div class="flex">
-                            <x-button flat label="Cancel" x-on:click="close" wire:click="cancel" />
+                            <x-button flat label="Cancel" x-on:click="close" />
                             <x-button primary label="Save" wire:click="newEvent" />
                         </div>
                     </div>
