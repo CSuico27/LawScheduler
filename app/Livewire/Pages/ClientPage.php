@@ -2,6 +2,8 @@
 
 namespace App\Livewire\Pages;
 
+use App\Mail\ClientActivation;
+use App\Models\AccountActivation;
 use App\Models\BeneficiariesModel;
 use App\Models\PHBarangays;
 use App\Models\PHCities;
@@ -12,6 +14,7 @@ use App\Models\User;
 use App\Models\UserInfo;
 use Filament\Notifications\Notification;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Livewire\Component;
 use Livewire\WithPagination;
 use WireUi\Traits\Actions;
@@ -102,6 +105,15 @@ class ClientPage extends Component
             'barangay' => $this->barangay,
             'state' => $this->state,
         ]);
+
+        $token = Str::random(60);
+
+        AccountActivation::create([
+            'user_id' => $user->id,
+            'token' => $token,
+        ]);
+
+        Mail::to($user->email)->send(new ClientActivation($user, $token));
         
         $this->dispatch('reload');
         $this->reset();
