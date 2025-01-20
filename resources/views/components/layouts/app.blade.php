@@ -56,6 +56,9 @@
               });
           });
           </script>
+              <script src="{{ asset('lodash-min.js') }}"></script>
+              <script src="{{ asset('dropzone-min.js') }}"></script>
+          
         {{-- <script src="https://cdn.jsdelivr.net/npm/preline@2.0.2/dist/preline.min.js"></script> --}}
     </body>
 </html>

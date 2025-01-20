@@ -17,11 +17,13 @@ class ServicesPage extends Component
     public $name;
     public $price;
     public bool $isActive = true;
+    public $requirements;
 
     public $editServiceType;
     public $editName;
     public $editPrice;
     public bool $editIsActive;
+    public $editRequirements;
 
     public $selectedService;
     public $selectedServiceId;
@@ -39,7 +41,8 @@ class ServicesPage extends Component
             'service_type_id' => $this->serviceType,
             'name' => $this->name,
             'price' => $this->price,
-            'is_active' => $this->isActive
+            'is_active' => $this->isActive,
+            'requirements' => $this->requirements
         ]);
 
         Notification::make()
@@ -67,6 +70,7 @@ class ServicesPage extends Component
             $this->editName = $this->selectedService->name;
             $this->editPrice = $this->selectedService->price;
             $this->editIsActive = $this->selectedService->is_active;
+            $this->editRequirements = $this->selectedService->requirements;
         }
     }
 
@@ -78,6 +82,7 @@ class ServicesPage extends Component
             'name' => $this->editName,
             'price' => $this->editPrice,
             'is_active' => $this->editIsActive,
+            'requirements' => $this->editRequirements
         ]);
 
         Notification::make()

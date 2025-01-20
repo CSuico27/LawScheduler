@@ -2,6 +2,8 @@
 
 namespace App\Livewire\Client;
 
+use App\Mail\AppointmentCreation;
+use App\Mail\AppointmentCreationClient;
 use App\Mail\AppointmentSuccess;
 use App\Models\AppointmentDetails;
 use App\Models\AppointmentsModel;
@@ -184,7 +186,8 @@ class Booking extends Component
             'date' => $this->appointmentDate,
             'time' => $this->selectedTimeSlot,
             'description' => auth()->user()->name . ', create a appointment. Purpose of Appointment: (' . $this->getServiceNames() . ').',
-            'is_viewed' => 'new'
+            'is_viewed' => 'new',
+            'is_accepted' => 'accepted'
         ]);
 
         $order = Orders::create([
@@ -195,8 +198,15 @@ class Booking extends Component
             'grand_total' => self::getTotalPriceProperty(),
             'status' => 'Unclaimed'
         ]);
-        
-        Mail::to(request()->user())->send(new AppointmentSuccess($appointDetails));
+
+        $serviceIds = array_filter($this->services);
+        if (!empty($serviceIds)) {
+            $requirements = Services::whereIn('id', $serviceIds)->pluck('requirements')->toArray();
+            $filteredRequirements = implode(', ', $requirements);
+        }
+
+        Mail::to(request()->user())->send(new AppointmentCreationClient($filteredRequirements, Carbon::parse($appointDetails->time)->format('h:i A'), Carbon::createFromFormat('Y-m-d', $event->date)->format('d-m-Y'), $appointDetails->id));
+        // Mail::to(request()->user())->send(new AppointmentSuccess($appointDetails));
         // self::sendSMS($appointDetails->id,$this->appointmentDate);
         return redirect($redirect_url);
 

@@ -54,7 +54,9 @@ class Dashboard extends Component
     public function render()
     {
         $upcomingZoomMeetings = AppointmentsModel::where('is_active', 1)
-            ->whereHas('zoomMeet')
+            ->whereHas('zoomMeet', function ($query) {
+                $query->where('is_accepted', 'accepted');
+            })
             ->with('zoomMeet')
             ->whereDate('date', '>=', Carbon::now())
             ->get()
@@ -81,8 +83,11 @@ class Dashboard extends Component
         } 
         
         $upcomingAppointments = AppointmentsModel::where('is_active', 1)
-            ->whereHas('appointmentDetails.orders', function ($query) {
-                $query->where('payment_status', '<>', 'Failed');
+            ->whereHas('appointmentDetails', function ($query) {
+                $query->where('is_accepted', 'accepted')
+                ->whereHas('orders', function ($query) {
+                    $query->where('payment_status', '<>', 'Failed');
+                });
             })
             ->whereDate('date', '>=', Carbon::now())
             ->with(['appointmentDetails.orders' => function ($query) {

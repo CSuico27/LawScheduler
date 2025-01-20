@@ -131,7 +131,10 @@ class ScheduleList extends Component
 
             $scheduleList = $searchItems;
         } else {
-            $scheduleList = AppointmentsModel::with('zoomMeet')->latest()->paginate(8);
+            $scheduleList = AppointmentsModel::whereHas('zoomMeet') // This filters appointments that have zoomMeet
+            ->with('zoomMeet') // Eager load the zoomMeet relationship
+            ->latest()
+            ->paginate(8);
         }
 
         foreach ($scheduleList as $appointment) {

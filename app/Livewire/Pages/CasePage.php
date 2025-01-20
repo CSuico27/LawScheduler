@@ -3,6 +3,7 @@
 namespace App\Livewire\Pages;
 
 use App\Helpers\RespondentHelper;
+use App\Mail\ChangedCaseStatus;
 use App\Models\Cases;
 use App\Models\CaseStage;
 use App\Models\Court;
@@ -15,11 +16,15 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Http;
 use Livewire\WithPagination;
 use WireUi\Traits\Actions;
+use Livewire\WithFileUploads;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Mail;
 
 class CasePage extends Component
 {
     use Actions;
     use WithPagination;
+    use WithFileUploads;
 
     // SEARCH
     public $searchTerm;
@@ -47,6 +52,7 @@ class CasePage extends Component
 
     public $ISNo;
     public $handlingProsecutor;
+    public $file;
     
     // EDIT
     public $editNPSDocketNumber;
@@ -72,6 +78,7 @@ class CasePage extends Component
 
     public $editISNo;
     public $editHandlingProsecutor;
+    public $editFile;
 
     // STEP 2
    
@@ -121,6 +128,7 @@ class CasePage extends Component
 
             'ISNo' => 'required|max:255',
             'handlingProsecutor' => 'required|max:255',
+            'file' => 'nullable|file|mimes:*|max:2048',
         ]);
 
         $parsedRespondents = array_map(function($respondent) {
@@ -143,6 +151,10 @@ class CasePage extends Component
             ];
         }, $this->witnesses);
 
+        $filePath = null;
+        if ($this->file && $this->file->isValid()) {
+            $filePath = $this->file->store('case_files', 'public');
+        }
         $case = Cases::create([
             'nps_docket_no' => $this->NPSDocketNumber,
             'date_received' => $this->dateReceived,
@@ -166,7 +178,8 @@ class CasePage extends Component
             'question_three' => $this->questionThree,
 
             'is_no' => $this->ISNo,
-            'handling_prosecutor' => $this->handlingProsecutor
+            'handling_prosecutor' => $this->handlingProsecutor,
+            'file' => $filePath,
         ]);
 
         Notification::make()
@@ -178,6 +191,16 @@ class CasePage extends Component
         $this->dispatch('reload');
         $this->reset();
         return redirect()->back();
+    }
+
+    public function removeFile()
+    {
+        $this->file = null;
+    }
+
+    public function removeFileEdit()
+    {
+        $this->editFile = null;
     }
 
     public function getSelectedCaseId($id)
@@ -217,12 +240,25 @@ class CasePage extends Component
 
                 $this->editISNo = $caseInfo->is_no;
                 $this->editHandlingProsecutor = $caseInfo->handling_prosecutor;
+                $this->editFile = $caseInfo->file;
+                // dd($this->editFile);
             }
         }
     }
 
     public function updateCaseDetails($id){
         $this->selectedCase = Cases::findOrFail($id);
+        $oldCaseStage = $this->selectedCase->case_stage;
+       
+        if ($this->editFile instanceof \Illuminate\Http\UploadedFile) {
+            $filePath = $this->editFile->store('case_files', 'public');
+        } else if ($this->editFile) {
+            // If no file is uploaded (or file is removed), use null or empty string
+            $filePath = $this->selectedCase->file;
+        } else {
+            $filePath = null;
+        }
+        
 
         $parsedRespondents = array_map(function($respondent) {
             $parts = explode(',', $respondent);
@@ -267,9 +303,20 @@ class CasePage extends Component
             'question_three' => $this->editQuestionThree,
 
             'is_no' => $this->editISNo,
-            'handling_prosecutor' => $this->editHandlingProsecutor
+            'handling_prosecutor' => $this->editHandlingProsecutor,
+            'file' => $filePath
         ]);
+        
+        if ((int) $this->editCaseStage !== (int) $oldCaseStage) {
+            $complainantIds = json_decode($this->selectedCase->complainants, true);
+            $users = User::whereIn('id', $complainantIds)->get();
+            $statusValue = CaseStage::where('id', $this->editCaseStage)->first();
 
+            foreach ($users as $user) {
+                Mail::to($user->email)->send(new ChangedCaseStatus($statusValue->name, $this->editNPSDocketNumber));
+            }
+        }
+        
         Notification::make()
             ->title('Success!')
             ->body('Client details has been updated.')

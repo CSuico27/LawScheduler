@@ -2,6 +2,8 @@
 
 namespace App\Livewire\Pages;
 
+use App\Mail\AppointmentCreation;
+use App\Mail\ZoomCreation;
 use App\Mail\ZoomMeetingEmail;
 use App\Models\AppointmentDetails;
 use App\Models\AppointmentsModel;
@@ -78,6 +80,7 @@ class AppointmentPage extends LivewireCalendar
     public $servicePrices = [];
 
     // Click Event
+    public $clientId;
     public $selectedMeetingId;
     public $meetingFullDetails;
 
@@ -218,6 +221,8 @@ class AppointmentPage extends LivewireCalendar
             'services.*' => 'required|max:255',
             'payment_status' => 'required'
         ]);
+        
+        
 
         $event = AppointmentsModel::create([
             'title' => $this->title,
@@ -232,7 +237,8 @@ class AppointmentPage extends LivewireCalendar
             'date' => Carbon::createFromFormat('Y-m-d', $this->date)->format('d-m-Y'),
             'time' => $this->selectedTimeSlot,
             'description' => $this->description,
-            'is_viewed' => 'new'
+            'is_viewed' => 'new',
+            'is_accepted' => 'pending'
         ]);
 
         $order = Orders::create([
@@ -244,9 +250,20 @@ class AppointmentPage extends LivewireCalendar
             'status' => 'Unclaimed'
         ]);
 
-        // $this->sendSingleSMS($this->title, $this->date);
+        
+        $serviceIds = array_filter($this->services);
+        if (!empty($serviceIds)) {
+            $requirements = Services::whereIn('id', $serviceIds)->pluck('requirements')->toArray();
+            $filteredRequirements = implode(', ', $requirements);
+        }
+
+        if($this->client){
+            $client = User::where('id', $this->client)->first();
+        }
+        
         try {
             $this->sendSMS($this->title, $this->date);
+            
         } catch (\Throwable $e) {
             $this->dispatch('reload');
             // Log::error('Error sending SMS: ' . $e->getMessage());
@@ -256,7 +273,7 @@ class AppointmentPage extends LivewireCalendar
                 ->danger()
                 ->send();
         }
-
+        Mail::to($client->email)->send(new AppointmentCreation($filteredRequirements, Carbon::parse($appointDetails->time)->format('h:i A'), Carbon::createFromFormat('Y-m-d', $this->date)->format('d-m-Y'), $appointDetails->id));
         Notification::make()
             ->title('Success!')
             ->body('Appointment has been created.')
@@ -415,28 +432,56 @@ class AppointmentPage extends LivewireCalendar
         } 
     }
     
-    public function events() : Collection
-    {
-        // return AppointmentsModel::whereNotNull('date')->get();
-        return AppointmentsModel::whereNotNull('date')
-        ->where('date', '>=', Carbon::now()->startOfDay()->toDateString())
-        ->where(function ($query) {
-            // Group conditions for orders
-            $query->whereHas('appointmentDetails.orders', function ($query) {
-                $query->where('payment_status', 'Unpaid')
-                      ->orWhere(function ($query) {
-                          $query->where('status', 'Unclaimed')
-                                ->where('payment_status', '<>', 'Failed');
-                      });
-            })
-            ->orWhereHas('zoomMeet'); // Ensure zoomMeet relationship is not null
-        })
-        ->with(['appointmentDetails.orders' => function ($query) {
-            $query->where('payment_status', '<>', 'Failed');
-        }])
-        ->get();
-
+    public function updatedclientId(){
+        $this->events();
     }
+    
+    public function events(): Collection
+    {
+        // Use $clientId if set, otherwise fetch all appointments
+        $clientId = $this->clientId ?? null;
+
+        return AppointmentsModel::whereNotNull('date')
+            ->where('date', '>=', Carbon::now()->startOfDay()->toDateString()) // Filter for upcoming events
+            ->where(function ($query) use ($clientId) {
+                if ($clientId) {
+                    // If $clientId is provided, filter appointments based on client_id in appointmentDetails and zoomMeet
+                    $query->whereHas('appointmentDetails', function ($query) use ($clientId) {
+                        $query->where('client_id', $clientId)
+                            ->where('is_accepted', 'accepted')
+                            ->whereHas('orders', function ($query) {
+                                // Filter based on payment status
+                                $query->where('payment_status', 'Unpaid')
+                                    ->orWhere(function ($query) {
+                                        $query->where('status', 'Unclaimed')
+                                            ->where('payment_status', '<>', 'Failed');
+                                    });
+                            });
+                    })
+                    // Check if the clientId is in the participants text field in zoomMeetings
+                    ->orWhereHas('zoomMeet', function ($query) use ($clientId) {
+                        $query->where('participants', 'like', '%' . $clientId . '%')
+                              ->where('is_accepted', 'accepted'); // Only include zoomMeet with accepted status
+                    });
+                } else {
+                    // If no clientId is provided, fetch appointments for all clients
+                    $query->whereHas('appointmentDetails', function ($query) {
+                        $query->where('is_accepted', 'accepted'); // Filter where is_accepted is 'accepted'
+                    })
+                    ->orWhereHas('zoomMeet', function ($query) {
+                        $query->where('is_accepted', 'accepted'); // Only include zoomMeet with accepted status
+                    });
+                }
+            })
+            ->with([
+                'appointmentDetails.orders' => function ($query) {
+                    $query->where('payment_status', '<>', 'Failed');
+                },
+                'zoomMeet'  // Eager load the zoomMeet relationship
+            ])
+            ->get();
+    }
+
 
     public function createMeeting()
     {
@@ -505,7 +550,8 @@ class AppointmentPage extends LivewireCalendar
                         'password' => $responseData['password'] ?? null,
                         'agenda' => $this->meetingDescription,
                         'participants' => $participantToString,
-                        'is_viewed' => 'new'
+                        'is_viewed' => 'new',
+                        'is_accepted' => 'pending'
                     ]);
                    
                     Notification::make()
@@ -514,13 +560,15 @@ class AppointmentPage extends LivewireCalendar
                             ->success()
                             ->send();
 
+                    
+
                     try {
                         
                         $this->sendSMS($appointment->id, $this->meetingStartDate);
                         if ($participantArray[0]) {
                             $user = User::where('id', $participantArray[0])->first();
                             $date = Carbon::parse($meeting->start_time);
-                            Mail::to($user->email)->send(new ZoomMeetingEmail($meeting->join_url, $date->format('M. d, Y')));
+                            Mail::to($user->email)->send(new ZoomCreation($date->format('M. d, Y'), $meeting->id));
                         }
                        
                     } catch (\Throwable $e) {
@@ -532,7 +580,7 @@ class AppointmentPage extends LivewireCalendar
                             ->danger()
                             ->send();
                     }
-
+                    
                     $this->dispatch('reload');
                    
                     return $response->json();

@@ -31,6 +31,7 @@
                     <th scope="col" class="px-4 py-2 text-blue-950">Client</th>
                     <th scope="col" class="px-4 py-2 text-blue-950">Orders</th>
                     <th scope="col" class="px-4 py-2 text-blue-950">Grand Total</th>
+                    <th scope="col" class="px-4 py-2 text-blue-950">Status</th>
                     {{-- <th scope="col" class="px-4 py-2 text-blue-950">Payment Status</th>
                     <th scope="col" class="px-4 py-2 text-blue-950">Payment Method</th> --}}
                     <th scope="col" class="px-4 py-2 text-blue-950">Actions</th>
@@ -82,6 +83,17 @@
                                 <td class="px-4 py-2">
                                     @if ($schedule->appointmentDetails->orders)
                                         <p>{{ Number::currency($schedule->appointmentDetails->orders->grand_total, 'PHP') }}</p>
+                                    @endif
+                                </td>
+                                <td class="px-4 py-2">
+                                    @if ($schedule->appointmentDetails->is_accepted)
+                                        @if ($schedule->appointmentDetails->is_accepted == 'pending')
+                                            <span class="inline-flex items-center gap-x-1.5 py-1.5 px-3 capitalize rounded-full text-xs font-medium bg-gray-800 text-white dark:bg-white dark:text-neutral-800">{{ $schedule->appointmentDetails->is_accepted }}</span>
+                                        @elseif($schedule->appointmentDetails->is_accepted == 'accepted')
+                                            <span class="inline-flex items-center gap-x-1.5 py-1.5 px-3 capitalize rounded-full text-xs font-medium bg-green-500 text-white">{{ $schedule->appointmentDetails->is_accepted }}</span>
+                                        @elseif($schedule->appointmentDetails->is_accepted == 'rejected')
+                                            <span class="inline-flex items-center gap-x-1.5 py-1.5 px-3 capitalize rounded-full text-xs font-medium bg-red-500 text-white">{{ $schedule->appointmentDetails->is_accepted }}</span>
+                                        @endif
                                     @endif
                                 </td>
                                 <td class="px-4 py-2">

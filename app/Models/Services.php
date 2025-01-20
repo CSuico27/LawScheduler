@@ -14,6 +14,7 @@ class Services extends Model
         'name',
         'service_type_id',
         'price',
+        'requirements',
         'is_active', 
     ];
 

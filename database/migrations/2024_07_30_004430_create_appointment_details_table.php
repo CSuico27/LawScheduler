@@ -20,6 +20,7 @@ return new class extends Migration
             $table->time('time');
             $table->string('description');
             $table->string('is_viewed');
+            $table->string('is_accepted');
             $table->timestamps();
 
             $table->foreign('appointment_id')

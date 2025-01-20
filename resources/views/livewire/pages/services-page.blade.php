@@ -36,6 +36,9 @@
                     <th scope="col" colspan="4" class="px-6 py-3 text-blue-950">
                         Type
                     </th>
+                    <th scope="col" colspan="4" class="px-6 py-3 text-blue-950">
+                        Requirements
+                    </th>
                     <th scope="col" colspan="2" class="px-6 py-3 text-blue-950">
                         Status
                     </th>
@@ -71,6 +74,11 @@
                                       
                                     {{ $service->service_type->name }}
                                 </span>
+                            </th>
+                            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white" colspan="4">
+                                @foreach (explode(',', $service->requirements) as $requirement)
+                                    <li class="text-teal-800">{{ trim($requirement) }}</li>
+                                @endforeach
                             </th>
                             <td class="px-6 py-4" colspan="2">
                                 @if ($service->is_active)
@@ -126,6 +134,8 @@
                             placeholder="Ex: 30, 000"
                             wire:model="price"
                         />
+                        <p class="-mb-2.5 text-sm font-medium">Requirements <span class="text-xs italic text-green-500">(Must be separated by commas.)</span></p>
+                        <x-textarea wire:model="requirements" placeholder="Ex: 2 valid ID's" />
                         <x-toggle lg wire:model.defer="isActive" left-label="Is Active"/>
                     </div>
                 </div>
@@ -177,6 +187,9 @@
                             placeholder="Ex: 30, 000"
                             wire:model="editPrice"
                         />
+
+                        <p class="-mb-2.5 text-sm font-medium">Requirements <span class="text-xs italic text-green-500">(Must be separated by commas.)</span></p>
+                        <x-textarea wire:model="editRequirements" placeholder="Ex: 2 valid ID's" />
 
                         <x-toggle lg wire:model="editIsActive" left-label="Is Active"/>
                     </div>

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string("name");
             $table->string("price");
             $table->boolean('is_active')->default(true);
+            $table->text("requirements")->nullable();
             $table->foreign('service_type_id')->references('id')->on('service_types')->onDelete('cascade');
             $table->timestamps();
         });

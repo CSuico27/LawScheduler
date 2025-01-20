@@ -31,8 +31,9 @@ class AccountPage extends Component
             $this->accountDetails = User::where('id',  $user_id)->with('info')->get();
 
             if ($user_id) {
-                $zoomMeetings = ZoomMeeting::whereJsonContains('participants', $user_id)->get();
+                $zoomMeetings = ZoomMeeting::whereJsonContains('participants', $user_id)->where('is_accepted', 'accepted')->get();
                 $appointments = AppointmentDetails::where('client_id', $user_id)
+                    ->where('is_accepted', 'accepted')
                     ->whereHas('orders', function ($query) {
                         $query->where('payment_status', '<>', 'Failed');
                     })->get();

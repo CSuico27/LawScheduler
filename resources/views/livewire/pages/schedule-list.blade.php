@@ -39,6 +39,9 @@
                         Participant
                     </th>
                     <th scope="col" class="px-4 py-2 text-blue-950">
+                        Status
+                    </th>
+                    <th scope="col" class="px-4 py-2 text-blue-950">
                         Actions
                     </th>
                 </tr>
@@ -80,6 +83,17 @@
                                                 {{ $participant->name }}
                                             </div>
                                         @endforeach
+                                    </td>
+                                    <td class="px-4 py-2">
+                                        @if ($schedule->zoomMeet->is_accepted)
+                                            @if ($schedule->zoomMeet->is_accepted == 'pending')
+                                                <span class="inline-flex items-center gap-x-1.5 py-1.5 px-3 capitalize rounded-full text-xs font-medium bg-gray-800 text-white dark:bg-white dark:text-neutral-800">{{ $schedule->zoomMeet->is_accepted }}</span>
+                                            @elseif($schedule->zoomMeet->is_accepted == 'accepted')
+                                                <span class="inline-flex items-center gap-x-1.5 py-1.5 px-3 capitalize rounded-full text-xs font-medium bg-green-500 text-white">{{ $schedule->zoomMeet->is_accepted }}</span>
+                                            @elseif($schedule->zoomMeet->is_accepted == 'rejected')
+                                                <span class="inline-flex items-center gap-x-1.5 py-1.5 px-3 capitalize rounded-full text-xs font-medium bg-red-500 text-white">{{ $schedule->zoomMeet->is_accepted }}</span>
+                                            @endif
+                                        @endif
                                     </td>
                                     <td class="px-4 py-2 flex gap-4">
                                         <a href="{{ $schedule->zoomMeet->join_url }}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline" target="_blank">

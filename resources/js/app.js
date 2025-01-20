@@ -1,2 +1,4 @@
 import './bootstrap';
-import 'preline'
+import 'preline';
+import 'dropzone';
+import 'lodash';

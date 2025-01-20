@@ -32,6 +32,7 @@ class Cases extends Model
         'is_no',
         'handling_prosecutor',
         'is_archived',
+        'file'
     ];
 
     public function user(): BelongsTo

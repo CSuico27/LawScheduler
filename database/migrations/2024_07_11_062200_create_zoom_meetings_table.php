@@ -25,6 +25,7 @@ return new class extends Migration
             $table->text('agenda')->nullable();
             $table->text('participants');
             $table->string('is_viewed');
+            $table->string('is_accepted');
             $table->foreign('appointment_id')->references('id')->on('appointments_models')->onDelete('cascade');
             $table->timestamps();
         });
