@@ -114,7 +114,10 @@
                                             <div class="py-1 flex items-center text-sm text-gray-800 before:flex-1 before:border-t before:border-gray-200 before:me-6 after:flex-1 after:border-t after:border-gray-200 after:ms-6 dark:text-white dark:before:border-neutral-600 dark:after:border-neutral-600">VS</div>
                                             @foreach (json_decode($case->respondents) as $respondent)
                                                 <div class="pl-9">
-                                                    <span class="font-medium text-gray-900">{{ $respondent }}</span>
+                                                    <span class="font-medium text-gray-900">{{ $respondent->name }}</span>,
+                                                    <span class="font-medium text-gray-900">{{ $respondent->sex }}</span>,
+                                                    <span class="font-medium text-gray-900">{{ $respondent->age }}</span>,
+                                                    <span class="font-medium text-gray-900">{{ $respondent->address }}</span>
                                                 </div>
                                             @endforeach
                                        </div>
@@ -222,7 +225,7 @@
                                             @foreach ($respondents as $index => $respondent)
                                                 <div id="copy-markup-item-{{ $index }}" class="space-y-3">
                                                     <div class="flex space-x-3">
-                                                        <input type="text" wire:model.blur="respondents.{{ $index }}" class="py-2 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600" placeholder="Enter Name">
+                                                        <input type="text" wire:model.blur="respondents.{{ $index }}" class="py-2 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600" placeholder="Name, sex, age and address">
                                                         
                                                         <!-- Only show delete button for inputs other than the first one -->
                                                         @if ($index > 0)
@@ -503,11 +506,13 @@
                                             @foreach ($editRespondents as $index => $respondent)
                                                 <div id="copy-markup-item-{{ $index }}" class="space-y-3">
                                                     <div class="flex space-x-3">
-                                                        <input type="text" wire:model.blur="editRespondents.{{ $index }}" class="py-2 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600" placeholder="Enter Name">
-                                                        
-                                                        <!-- Only show delete button for inputs other than the first one -->
+                                                        <input type="text" wire:model.blur="editRespondents.{{ $index }}" 
+                                                            class="py-2 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600" 
+                                                            placeholder="Enter Name, Sex, Age, Address" 
+                                                        >
                                                         @if ($index > 0)
-                                                            <button type="button" wire:click="removeRespondent({{ $index }})" class="py-2 px-3 inline-flex items-center gap-x-1 text-xs font-medium rounded-full border border-dashed border-gray-200 bg-white text-gray-800 hover:bg-gray-50 focus:outline-none focus:bg-gray-50 dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700">
+                                                            <button type="button" wire:click="removeRespondent({{ $index }})" 
+                                                                class="py-2 px-3 inline-flex items-center gap-x-1 text-xs font-medium rounded-full border border-dashed border-gray-200 bg-white text-gray-800 hover:bg-gray-50 focus:outline-none focus:bg-gray-50 dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700">
                                                                 <svg class="shrink-0 size-3.5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                                                     <path d="M19 13H5"></path>
                                                                 </svg>
@@ -518,6 +523,7 @@
                                                 </div>
                                             @endforeach
                                         </div>
+                                        
                                         
                                         <p class="mt-3 text-end">
                                             <button type="button" wire:click="addRespondent" class="py-1.5 px-2 inline-flex items-center gap-x-1 text-xs font-medium rounded-full border border-dashed border-gray-200 bg-white text-gray-800 hover:bg-gray-50 focus:outline-none focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700">

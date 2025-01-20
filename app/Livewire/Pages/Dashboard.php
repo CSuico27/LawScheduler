@@ -10,6 +10,34 @@ use Livewire\Component;
 
 class Dashboard extends Component
 {
+    public $zoomMeetingId;
+    public $zoomMeetingFullDetails;
+
+    public function getMeetingFullDetails($id){
+        $this->zoomMeetingId = $id;
+
+        
+        $this->zoomMeetingFullDetails = AppointmentsModel::where('id', $this->zoomMeetingId)
+            ->with('zoomMeet')
+            ->with('appointmentDetails')
+            ->get();
+
+        foreach ($this->zoomMeetingFullDetails as $detail) {
+            if($detail->zoomMeet){
+                $participantIds = json_decode($detail->zoomMeet->participants, true);
+                $participants = User::with('info')->whereIn('id', $participantIds)->get();
+                $detail->participantsDetails = $participants;
+            } else {
+                $participantId = $detail->appointmentDetails->client_id;
+                $participants = User::with('info')->where('id', $participantId)->get();
+                $detail->participantsDetails = $participants;
+            }
+        }
+    }
+
+    public function resetDetails(){
+        $this->zoomMeetingFullDetails = [];
+    }
 
     public function render()
     {

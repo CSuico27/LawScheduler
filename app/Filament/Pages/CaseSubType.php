@@ -7,7 +7,7 @@ use Filament\Pages\Page;
 class CaseSubType extends Page
 {
     
-    protected static ?string $navigationGroup = 'Settings';
+    protected static ?string $navigationGroup = 'Case Management';
     protected static ?string $navigationIcon = 'heroicon-o-squares-plus';
     protected static ?int $navigationSort = 1;
     protected static string $view = 'filament.pages.case-sub-type';

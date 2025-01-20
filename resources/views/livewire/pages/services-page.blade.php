@@ -1,9 +1,9 @@
 <div class="w-full h-full">
     <div class="container dashed-container flex flex-col-reverse md:flex-row md:flex">
         <div class="w-full flex md:justify-start md:mt-0 items-center justify-center mt-3 ">
-            <button type="button" wire:loading.attr="disabled" wire:loading.class="!cursor-wait" onclick="$openModal('newCourtModal')" class="text-white bg-[#4285F4] hover:bg-[#4285F4]/90 focus:ring-4 focus:outline-none focus:ring-[#4285F4]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-[#4285F4]/55">
+            <button type="button" wire:loading.attr="disabled" wire:loading.class="!cursor-wait" onclick="$openModal('newServiceModal')" class="text-white bg-[#4285F4] hover:bg-[#4285F4]/90 focus:ring-4 focus:outline-none focus:ring-[#4285F4]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-[#4285F4]/55">
                 <x-icon name="document-add" class="w-5 h-5" />
-                New Court
+                New Service
             </button>
         </div>
 
@@ -27,47 +27,53 @@
         <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
-                    <th scope="col" class="px-6 py-3 text-blue-950" colspan="4">
-                        Court Name
+                    <th scope="col" colspan="4" class="px-6 py-3 text-blue-950">
+                        Name
                     </th>
-                    <th scope="col" class="px-6 py-3 text-blue-950" colspan="4">
-                        Court Type
+                    <th scope="col" colspan="2" class="px-6 py-3 text-blue-950">
+                        Price
                     </th>
-                    <th scope="col" class="px-6 py-3 text-blue-950" colspan="2">
+                    <th scope="col" colspan="4" class="px-6 py-3 text-blue-950">
+                        Type
+                    </th>
+                    <th scope="col" colspan="2" class="px-6 py-3 text-blue-950">
                         Status
                     </th>
-                    <th scope="col" class="px-6 py-3 text-blue-950" colspan="2">
-                        Actions
+                    <th scope="col" colspan="2" class="px-10 py-3 flex justify-end">
+                        <span class="px-6 py-3">Actions</span>
                     </th>
                 </tr>
             </thead>
             <tbody>
-                @if ($courtList->isEmpty())
+                @if ($servicesList->isEmpty())
                     <tr>
-                        <td colspan="12">
+                        <td colspan="16">
                             <div class="flex justify-center items-center text-center gap-2 py-10 w-full">
-                                <x-icon name="information-circle" class="w-5 h-5" /><h1>No Court found.</h1>
+                                <x-icon name="information-circle" class="w-5 h-5" /><h1>No service type found.</h1>
                             </div>
                         </td>
                     </tr>
                 @else
-                    @foreach ($courtList as $court)
+                    @foreach ($servicesList as $service)
                         <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                            <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white" colspan="4">
-                                {{ $court->name }}
-                            </td>
-                            <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white" colspan="4">
+                            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white" colspan="4">
+                                {{ $service->name }}
+                            </th>
+                            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white" colspan="2">
+                                {{ Number::currency($service->price, 'PHP') }}
+                            </th>
+                            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white" colspan="4">
                                 <span class="py-1 px-2 inline-flex items-center gap-x-1 text-xs font-medium bg-teal-100 text-teal-800 rounded-full dark:bg-teal-500/10 dark:text-teal-500">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M9.568 3H5.25A2.25 2.25 0 0 0 3 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 0 0 5.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 0 0 9.568 3Z" />
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M6 6h.008v.008H6V6Z" />
                                     </svg>
                                       
-                                    {{ $court->courtType->name }}
+                                    {{ $service->service_type->name }}
                                 </span>
-                            </td>
+                            </th>
                             <td class="px-6 py-4" colspan="2">
-                                @if ($court->is_active)
+                                @if ($service->is_active)
                                     <span class="py-1 px-2 inline-flex items-center gap-x-1 text-xs font-medium bg-green-100 text-teal-800 rounded-full dark:bg-teal-500/10 dark:text-teal-500">
                                         <svg class="shrink-0 size-3" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                         <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"></path>
@@ -84,34 +90,41 @@
                                     </span>
                                 @endif
                             </td>
-                            <td class="px-6 py-4 flex gap-4" colspan="2">
-                                <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline" onclick="$openModal('editCourtModal')" wire:click="getSelectedCourtId({{ $court->id }})">Edit</a>
-                                <a href="#" class="font-medium text-red-600 dark:text-red-500 hover:underline" wire:click="deleteConfirmation({{ $court->id }}, '{{ $court->name }}')">Delete</a>
+                            <td class="px-12 py-4 flex justify-end gap-4" colspan="2">
+                                <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline" onclick="$openModal('editServiceModal')" wire:click="getSelectedServiceId({{ $service->id }})">Edit</a>
+                                <a href="#" class="font-medium text-red-600 dark:text-red-500 hover:underline" wire:click="deleteConfirmation({{ $service->id }}, '{{ $service->name }}')">Delete</a>
                             </td>
                         </tr>
                     @endforeach
                 @endif
-            </tbody>
-        </table>        
+            </tbody>            
+        </table>
         <div class="w-full flex justify-end items-end py-5 px-2">
-            {{ $courtList->links() }}
+            {{ $servicesList->links() }}
         </div>
+        
     </div>
 
     {{-- ADD MODAL --}}
-    <x-modal blur name="newCourtModal" align="center" max-width="md">
-        <x-card title="Add New Court">
+    <x-modal blur name="newServiceModal" align="center" max-width="md">
+        <x-card title="Add New Service">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div class="col-span-1 sm:col-span-2">
                     <div class="grid grid-cols-1 gap-5">
-                        <x-input label="Court Name" placeholder="Ex: RTC - Branch II" class="py-3 mt-1" wire:model="name" />
                         <x-select
-                            label="Select Court Type"
-                            wire:model.blur="courtTypeId"
-                            placeholder="Ex: Regional Trial Court"
-                            :async-data="route('api.court.types')"
+                            label="Service Type"
+                            wire:model.defer="serviceType"
+                            placeholder="Ex: Corporation / Business"
+                            :async-data="route('api.services.types')"
                             option-label="name"
                             option-value="id"
+                        />
+                        <x-input label="Service Name" placeholder="Ex: Corporate" class="py-3 mt-1" wire:model="name" />
+                        <x-inputs.maskable
+                            label="Price"
+                            mask="['###', '##, ###', '###, ###', '#, ###']"
+                            placeholder="Ex: 30, 000"
+                            wire:model="price"
                         />
                         <x-toggle lg wire:model.defer="isActive" left-label="Is Active"/>
                     </div>
@@ -121,7 +134,7 @@
                 <div class="flex justify-end gap-x-4">
                     <div class="flex">
                         <x-button flat label="Cancel" x-on:click="close" />
-                        <x-button primary label="Save" wire:click="addNewCourt" />
+                        <x-button primary label="Save" wire:click="addService" />
                     </div>
                 </div>
             </x-slot>
@@ -129,16 +142,25 @@
     </x-modal>
 
     {{-- EDIT MODAL --}}
-    <x-modal blur name="editCourtModal" align="center" max-width="md" persistent>
-        <x-card title="Edit Court Details" >
+    <x-modal blur name="editServiceModal" align="center" max-width="md" persistent>
+        <x-card title="Edit Service Type Details" >
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div class="col-span-1 sm:col-span-2">
                     <div class="grid grid-cols-1 gap-5">
+                        <x-select
+                            label="Service Type"
+                            wire:model.defer="editServiceType"
+                            placeholder="Ex: Corporation / Business"
+                            :async-data="route('api.services.types')"
+                            option-label="name"
+                            option-value="id"
+                        />
+
                         @if ($editName)
-                            <x-input label="Court Name" placeholder="Ex: RTC - Branch II" class="py-3 mt-1" wire:model="editName" />
+                            <x-input label="Service Name" placeholder="Ex: Corporate / Business" class="py-3 mt-1" wire:model="editName" />
                         @else
                             <div class="relative w-full h-full">
-                                <x-input label="Court Name" placeholder="" wire:model="editName" disabled />
+                                <x-input label="Service Type Name" placeholder="" wire:model="editName" disabled />
                                 <div role="status" class="absolute top-6.5 left-4 pt-1">
                                     <svg aria-hidden="true" class="inline w-4 h-4 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
@@ -148,14 +170,14 @@
                                 </div>
                             </div>
                         @endif
-                        <x-select
-                            label="Select Court Type"
-                            wire:model.blur="editCourtTypeId"
-                            placeholder="Ex: Regional Trial Court"
-                            :async-data="route('api.court.types')"
-                            option-label="name"
-                            option-value="id"
+
+                        <x-inputs.maskable
+                            label="Price"
+                            mask="['###', '##, ###', '###, ###', '#, ###']"
+                            placeholder="Ex: 30, 000"
+                            wire:model="editPrice"
                         />
+
                         <x-toggle lg wire:model="editIsActive" left-label="Is Active"/>
                     </div>
                 </div>
@@ -165,7 +187,7 @@
                 <div class="flex justify-end gap-x-4">
                     <div class="flex">
                         <x-button flat label="Cancel" x-on:click="close" wire:click="resetModal" />
-                        <x-button primary label="Save" wire:click="updateCourtDetails({{ $selectedCourtId }})" />
+                        <x-button primary label="Save" wire:click="updateServiceDetails({{ $selectedServiceId }})" />
                     </div>
                 </div>
             </x-slot>

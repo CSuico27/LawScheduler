@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Pages;
 
+use App\Helpers\RespondentHelper;
 use App\Models\Cases;
 use App\Models\CaseStage;
 use App\Models\Court;
@@ -125,9 +126,19 @@ class CasePage extends Component
             'remarks' => 'nullable|max:255',
         ]);
 
+        $parsedRespondents = array_map(function($respondent) {
+            $parts = explode(',', $respondent);
+            return [
+                'name' => trim($parts[0] ?? ''),
+                'sex' => trim($parts[1] ?? ''),
+                'age' => trim($parts[2] ?? ''),
+                'address' => trim($parts[3] ?? ''),
+            ];
+        }, $this->respondents);
+
         $case = Cases::create([
             'petitioner_id' => $this->petitioner,
-            'respondents' => json_encode($this->respondents),
+            'respondents' => json_encode($parsedRespondents),
             'case_no' => $this->caseNumber,
             'case_type' => $this->caseType,
             'case_sub_type' => $this->caseSubType,
@@ -178,8 +189,7 @@ class CasePage extends Component
             
             if ($caseInfo) {
                 $this->editPetitioner = $caseInfo->petitioner_id;
-                
-                $this->editRespondents = json_decode($caseInfo->respondents);
+                $this->editRespondents = RespondentHelper::formatRespondents(json_decode($caseInfo->respondents, true));
                 $this->editCaseNumber = $caseInfo->case_no;
                 $this->editCaseType = $caseInfo->case_type;
                 $this->editCaseSubType = $caseInfo->case_sub_type;
@@ -202,19 +212,26 @@ class CasePage extends Component
                 $this->editJudgeType = $caseInfo->judge_type;
                 $this->editJudgeName = $caseInfo->judge_name;
                 $this->editRemarks = $caseInfo->remarks;
-
             }
         }
-
-        
     }
 
     public function updateCaseDetails($id){
         $this->selectedCase = Cases::findOrFail($id);
 
+        $parsedRespondents = array_map(function($respondent) {
+            $parts = explode(',', $respondent);
+            return [
+                'name' => trim($parts[0] ?? ''),
+                'sex' => trim($parts[1] ?? ''),
+                'age' => trim($parts[2] ?? ''),
+                'address' => trim($parts[3] ?? ''),
+            ];
+        }, $this->editRespondents);
+
         $this->selectedCase->update([
             'petitioner_id' => $this->editPetitioner,
-            'respondents' => json_encode($this->editRespondents),
+            'respondents' => json_encode($parsedRespondents),
             'case_no' => $this->editCaseNumber,
             'case_type' => $this->editCaseType,
             'case_sub_type' => $this->editCaseSubType,
@@ -283,44 +300,6 @@ class CasePage extends Component
         }
     }
 
-    public function getCaseSubTypes(Request $request){
-        $search = $request->input('search');
-        $selected = $request->input('selected');
-
-        if ($search) {
-            $caseSubTypes = SubCaseType::where('name', 'like', '%' . $search . '%')->where('is_active', 1)->get();
-        } elseif ($selected) {
-
-            $selectedCaseSubType = SubCaseType::where('id', $selected)->get();
-
-            return response()->json($selectedCaseSubType);
-            
-        } else {
-            $caseSubTypes = SubCaseType::where('is_active', 1)->get();
-        }
-
-        return response()->json($caseSubTypes);
-    }
-
-    public function getCaseStage(Request $request){
-        $search = $request->input('search');
-        $selected = $request->input('selected');
-
-        if ($search) {
-            $caseStage = CaseStage::where('name', 'like', '%' . $search . '%')->where('is_active', 1)->get();
-        } elseif ($selected) {
-
-            $selectedCaseStage= CaseStage::where('id', $selected)->get();
-
-            return response()->json($selectedCaseStage);
-            
-        } else {
-            $caseStage = CaseStage::where('is_active', 1)->get();
-        }
-
-        return response()->json($caseStage);
-    }
-
     public function deleteCase($id){
         Cases::find($id)->delete();
 
@@ -344,45 +323,6 @@ class CasePage extends Component
         ]);
     }
     
-    public function getCourtsByType(Request $request, $courtTypeId)
-    {
-        $search = $request->input('search');
-        $selected = $request->input('selected');
-
-        if ($search) {
-            $courts = Court::where('name', 'like', '%' . $search . '%')->where('is_active', 1)->get();
-        } elseif ($selected) {
-
-            $selectedCourt = Court::where('id', $selected)->get();
-
-            return response()->json($selectedCourt);
-            
-        } else {
-            $courts = Court::where('court_type_id', $courtTypeId)->where('is_active', 1)->get();
-        }
-
-        return response()->json($courts);
-    }
-
-    public function getCourts(Request $request){
-        $search = $request->input('search');
-        $selected = $request->input('selected');
-
-        if ($search) {
-            $courts = Court::where('name', 'like', '%' . $search . '%')->where('is_active', 1)->get();
-        } elseif ($selected) {
-
-            $selectedCourt = Court::where('id', $selected)->get();
-
-            return response()->json($selectedCourt);
-
-        } else {
-            $courts = Court::where('is_active', 1)->get();
-        }
-
-        return response()->json($courts);
-    }
-
     public function cancel(){
         $this->dispatch('reload');
     }

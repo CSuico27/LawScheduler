@@ -93,25 +93,6 @@ class CourtPage extends Component
         ]);
     }
 
-    public function getCourtTypes(Request $request){
-        $search = $request->input('search');
-        $selected = $request->input('selected');
-
-        if ($search) {
-            $courtTypes = CourtType::where('name', 'like', '%' . $search . '%')->where('is_active', 1)->get();
-        } elseif ($selected) {
-
-            $selectedCourtType = CourtType::where('id', $selected)->get();
-
-            return response()->json($selectedCourtType);
-            
-        } else {
-            $courtTypes = CourtType::where('is_active', 1)->get();
-        }
-
-        return response()->json($courtTypes);
-    }
-
 
     public function render()
     {

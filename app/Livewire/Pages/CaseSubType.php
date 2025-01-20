@@ -92,26 +92,7 @@ class CaseSubType extends Component
             'params'      => $id,
         ]);
     }
-
-    public function getCaseTypes(Request $request){
-        $search = $request->input('search');
-        $selected = $request->input('selected');
-
-        if ($search) {
-            $caseTypes = ModelsCaseType::where('name', 'like', '%' . $search . '%')->where('is_active', 1)->get();
-        } elseif ($selected) {
-
-            $selectedCaseType = ModelsCaseType::where('id', $selected)->get();
-
-            return response()->json($selectedCaseType);
-            
-        } else {
-            $caseTypes = ModelsCaseType::where('is_active', 1)->get();
-        }
-
-        return response()->json($caseTypes);
-    }
-
+    
     public function render()
     {
         if ($this->searchTerm) {

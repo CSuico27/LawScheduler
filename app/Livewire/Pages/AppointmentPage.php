@@ -275,29 +275,6 @@ class AppointmentPage extends LivewireCalendar
         return AppointmentsModel::whereNotNull('date')->get();
     }
 
-    public function getParticipant(Request $request){
-        $search = $request->input('search');
-        $selected = $request->input('selected');
-
-        if ($search) {
-            $users = User::where('name', 'like', '%' . $search . '%')
-                ->whereNotNull('profile_picture')
-                ->get();
-        } elseif ($selected) {
-
-            $selectedUsers = User::where('id', $selected)
-                ->whereNotNull('profile_picture')
-                ->get();
-
-            return response()->json($selectedUsers);
-            
-        } else {
-            $users = User::whereNotNull('profile_picture')->get();
-        }
-
-        return response()->json($users);
-    }
-
     public function createMeeting()
     {
         $this->validate([

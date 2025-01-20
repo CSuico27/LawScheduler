@@ -6,7 +6,7 @@ use Filament\Pages\Page;
 
 class CaseType extends Page
 {
-    protected static ?string $navigationGroup = 'Settings';
+    protected static ?string $navigationGroup = 'Case Management';
     protected static ?string $navigationIcon = 'heroicon-o-squares-2x2';
     protected static string $view = 'filament.pages.case-type';
 
