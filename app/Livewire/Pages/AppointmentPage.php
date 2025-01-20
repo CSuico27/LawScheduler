@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Pages;
 
+use App\Mail\ZoomMeetingEmail;
 use App\Models\AppointmentDetails;
 use App\Models\AppointmentsModel;
 use App\Models\BeneficiariesModel;
@@ -23,6 +24,7 @@ use Carbon\Carbon;
 use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 
 class AppointmentPage extends LivewireCalendar
@@ -431,7 +433,7 @@ class AppointmentPage extends LivewireCalendar
                     $participantArray = [$this->meetingParticipant];
                     $participantToString = json_encode($participantArray);
 
-                    ZoomMeeting::create([
+                    $meeting = ZoomMeeting::create([
                         'appointment_id' => $appointment->id,
                         'meeting_id' => strval($responseData['id']),
                         'topic' => $responseData['topic'],
@@ -445,7 +447,7 @@ class AppointmentPage extends LivewireCalendar
                         'participants' => $participantToString,
                         'is_viewed' => 'new'
                     ]);
-
+                   
                     Notification::make()
                             ->title('Success!')
                             ->body('Meeting has been created.')
@@ -453,7 +455,14 @@ class AppointmentPage extends LivewireCalendar
                             ->send();
 
                     try {
-                        $this->sendSMS($responseData['join_url'], $this->meetingStartDate);
+                        
+                        $this->sendSMS($appointment->id, $this->meetingStartDate);
+                        if ($participantArray[0]) {
+                            $user = User::where('id', $participantArray[0])->first();
+                            $date = Carbon::parse($meeting->start_time);
+                            Mail::to($user->email)->send(new ZoomMeetingEmail($meeting->join_url, $date->format('M. d, Y')));
+                        }
+                       
                     } catch (\Throwable $e) {
                         $this->dispatch('reload');
                         // Log::error('Error sending SMS: ' . $e->getMessage());
@@ -504,7 +513,7 @@ class AppointmentPage extends LivewireCalendar
         $twilioNumber = env('TWILIO_FROM');
 
         $client = new Client($sid, $token);
-        $message = "LawScheduler\nWe created a Zoom Meeting!\n Date: {$appointmentDate}\nYour Zoom Meeting URL is: {$appointmentNumber}";
+        $message = "We created a Meeting!\n Date: {$appointmentDate}\nYour Meeting ID is: {$appointmentNumber}";
         $client->messages->create(
             '+639633366707',
             [

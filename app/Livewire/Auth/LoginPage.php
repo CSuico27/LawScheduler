@@ -29,6 +29,15 @@ class LoginPage extends Component
             return;
         }
 
+        if (auth()->user()->is_verified == 0) {
+            auth()->logout(); // Log out the user if they are not verified
+            $this->notification()->error(
+                $title = 'Error!',
+                $description = 'Your account is not verified. Please verify your account to log in.'
+            );
+            return;
+        }
+
         return redirect()->intended();
     }
 

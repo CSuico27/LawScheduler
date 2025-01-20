@@ -18,6 +18,7 @@ class AccountSeeder extends Seeder
             'name' => 'Admin User',
             'email' => 'admin@admin.com',
             'password' => Hash::make('admin@2024'),
+            'is_verified' => true,
             'role' => 'admin',
         ]);
 
@@ -25,6 +26,7 @@ class AccountSeeder extends Seeder
             'name' => 'Secretary User',
             'email' => 'secretary_1@secretary.com',
             'password' => Hash::make('secretary@2024'),
+            'is_verified' => true,
             'role' => 'secretary',
         ]);
 
@@ -32,6 +34,7 @@ class AccountSeeder extends Seeder
             'name' => 'Secretary User',
             'email' => 'secretary_2@example.com',
             'password' => Hash::make('secretary@2024'),
+            'is_verified' => true,
             'role' => 'secretary',
         ]);
     }

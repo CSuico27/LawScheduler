@@ -14,6 +14,13 @@
                 />
             @endforeach
         </div>
+        @if (session('error'))
+            <div>
+                <p class="text-red-500 text-xs text-center mb-5">
+                    {{ session('error') }}
+                </p>
+            </div>
+        @endif
         <a href="#" wire:click="verifyOtp" class="py-3 px-4 inline-flex rounded-md justify-center gap-x-2 text-sm font-semibold border border-transparent bg-[#2b2b31] text-white hover:bg-slate-950 disabled:opacity-50 disabled:pointer-events-none">
             Sign up
         </a>

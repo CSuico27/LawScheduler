@@ -23,12 +23,11 @@ class AccountVerification extends Component
             $this->user->is_verified = true;
             $this->user->otp = null;
             $this->user->save();
-
-            session()->flash('message', 'Account successfully verified.');
+            
             auth()->login($this->user);
             return redirect()->route('user.home');
         } else {
-            session()->flash('error', 'Invalid OTP or it has expired.');
+            session()->flash('error', 'Invalid OTP');
         }
     }
     
