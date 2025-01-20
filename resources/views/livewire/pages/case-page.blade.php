@@ -496,7 +496,8 @@
                                         <x-time-picker
                                             label="Time Received"
                                             placeholder="12:00 AM"
-                                            wire:model.defer="editTimeReceived"
+                                            format="24"
+                                            wire:model="editTimeReceived"
                                         />
                                         <x-input label="Receiving Staff" placeholder="Ex: RTC - Branch III" wire:model="editReceivingStaff" />
                                         <x-select
