@@ -250,7 +250,7 @@ class AppointmentList extends Component
         $this->title = "";
         $this->description = "";
         $this->date = "";
-        $this->time = "";
+        $this->selectedTimeSlot = "";
         $this->payment_method = "";
         $this->payment_status = "";
         $this->grand_total = "";
