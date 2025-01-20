@@ -71,8 +71,8 @@
                 </a>
               </div>
             </div> --}}
-            <a class="font-medium text-[#2b2b31] hover:text-[#d6b685] dark:text-neutral-400 dark:hover:text-neutral-500 text-base" href="#">Members</a>
-            <a class="font-medium text-[#2b2b31] hover:text-[#d6b685] dark:text-neutral-400 dark:hover:text-neutral-500 text-base" href="#">About Us</a>
+            <a class="font-medium text-[#2b2b31] hover:text-[#d6b685] dark:text-neutral-400 dark:hover:text-neutral-500 text-base" href="#">Services</a>
+            <a class="font-medium text-[#2b2b31] hover:text-[#d6b685] dark:text-neutral-400 dark:hover:text-neutral-500 text-base" href="{{ route('user.about') }}">About Us</a>
             <a class="font-medium text-[#2b2b31] hover:text-[#d6b685] dark:text-neutral-400 dark:hover:text-neutral-500 text-base" href="#">Contact</a>
 
             <div class="flex justify-center lg:hidden md:ml-10">

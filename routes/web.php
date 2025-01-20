@@ -1,5 +1,6 @@
 <?php
 
+use App\Livewire\AboutPage;
 use App\Livewire\Auth\AccountActivationPage;
 use App\Livewire\Auth\AccountVerification;
 use App\Livewire\Auth\ForgotPasswordPage;
@@ -29,6 +30,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 Route::get('/', HomePage::class)->name('user.home');
+Route::get('/about-us', AboutPage::class)->name('user.about');
 Route::get('/invoice/{invoiceId}/pdf', [InvoicePage::class, 'generatePdf'])->name('invoice.pdf');
 
 Route::middleware('guest')->group(function () {

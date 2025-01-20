@@ -66,7 +66,7 @@
                                 <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                     <div class="flex flex-col">
                                         <div class="hs-tooltip inline-block"> 
-                                            <a class="hs-tooltip-toggle underline cursor-pointer hover:text-blue-600">
+                                            <a class="hs-tooltip-toggle ">
                                                 <div class="flex flex-col gap-1">
                                                     @if ($case->complainantDetails)
                                                         @foreach ($case->complainantDetails as $complainant)
@@ -77,9 +77,9 @@
                                                         @endforeach
                                                     @endif
                                                 </div>
-                                                <span class="hs-tooltip-content hs-tooltip-shown:opacity-100 hs-tooltip-shown:visible opacity-0 transition-opacity inline-block absolute invisible z-10 py-1 px-2 bg-gray-900 text-xs font-medium text-white rounded shadow-sm dark:bg-neutral-700" role="tooltip">
+                                                {{-- <span class="hs-tooltip-content hs-tooltip-shown:opacity-100 hs-tooltip-shown:visible opacity-0 transition-opacity inline-block absolute invisible z-10 py-1 px-2 bg-gray-900 text-xs font-medium text-white rounded shadow-sm dark:bg-neutral-700" role="tooltip">
                                                     Full Case Details
-                                                </span>
+                                                </span> --}}
                                             </a>
                                         </div>
                                         <div>
