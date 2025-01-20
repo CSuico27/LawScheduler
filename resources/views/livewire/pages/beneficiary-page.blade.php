@@ -71,7 +71,10 @@
                 @endif
             </tbody>            
         </table>
-       
+        <div class="w-full flex justify-end items-end py-5 px-2">
+            {{ $beneficiariesList->links() }}
+        </div>
+        
     </div>
 
     {{-- ADD MODAL --}}

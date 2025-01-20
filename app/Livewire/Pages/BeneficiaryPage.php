@@ -4,14 +4,15 @@ namespace App\Livewire\Pages;
 
 use App\Models\BeneficiariesModel;
 use Livewire\Component;
+use Livewire\WithPagination;
 use WireUi\Traits\Actions;
 
 class BeneficiaryPage extends Component
 {
     use Actions;
+    use WithPagination;
     // SEARCH
     public $searchTerm;
-    public $beneficiariesList;
 
     // ADD
     public $firstName;
@@ -40,19 +41,9 @@ class BeneficiaryPage extends Component
     public $selectedBeneficiaryId;
 
     public function mount(){
-        $this->beneficiariesList = BeneficiariesModel::all();
         $this->city = 'Tayabas City';
         $this->state = 'Philippines';
         $this->zipCode = '4306';
-    }
-
-    public function searchBeneficiary()
-    {
-        if ($this->searchTerm) {
-            $this->beneficiariesList = BeneficiariesModel::where('last_name', 'like', '%' . $this->searchTerm . '%')
-                ->orWhere('first_name', 'like', '%' . $this->searchTerm . '%')
-                ->get();
-        } 
     }
 
     public function initialData(){
@@ -155,8 +146,19 @@ class BeneficiaryPage extends Component
 
     public function render()
     {
-        $this->beneficiariesList = BeneficiariesModel::all();
-        $this->searchBeneficiary();
-        return view('livewire.pages.beneficiary-page');
+        
+        if ($this->searchTerm) {
+            $searchItems = BeneficiariesModel::where('last_name', 'like', '%' . $this->searchTerm . '%')
+                ->orWhere('first_name', 'like', '%' . $this->searchTerm . '%')
+                ->paginate(8);
+
+            $beneficiariesList = $searchItems;
+        } else {
+            $beneficiariesList = BeneficiariesModel::paginate(8);
+        }
+
+        return view('livewire.pages.beneficiary-page', [
+            'beneficiariesList' => $beneficiariesList
+        ]);
     }
 }
