@@ -24,7 +24,7 @@
                       <div class="hs-dropdown relative inline-flex md:flex md:items-center md:justify-center">
                           <button id="hs-dropdown-default" type="button" class="hs-dropdown-toggle py-2 inline-flex items-center gap-x-2 text-base font-medium rounded-lg text-[#2b2b31]">
                             <div class="flex justify-center items-center gap-2">
-                                <img src="{{ asset('storage/' . auth()->user()->profile_picture) }}" alt="{{ auth()->user()->name }}" class="w-10 h-10">
+                                <img src="{{ asset(auth()->user()->profile_picture) }}" alt="{{ auth()->user()->name }}" class="w-10 h-10">
                                 {{ auth()->user()->name }}
                             </div>
                               
