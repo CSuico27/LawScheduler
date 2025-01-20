@@ -68,4 +68,8 @@ class User extends Authenticatable implements FilamentUser
 
         return in_array($this->id, $allowedIds);
     }
+
+    public function invoice(): HasOne{
+        return $this->hasOne(Invoice::class, 'client_id');
+    }
 }

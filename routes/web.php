@@ -11,6 +11,7 @@ use App\Livewire\Client\CancelPage;
 use App\Livewire\Client\SuccessPage;
 use App\Livewire\HomePage;
 use App\Livewire\Pages\AppointmentPage;
+use App\Livewire\Pages\InvoicePage;
 use App\Models\AccountActivation;
 use Illuminate\Support\Facades\Route;
 
@@ -25,6 +26,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 Route::get('/', HomePage::class)->name('user.home');
+Route::get('/invoice/{invoiceId}/pdf', [InvoicePage::class, 'generatePdf'])->name('invoice.pdf');
 
 Route::middleware('guest')->group(function () {
     // AUTH
