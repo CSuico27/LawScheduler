@@ -24,7 +24,10 @@ class AccountPage extends Component
 
             if ($user_id) {
                 $zoomMeetings = ZoomMeeting::whereJsonContains('participants', $user_id)->get();
-                $appointments = AppointmentDetails::where('client_id', $user_id)->get();
+                $appointments = AppointmentDetails::where('client_id', $user_id)
+                    ->whereHas('orders', function ($query) {
+                        $query->where('payment_status', '<>', 'Failed');
+                    })->get();
                 $cases = Cases::whereJsonContains('complainants',  $user_id)->with('caseStage')->get();
 
                 foreach ($cases as $case) {

@@ -202,14 +202,25 @@ class AppointmentList extends Component
     {
         if ($this->searchTerm) {
             $searchItems = AppointmentsModel::whereHas('appointmentDetails.orders', function ($query) {
-                $query->where('title', 'like', '%' . $this->searchTerm . '%');
+                $query->where('title', 'like', '%' . $this->searchTerm . '%')
+                      ->where('payment_status', '<>', 'Failed');
             })
+            ->with(['appointmentDetails.orders' => function ($query) {
+                $query->where('payment_status', '<>', 'Failed');
+            }])
             ->latest()
             ->paginate(8);
 
             $appointmentList = $searchItems;
         } else {
-            $appointmentList = AppointmentsModel::with(['appointmentDetails.orders'])->latest()->paginate(8);
+            $appointmentList = AppointmentsModel::whereHas('appointmentDetails.orders', function ($query) {
+                $query->where('payment_status', '<>', 'Failed');
+            })
+            ->with(['appointmentDetails.orders' => function ($query) {
+                $query->where('payment_status', '<>', 'Failed');
+            }])
+            ->latest()
+            ->paginate(8);
         }
 
         foreach ($appointmentList as $appointment) {
@@ -228,13 +239,16 @@ class AppointmentList extends Component
         }
 
         foreach ($appointmentList as $appointment) {
-            $order = $appointment->appointmentDetails->orders;
+            if($appointment->appointmentDetails){
+                $order = $appointment->appointmentDetails->orders;
         
-            if ($order && $order->services_ids) {
-                $serviceIds = json_decode($order->services_ids, true);
-                $services = Services::whereIn('id', $serviceIds)->get();
-                $order->services = $services;
+                if ($order && $order->services_ids) {
+                    $serviceIds = json_decode($order->services_ids, true);
+                    $services = Services::whereIn('id', $serviceIds)->get();
+                    $order->services = $services;
+                }
             }
+            
         }
 
         return view('livewire.pages.appointment-list',[

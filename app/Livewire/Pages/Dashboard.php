@@ -75,8 +75,16 @@ class Dashboard extends Component
             }
         } 
         
-        $upcomingAppointments = AppointmentsModel::where('is_active', 1)->whereHas('appointmentDetails')->with('appointmentDetails')->get()->groupBy(function($item) {
-            return $item->date;
+        $upcomingAppointments = AppointmentsModel::where('is_active', 1)
+            ->whereHas('appointmentDetails.orders', function ($query) {
+                $query->where('payment_status', '<>', 'Failed');
+            })
+            ->with(['appointmentDetails.orders' => function ($query) {
+                $query->where('payment_status', '<>', 'Failed');
+            }])
+            ->get()
+            ->groupBy(function($item) {
+                return $item->date;
         });
 
         foreach ($upcomingAppointments as $date => $appointments) {

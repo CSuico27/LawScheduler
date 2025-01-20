@@ -148,9 +148,9 @@ class Booking extends Component
             'grand_total' => self::getTotalPriceProperty(),
             'status' => 'Unclaimed'
         ]);
-
+        
         return redirect($redirect_url);
-        // $this->sendSingleSMS($this->title, $this->date);
+
     }
 
     public function updatedServices($value, $index)

@@ -24,9 +24,9 @@ class CancelPage extends Component
             Stripe::setApiKey(env('STRIPE_SECRET'));
             $session_info = Session::retrieve($this->session_id);
 
-            if($session_info->payment_status != 'Paid'){
-                $latest_order->payment_status = 'Failed';
-                $latest_order->save();
+            if($session_info->payment_status != 'paid'){
+                $latest_order->orders->payment_status = 'Failed';
+                $latest_order->orders->save();
             }
         }
 

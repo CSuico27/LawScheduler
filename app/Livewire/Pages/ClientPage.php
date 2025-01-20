@@ -179,7 +179,10 @@ class ClientPage extends Component
 
         if ($user) {
             $zoomMeetings = ZoomMeeting::whereJsonContains('participants', $user->id)->get();
-            $appointments = AppointmentDetails::where('client_id', $user->id)->get();
+            $appointments = AppointmentDetails::where('client_id', $user->id)
+                ->whereHas('orders', function ($query) {
+                    $query->where('payment_status', '<>', 'Failed');
+                })->get();
             $cases = Cases::whereJsonContains('complainants',  $user->id)->with('caseStage')->get();
 
             foreach ($cases as $case) {

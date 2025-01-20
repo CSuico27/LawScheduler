@@ -345,12 +345,22 @@ class AppointmentPage extends LivewireCalendar
     {
         // return AppointmentsModel::whereNotNull('date')->get();
         return AppointmentsModel::whereNotNull('date')
-            ->where('date', '>=', Carbon::now()->startOfDay()->toDateString())
-            ->whereHas('appointmentDetails.orders', function ($query) {
+        ->where('date', '>=', Carbon::now()->startOfDay()->toDateString())
+        ->where(function ($query) {
+            // Group conditions for orders
+            $query->whereHas('appointmentDetails.orders', function ($query) {
                 $query->where('payment_status', 'Unpaid')
-                    ->orWhere('status', 'Unclaimed');
+                      ->orWhere(function ($query) {
+                          $query->where('status', 'Unclaimed')
+                                ->where('payment_status', '<>', 'Failed');
+                      });
             })
-            ->get();
+            ->orWhereHas('zoomMeet'); // Ensure zoomMeet relationship is not null
+        })
+        ->with(['appointmentDetails.orders' => function ($query) {
+            $query->where('payment_status', '<>', 'Failed');
+        }])
+        ->get();
 
     }
 
