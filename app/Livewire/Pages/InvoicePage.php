@@ -53,9 +53,22 @@ class InvoicePage extends Component
 
     public $selectedInvoiceForPaymentId;
 
+    public $paymentHistory;
+
     public function selectInvoice($invoiceId)
     {
         $this->selectedInvoice = Invoice::with(['client.info', 'payments'])->find($invoiceId);
+
+        $invoice = Invoice::where('id', $invoiceId)
+            ->with(['client.info', 'payments'])
+            ->first();
+        if ($invoice) {
+            $this->paymentHistory = $invoice->payments
+                ->groupBy('date_received')->toArray();
+        } else {
+            
+            $this->paymentHistory = collect();
+        }
 
         if ($this->selectedInvoice) {
             if ($this->selectedInvoice->services_ids) {
@@ -306,27 +319,68 @@ class InvoicePage extends Component
         $invoice = Invoice::find($invoiceId);
 
         if ($invoice) {
+            
+            $currentBalanceDue = $invoice->balance_due;
+            if ($this->amountPaid > $currentBalanceDue) {
+               
+                Notification::make()
+                    ->title('Error!')
+                    ->body('Payment amount exceeds the balance due.')
+                    ->danger()
+                    ->send();
+                return redirect()->back();
+            }
+
             $payment = new Payments([
                 'invoice_id' => $invoiceId,
-                'date_received' => now(),
+                'date_received' => $this->receivingDate,
                 'reference_no' => $this->refNo,
                 'amount' => $this->amountPaid,
             ]);
 
             $payment->save();
 
+            $invoice->updateBalanceAndStatus();
+
             Notification::make()
                 ->title('Success!')
                 ->body('Payment has been created.')
                 ->success()
                 ->send();
-
-            $invoice->updateBalanceAndStatus();
         } else {
-            
-
+            Notification::make()
+                ->title('Error!')
+                ->body('Invoice not found.')
+                ->danger()
+                ->send();
         }
+
         $this->dispatch('reload');
+        
+        return redirect()->back();
+    }
+
+    public function deleteConfirmation($id, $invoiceNumber){
+        $this->dialog()->confirm([
+            'title'       => 'Are you Sure?',
+            'description' => "Do you want to delete this invoice " . html_entity_decode('<span class="text-red-600 underline">' . $invoiceNumber . '</span>') . " ?",
+            'acceptLabel' => 'Yes, delete it',
+            'method'      => 'deleteInvoice',
+            'icon'        => 'error',
+            'params'      => $id,
+        ]);
+    }
+
+    public function deleteInvoice($id){
+        $invoice = Invoice::with(['client.info', 'payments'])->findOrFail($id);
+
+        $invoice->delete();
+
+        Notification::make()
+            ->title('Success!')
+            ->body('Invoice has been deleted.')
+            ->success()
+            ->send();
         
         return redirect()->back();
     }
@@ -336,7 +390,7 @@ class InvoicePage extends Component
         $this->selectedInvoice = null;
         $this->selectedInvoiceForPaymentId = null;
         $this->clientInfoEdit = null;
-        // $this->services = null;
+        $this->paymentHistory = null;
     }
 
     public function render()

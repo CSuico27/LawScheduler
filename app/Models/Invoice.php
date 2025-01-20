@@ -29,7 +29,7 @@ class Invoice extends Model
         $totalPaid = $this->payments()->sum('amount');
 
         $this->amount_paid = $totalPaid;
-        $this->balance_due = $this->total_amount - $totalPaid;
+        $this->balance_due = max($this->total_amount - $totalPaid, 0);
 
         if ($this->balance_due <= 0) {
             $this->status = 'Paid';

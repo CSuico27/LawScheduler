@@ -156,7 +156,7 @@
                                                     </a>
                                                 @endif
                                                 
-                                                <a class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700" href="#">
+                                                <a onclick="$openModal('paymentHistoryModal')" wire:click="selectInvoice({{ $invoice->id }})" class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700" href="#">
                                                     <span>
                                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
                                                             <path stroke-linecap="round" stroke-linejoin="round" d="m20.25 7.5-.625 10.632a2.25 2.25 0 0 1-2.247 2.118H6.622a2.25 2.25 0 0 1-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125Z" />
@@ -164,7 +164,7 @@
                                                     </span>
                                                     Payment History
                                                 </a>
-                                                <a class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-red-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700" href="#">
+                                                <a wire:click="deleteConfirmation({{ $invoice->id }}, '{{ $invoice->invoice_number }}')" class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-red-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700" href="#">
                                                     <span>
                                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
                                                             <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
@@ -582,6 +582,154 @@
                         @if ($selectedInvoiceForPaymentId)
                             <x-button primary label="Save" wire:click="addPayment({{ $selectedInvoiceForPaymentId->id }})" x-on:click="close"/>
                         @endif
+                    </div>
+                </div>
+            </x-slot>
+        </x-card>
+    </x-modal>
+
+    {{-- PAYMENT HISTORY --}}
+    <x-modal blur name="paymentHistoryModal" align="center" max-width="md">
+        <x-card title="Payment History">
+            <!-- Timeline -->
+            @if ($paymentHistory && $selectedInvoice)
+                {{-- @dump($selectedInvoice->client) --}}
+                @if (count($paymentHistory) > 0)
+                    <div class="max-h-[400px] overflow-y-auto
+                    [&::-webkit-scrollbar]:w-2
+                    [&::-webkit-scrollbar-track]:rounded-full
+                    [&::-webkit-scrollbar-track]:bg-gray-100
+                    [&::-webkit-scrollbar-thumb]:rounded-full
+                    [&::-webkit-scrollbar-thumb]:bg-gray-300
+                    dark:[&::-webkit-scrollbar-track]:bg-neutral-700
+                    dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500">
+                        @foreach($paymentHistory as $date => $histories)
+                            <div>
+                                <!-- Heading -->
+                                <div class="ps-2 my-2 first:mt-0">
+                                    <h3 class="text-xs font-medium uppercase text-gray-500 dark:text-neutral-400">
+                                        {{ \Carbon\Carbon::parse($date)->format('j M, Y') }}
+                                    </h3>
+                                </div>
+                                <!-- End Heading -->
+                                @foreach($histories as $history)
+                                    @if ($history)
+                                        <!-- Item -->
+                                        <div class="flex gap-x-3">
+                                            <!-- Icon -->
+                                            <div class="relative last:after:hidden after:absolute after:top-7 after:bottom-0 after:start-3.5 after:w-px after:-translate-x-[0.5px] after:bg-gray-200 dark:after:bg-neutral-700">
+                                                <div class="relative z-10 size-7 flex justify-center items-center">
+                                                    @if ($selectedInvoice->client)
+                                                        <img class="shrink-0 size-7 rounded-full" src="{{ $selectedInvoice->client->profile_picture }}" alt="Avatar">
+                                                    @endif
+                                                </div>
+                                            </div>
+                                            <!-- End Icon -->
+                                    
+                                            <!-- Right Content -->
+                                            <div class="grow pt-0.5 pb-8">
+                                                <h3 class="flex gap-x-1.5 font-semibold text-gray-800 dark:text-white">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0 1 15.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 0 1 3 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 0 0-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 0 1-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 0 0 3 15h-.75M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm3 0h.008v.008H18V10.5Zm-12 0h.008v.008H6V10.5Z" />
+                                                    </svg>
+                                                    
+                                                    {{ $history['reference_no'] }}
+                                                </h3>
+                                                <p class="mt-1 text-sm text-gray-600 dark:text-neutral-400">
+                                                    @if ($selectedInvoice->client)
+                                                        {{$selectedInvoice->client->name}} paid {{Number::currency($history['amount'], 'PHP')}} on {{ \Carbon\Carbon::parse($history['date_received'])->format('j M, Y') }}
+                                                    @endif
+                                                </p>
+                                                @if ($selectedInvoice->client)
+                                                <button type="button" class="mt-1 -ms-1 p-1 inline-flex items-center gap-x-2 text-xs rounded-lg border border-transparent text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:text-neutral-400 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700">
+                                                
+                                                    <img class="shrink-0 size-4 rounded-full" src="{{ $selectedInvoice->client->profile_picture }}" alt="Avatar">
+                                                        {{ $selectedInvoice->client->name }}
+                                                    </button>
+                                                @endif
+                                            </div>
+                                            <!-- End Right Content -->
+                                        </div>
+                                        <!-- End Item -->
+                                    @endif
+                                @endforeach
+                            </div>
+                        @endforeach
+                        <div>
+                            <!-- Heading -->
+                            <div class="ps-2 my-2 first:mt-0">
+                                <h3 class="text-xs font-medium uppercase text-gray-500 dark:text-neutral-400">
+                                    Status
+                                </h3>
+                            </div>
+                            <!-- End Heading -->
+                            
+                            <!-- Item -->
+                            <div class="flex gap-x-3">
+                                <!-- Icon -->
+                                <div class="relative">
+                                    <div class="relative z-10 size-7 flex justify-center items-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="m9 14.25 6-6m4.5-3.493V21.75l-3.75-1.5-3.75 1.5-3.75-1.5-3.75 1.5V4.757c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0c1.1.128 1.907 1.077 1.907 2.185ZM9.75 9h.008v.008H9.75V9Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm4.125 4.5h.008v.008h-.008V13.5Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
+                                          </svg>                                      
+                                    </div>
+                                </div>
+                                <!-- End Icon -->
+                        
+                                <!-- Right Content -->
+                                <div class="grow pt-0.5 pb-8">
+                                    <h3 class="flex gap-x-1.5 font-semibold text-gray-800 dark:text-white">
+                                        @if ($selectedInvoice->status == 'Paid')
+                                            <span class="py-1 px-2 inline-flex items-center gap-x-1 text-xs font-medium bg-green-100 text-teal-800 rounded-full dark:bg-teal-500/10 dark:text-teal-500">
+                                                <svg class="shrink-0 size-3" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"></path>
+                                                <path d="m9 12 2 2 4-4"></path>
+                                                </svg>
+                                                {{ $selectedInvoice->status }}
+                                            </span>
+                                        @elseif($selectedInvoice->status == 'Partially Paid')
+                                            <span class="py-1 px-2 inline-flex items-center gap-x-1 text-xs font-medium bg-blue-800 text-white rounded-full dark:bg-teal-500/10 dark:text-teal-500">
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375m16.5 0v3.75m-16.5-3.75v3.75m16.5 0v3.75C20.25 16.153 16.556 18 12 18s-8.25-1.847-8.25-4.125v-3.75m16.5 0c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125" />
+                                                </svg>
+                                                
+                                                {{ $selectedInvoice->status }}
+                                            </span>
+                                        @elseif($selectedInvoice->status == 'Overdue')
+                                            <span class="py-[2px] px-2 inline-flex items-center gap-x-1 text-xs font-medium bg-red-100 text-red-800 rounded-full dark:bg-red-500/10 dark:text-red-500">
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                                                </svg>                                          
+                                                {{ $selectedInvoice->status }}
+                                            </span> 
+                                        @else
+                                            <span class="py-1 px-2 inline-flex items-center gap-x-1 text-xs font-medium bg-gray-400 text-white rounded-full dark:bg-teal-500/10 dark:text-teal-500">
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
+                                                </svg>
+                                                {{ $selectedInvoice->status }}
+                                            </span>
+                                        @endif
+                                    </h3>
+                                </div>
+                                <!-- End Right Content -->
+                            </div>
+                            <!-- End Item -->
+                        </div>
+                    </div>
+                @endif
+            @else
+                <div class="w-full h-auto py-8 flex justify-center items-center">
+                    <div class="animate-spin inline-block size-8 border-[3px] border-current border-t-transparent text-blue-600 rounded-full dark:text-blue-500"    role="status" aria-label="loading">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
+            @endif
+            <!-- End Timeline -->
+            <x-slot name="footer">
+                <div class="flex justify-end gap-x-4">
+                    <div class="flex">
+                        <x-button flat label="Cancel" x-on:click="close" wire:click="closeModal" />
                     </div>
                 </div>
             </x-slot>
