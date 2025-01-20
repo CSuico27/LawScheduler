@@ -95,7 +95,7 @@ class RegisterPage extends Component
             $avatarPath = 'avatars/' . $user->id . '.png';
             Storage::disk('public')->put($avatarPath, (string) $avatar);
 
-            $user->profile_picture = $avatarPath;
+            $user->profile_picture = asset('storage/' . $avatarPath);
             $user->save();
     
             $userInfo = UserInfo::create([
@@ -103,7 +103,7 @@ class RegisterPage extends Component
                 'first_name' => $this->firstName,
                 'middle_name' => $this->middleName,
                 'last_name' => $this->lastName,
-                'phone' => $this->phone,
+                'phone' => '+63' . $this->phone,
                 'region' => $this->region,
                 'province' => $this->province,
                 'municipality' => $this->municipality,
