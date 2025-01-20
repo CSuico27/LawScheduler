@@ -2,16 +2,19 @@
 
 namespace App\Livewire\Client;
 
+use App\Mail\AppointmentSuccess;
 use App\Models\AppointmentDetails;
 use App\Models\AppointmentsModel;
 use App\Models\Orders;
 use App\Models\Services;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session as FacadesSession;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 use Stripe\Checkout\Session;
 use Stripe\Stripe;
+use Twilio\Rest\Client;
 
 #[Title('Booking')]
 class Booking extends Component
@@ -149,6 +152,8 @@ class Booking extends Component
             'status' => 'Unclaimed'
         ]);
         
+        Mail::to(request()->user())->send(new AppointmentSuccess($appointDetails));
+        self::sendSMS($appointDetails->id,$this->appointmentDate);
         return redirect($redirect_url);
 
     }
@@ -164,11 +169,25 @@ class Booking extends Component
         }
     }
     
-    
-
     public function getTotalPriceProperty()
     {
         return array_sum($this->servicePrices);
+    }
+
+    public function sendSMS($appointmentNumber, $appointmentDate){
+        $sid = env('TWILIO_SID');
+        $token = env('TWILIO_TOKEN');
+        $twilioNumber = env('TWILIO_FROM');
+
+        $client = new Client($sid, $token);
+        $message = "LawScheduler\nWe received your appointment!\n Date: {$appointmentDate}\nYour appoitnemnt number is: {$appointmentNumber}";
+        $client->messages->create(
+            '+639306558025',
+            [
+                'from' => $twilioNumber,
+                'body' => $message
+            ]
+        ); 
     }
     
     public function render()
