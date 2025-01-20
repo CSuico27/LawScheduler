@@ -60,15 +60,15 @@
         <form >
             <div class="grid grid-cols-12 sm:grid-cols-1 gap-4">
                 <div class="col-span-1 sm:col-span-2">
-                    <x-input label="Title" placeholder="Appointment Title" wire:model="title" />
+                    <x-input label="Title" placeholder="Appointment Title" wire:model="editTitle" />
                 </div>
                 <div class="col-span-1 sm:col-span-2">
-                    <x-textarea label="Description" placeholder="write appointment desctiption" wire:model="description" />
+                    <x-textarea label="Description" placeholder="write appointment desctiption" wire:model="editDescription" />
                 </div>
             </div>
             <x-slot name="footer">
                 <div class="flex justify-between gap-x-4">
-                    <x-button flat negative label="Delete" wire:click="deleteConfirmation({{ $eventID }}, '{{ $title }}')" />
+                    <x-button flat negative label="Delete" wire:click="deleteConfirmation({{ $eventID }}, '{{ $editTitle }}')" />
                     <div class="flex">
                         <x-button flat label="Cancel" x-on:click="close" />
                         <x-button primary label="Save" wire:click="editEvent({{ $eventID }})" />

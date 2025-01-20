@@ -14,9 +14,14 @@ class AppointmentPage extends LivewireCalendar
 {
     use Actions;
 
+    // ADD
     public $title;
     public $description;
     public $date;
+
+    // EDIT
+    public $editTitle;
+    public $editDescription;
     public $eventID;
     public $cardModal;
     public $selectedEvent;
@@ -48,8 +53,8 @@ class AppointmentPage extends LivewireCalendar
         $this->selectedEvent = AppointmentsModel::findOrFail($id);
 
         $this->selectedEvent->update([
-            'title' => $this->title,
-            'description' => $this->description
+            'title' => $this->editTitle,
+            'description' => $this->editDescription
         ]);
 
         $this->dispatch('reload');
@@ -64,12 +69,12 @@ class AppointmentPage extends LivewireCalendar
         if ($event) {
             $eventDate = Carbon::parse($event['date']);
             $this->dispatch('editEvent', [
-                $this->title => $event->title,
-                $this->description => $event->description,
+                $this->editTitle => $event->title,
+                $this->editDescription => $event->description,
                 $this->eventID => $event->id,
             ]);
-            $this->title = $event->title;
-            $this->description = $event->description;
+            $this->editTitle = $event->title;
+            $this->editDescription = $event->description;
             $this->eventID = $event->id;
         }
     }
