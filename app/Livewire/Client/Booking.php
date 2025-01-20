@@ -180,9 +180,9 @@ class Booking extends Component
         $twilioNumber = env('TWILIO_FROM');
 
         $client = new Client($sid, $token);
-        $message = "LawScheduler\nWe received your appointment!\n Date: {$appointmentDate}\nYour appoitnemnt number is: {$appointmentNumber}";
+        $message = "LawScheduler\nWe received your appointment!\n Date: {$appointmentDate}\nYour appointment number is: {$appointmentNumber}";
         $client->messages->create(
-            '+639306558025',
+            '+639633366707',
             [
                 'from' => $twilioNumber,
                 'body' => $message

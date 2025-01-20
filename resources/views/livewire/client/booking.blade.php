@@ -1,4 +1,4 @@
-<div class="w-full h-svh pt-32 flex flex-col items-center">
+<div class="w-full h-svh pt-20 md:pt-32 flex flex-col items-center">
     <div class="w-full md:w-1/2 flex flex-col bg-white border shadow-sm rounded-xl dark:bg-neutral-900 dark:border-neutral-700 dark:shadow-neutral-700/70">
         <div class="bg-gray-100 border-b rounded-t-xl py-3 px-4 md:py-4 md:px-5 dark:bg-neutral-900 dark:border-neutral-700">
             <p class="mt-1 text-sm text-gray-500 dark:text-neutral-500">

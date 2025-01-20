@@ -4,7 +4,7 @@
         <p class="text-base text-center">Welcome Back, Please enter your details.</p>
         <form wire:submit.prevent="login" class="w-full flex flex-col justify-center items-center mt-10">
             <div class="w-full flex flex-col justify-center items-center">
-                <div class="space-y-6 w-[80%] md:w-[70%]">
+                <div class="space-y-6 w-[90%] md:w-[70%]">
                     <div class="relative">
                         <x-input icon="user" label="Email" placeholder="Enter email" wire:model="email" class="py-3"/>
                         {{-- <input type="email" wire:model="email" class="peer py-3 pe-0 ps-8 block w-full bg-transparent border-t-transparent border-b-2 border-x-transparent border-b-gray-200 text-sm focus:border-t-transparent focus:border-x-transparent focus:border-b-blue-500 focus:ring-0 disabled:opacity-50 disabled:pointer-events-none dark:border-b-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600 dark:focus:border-b-neutral-600" placeholder="Enter email"> --}}
@@ -31,7 +31,7 @@
                     </div>
                 </div>
             </div>
-            <button type="submit" class="w-[70%] py-3 px-4 mt-5 inline-flex justify-center items-center gap-x-2 text-base font-medium rounded-lg border border-transparent bg-[#2b2b31] text-white hover:bg-slate-950 disabled:opacity-50 disabled:pointer-events-none">
+            <button type="submit" class="w-[90%] py-3 px-4 mt-5 inline-flex justify-center items-center gap-x-2 text-base font-medium rounded-lg border border-transparent bg-[#2b2b31] text-white hover:bg-slate-950 disabled:opacity-50 disabled:pointer-events-none">
                 Log in
             </button>
         </form>
