@@ -474,7 +474,7 @@
                                         <x-toggle label="Yes" left-label="No" wire:model.live="questionTwo" />
                                     </div>
                                     <div class="flex items-center gap-5">
-                                        <p>2. Is this complaint related to another case before this Office?</p>
+                                        <p>3. Is this complaint related to another case before this Office?</p>
                                         <div class="w-20 border-t-2 border-indigo-500 border-dashed"></div>
                                         <x-toggle label="Yes" left-label="No" wire:model.live="questionThree" />
                                     </div>

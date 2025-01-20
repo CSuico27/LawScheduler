@@ -53,7 +53,7 @@
         
         <div id="navbar-alignment" class="hs-collapse hidden overflow-hidden transition-all duration-300 basis-full grow sm:grow-0 sm:basis-auto sm:block sm:order-2">
           <div class="flex flex-col gap-8 lg:gap-16 mt-5 sm:flex-row sm:items-center sm:mt-0 sm:ps-5">
-            <a class="font-medium {{ request()->is('/') ? 'text-[#d6b685]' : 'text-[#2b2b31]'  }} text-base" href="/" aria-current="page">Home</a>
+            <a class="font-medium text-[#2b2b31] hover:text-[#d6b685] {{ request()->is('/') ? 'text-[#d6b685]' : 'text-[#2b2b31]'  }} text-base" href="/" aria-current="page">Home</a>
             {{-- <div class="hs-dropdown [--strategy:static] sm:[--strategy:fixed] [--adaptive:none] ">
               <button id="hs-mega-menu-basic-dr" type="button" class="flex items-center w-full text-[#2b2b31] hover:text-[#d6b685] font-medium dark:text-neutral-400 dark:hover:text-neutral-500 text-base">
                 Practice Areas
@@ -71,9 +71,9 @@
                 </a>
               </div>
             </div> --}}
-            <a class="font-medium text-[#2b2b31] hover:text-[#d6b685] dark:text-neutral-400 dark:hover:text-neutral-500 text-base" href="#">Services</a>
-            <a class="font-medium text-[#2b2b31] hover:text-[#d6b685] dark:text-neutral-400 dark:hover:text-neutral-500 text-base" href="{{ route('user.about') }}">About Us</a>
-            <a class="font-medium text-[#2b2b31] hover:text-[#d6b685] dark:text-neutral-400 dark:hover:text-neutral-500 text-base" href="#">Contact</a>
+            <a class="font-medium text-[#2b2b31] hover:text-[#d6b685] dark:text-neutral-400 dark:hover:text-neutral-500 text-base {{ request()->routeIs('user.services') ? 'text-[#d6b685]' : 'text-[#2b2b31]' }}" href="{{ route('user.services') }}">Services</a>
+            <a class="font-medium text-[#2b2b31] hover:text-[#d6b685] dark:text-neutral-400 dark:hover:text-neutral-500 text-base {{ request()->routeIs('user.about') ? 'text-[#d6b685]' : 'text-[#2b2b31]' }}" href="{{ route('user.about') }}">About Us</a>
+            <a class="font-medium text-[#2b2b31] hover:text-[#d6b685] dark:text-neutral-400 dark:hover:text-neutral-500 text-base {{ request()->routeIs('user.contact') ? 'text-[#d6b685]' : 'text-[#2b2b31]'}}" href="{{ route('user.contact') }}">Contact</a>
 
             <div class="flex justify-center lg:hidden md:ml-10">
               {{-- <a href="{{ route('login') }}" class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-semibold border border-transparent bg-transparent text-[#2b2b31] hover:bg-slate-300 disabled:opacity-50 disabled:pointer-events-none">

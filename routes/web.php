@@ -13,9 +13,11 @@ use App\Livewire\Client\CancelPage;
 use App\Livewire\Client\InvoicePage as ClientInvoicePage;
 use App\Livewire\Client\SuccessPage;
 use App\Livewire\Client\TermsAndCondition;
+use App\Livewire\ContactPage;
 use App\Livewire\HomePage;
 use App\Livewire\Pages\AppointmentPage;
 use App\Livewire\Pages\InvoicePage;
+use App\Livewire\ServicePage;
 use App\Models\AccountActivation;
 use Illuminate\Support\Facades\Route;
 
@@ -31,6 +33,8 @@ use Illuminate\Support\Facades\Route;
 */
 Route::get('/', HomePage::class)->name('user.home');
 Route::get('/about-us', AboutPage::class)->name('user.about');
+Route::get('/service-page', ServicePage::class)->name('user.services');
+Route::get('/contact-page', ContactPage::class)->name('user.contact');
 Route::get('/invoice/{invoiceId}/pdf', [InvoicePage::class, 'generatePdf'])->name('invoice.pdf');
 
 Route::middleware('guest')->group(function () {

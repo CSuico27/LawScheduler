@@ -1,26 +1,89 @@
-<div class="pt-20 max-w-screen-xl overflow-hidden">
-        <div class="">
-            <div class="w-24 h-24 relative mx-auto">
+<div class="">
+        <header class=" font-medium text-[#2B2B31] text-center py-12">
+            <div class="w-24 h-24 relative mx-auto md:mt-5 -mt-14">
                 <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
                     <path fill="#ECD2AA" d="M24.7,-29.1C29.5,-19.8,29.1,-9.9,28.1,-1.1C27,7.8,25.2,15.6,20.4,25C15.6,34.3,7.8,45.1,-3.5,48.6C-14.9,52.2,-29.8,48.5,-45.1,39.1C-60.4,29.8,-76,14.9,-79,-3C-82,-20.9,-72.4,-41.8,-57.1,-51.1C-41.8,-60.3,-20.9,-57.8,-5.5,-52.3C9.9,-46.8,19.8,-38.3,24.7,-29.1Z" transform="translate(100 100)" />
                   </svg>
-                <img src="{{ asset('images/star2.png')}}" alt="Star" class="absolute top-0 left-0 w-16 h-16 transform translate-x-1/4 -translate-y-1/4 mt-9">
+                <img src="{{ asset('images/star2.png')}}" alt="Star" class="absolute top-0 left-0 w-16 h-16 transform translate-x-1/4 -translate-y-1/4 mt-9 mx-auto">
             </div>
-            <p class="font-serif md:text-5xl text-3xl font-semibold text-center text-[#2B2B31] pt-5">What we do</p>
-            <p class=" px-10 text-1xl text-center md:px-96 font-extralight pt-5">At Dato Law Office, we're dedicated to provide outstanding legal services with honesty, knowledge, and a client-centered approach. We put in endless effort to preserve justice and defend your rights, backed by a group of experienced attorney and dedicated staff members. Your legal matters are handled carefully and precisely at Dato Law Office, guaranteeing that you get the best representation available.  
-            <div class="flex flex-row justify-center ">
-                {{-- <div class="bg-[#8da0c9] absolute mt-20 mr-96 -ml-20">
-                    <img src="{{ asset('images/AttyDatoV.png')}}" alt="" class="w-86 -mt-2 pl-2 pb-2 -mr-20">
-                </div> --}}
-                <div class="relative h-auto mx-auto md:size-96 size-50 mt-11 ml-48 right-20 mb-10">
-                    <img src="{{ asset('images/BGcolor.png') }}" alt="Background" class="absolute inset-0  object-cover mt-5 ">
-                    <img src="{{ asset('images/temporary.png') }}" alt="Foreground" class="relative mx-auto ml-3 mb-3 pt-3 ">
+            <h1 class="text-4xl font-bold mt-3">About Us</h1>
+          </header>
+          <section class="bg-slate-200 text-center py-12 px-4">
+            <h2 class="text-2xl font-bold text-gray-600">Mission and Values</h2>
+            <p class="mt-4 text-gray-700 max-w-2xl mx-auto italic">
+              Justitia Nemini Neganda Est—“Justice is to be denied to no one.”
+              Our mission is to provide equitable, compassionate, and effective legal representation to all clients, regardless of background or circumstance.
+            </p>
+            <div class="flex justify-center space-x-8 mt-8 animate-fadeIn">
+              <div class="transition transform hover:scale-110">
+                <h3 class="text-xl font-bold text-gray-600" >15+</h3>
+                <p class="text-gray-700">Years of Experience</p>
+              </div>
+            </div>
+          </section>
+        <div class="flex flex-row w-full h-full md:mb-10 mb-96" >
+            {{-- <div class="bg-[#8da0c9] absolute mt-20 mr-96 -ml-20">
+                <img src="{{ asset('images/AttyDatoV.png')}}" alt="" class="w-86 -mt-2 pl-2 pb-2 -mr-20">
+            </div> --}}
+            <div class="relative h-auto mx-auto md:size-96 size-50 mt-11 ml-48 right-20 mb-10">
+                <img src="{{ asset('images/BGcolor.png') }}" alt="Background" class="absolute inset-0  object-cover mt-5 ">
+                <img src="{{ asset('images/AttyDatoV.png') }}" alt="Foreground" class="relative mx-auto ml-3 mb-3 pt-3 ">
+            </div>
+            <div class="md:ml-96 md:mt-11 absolute md:left-80 mt-64 md:flex md:flex-col md:justify-items-start md:px-0 px-10 text-center md:text-start ">
+                <p class="md:text-3xl font-normal text-[#2B2B31] dark:text-white">Atty. Vincent Edward Dato </p>
+                <p class="md:text-1xl font-normal text-[#2563EB] mt-2">Roll of Attorneys No. 49642 / Founder of Dato Law Office</p>
+                <p class="text-sm md:text-lg font-extralight md:w-[90%] md:mt-6">A highly accomplished lawyer based in Lucena City, Quezon. He earned his Political Science degree, graduating cum laude from Far Eastern University (FEU), before pursuing his law degree at the FEU Institute of Law. As the founder and managing partner of Dato Law Office, he has built a reputable legal practice known for delivering outstanding legal services and establishing client trust. Throughout his career, he made significant strides in the legal profession and served as the president of the Integrated Bar of the Philippines Quezon chapter, where he led efforts to elevate the standards of legal practice in the region.</p>
+            </div>
+        </div> 
+        <section class="bg-slate-200 text-center py-12 px-4 w-full">
+            <h2 class="text-2xl font-bold text-gray-600">Get Answer To Your Most Asked Questions</h2>
+            <div class="mt-8">
+              <div class="p-4 border rounded-lg shadow-md transition transform hover:scale-100 scale-90">
+                <h3 class="text-xl font-bold text-gray-600">How do I make an appointment online?</h3>
+                <p class="mt-2 text-gray-700">You can book an appointment online through our website.</p>
+              </div>
+              <div class="p-4 border rounded-lg shadow-md transition transform hover:scale-100 scale-90 mt-4">
+                <h3 class="text-xl font-bold text-gray-600">What types of legal matters do you handle?</h3>
+                <p class="mt-2 text-gray-700">We offer a wide range of legal services, including representation in civil, criminal, family law, and corporate law, as well as assistance with notarization, and legal consultations.</p>
+              </div>
+            </div>
+          </section>
+        <footer class="w-full py-14">
+            <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                <div class="max-w-3xl mx-auto">
+                    <a href="https://lawscheduler.online" class="flex justify-center ">
+                        <img src="{{ asset('images/lawSched-logo.png')}}" alt="" class="size-10"><span class="font-medium text-center mt-1 ml-2 text-lg">LawScheduler</span>
+                    </a>
+                        <ul class="text-lg flex items-center justify-center flex-col gap-7 md:flex-row md:gap-12 transition-all duration-500 py-16 mb-10 border-b border-gray-200">
+                            <li><a href="{{ route('user.about')}}" class="text-gray-800 hover:text-gray-900">About Us</a></li>
+                            <li><a href="{{ route('user.services')}}" class=" text-gray-800 hover:text-gray-900">Services</a></li>
+                            <li><a href="{{ route('terms&condition')}}" class=" text-gray-800 hover:text-gray-900">Terms & Condition</a></li>
+                            <li><a href="{{ route('user.contact')}}" class=" text-gray-800 hover:text-gray-900">Contact</a></li>
+                        </ul>
+                        <div class="flex space-x-10 justify-center items-center mb-14">
+                            <a href="#" class="block  text-gray-900 transition-all duration-500 hover:text-[#d6b685] ">
+                              <svg class="w-[1.688rem] h-[1.688rem]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none">
+                                <path d="M11.3214 8.93666L16.4919 3.05566H15.2667L10.7772 8.16205L7.1914 3.05566H3.05566L8.47803 10.7774L3.05566 16.9446H4.28097L9.022 11.552L12.8088 16.9446H16.9446L11.3211 8.93666H11.3214ZM9.64322 10.8455L9.09382 10.0765L4.72246 3.95821H6.60445L10.1322 8.8959L10.6816 9.66481L15.2672 16.083H13.3852L9.64322 10.8458V10.8455Z" fill="currentColor"/>
+                              </svg>
+                            </a>
+                            <a href="#" class="block  text-gray-900 transition-all duration-500 hover:text-[#d6b685] ">
+                                <svg class="w-[1.688rem] h-[1.688rem] " viewBox="0 0 29 29" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M9.76556 14.8811C9.76556 12.3243 11.8389 10.2511 14.3972 10.2511C16.9555 10.2511 19.03 12.3243 19.03 14.8811C19.03 17.4379 16.9555 19.5111 14.3972 19.5111C11.8389 19.5111 9.76556 17.4379 9.76556 14.8811ZM7.26117 14.8811C7.26117 18.82 10.456 22.0129 14.3972 22.0129C18.3385 22.0129 21.5333 18.82 21.5333 14.8811C21.5333 10.9422 18.3385 7.7493 14.3972 7.7493C10.456 7.7493 7.26117 10.9422 7.26117 14.8811ZM20.1481 7.46652C20.148 7.79616 20.2457 8.11843 20.4288 8.39258C20.6119 8.66674 20.8723 8.88046 21.177 9.00673C21.4817 9.133 21.8169 9.16614 22.1405 9.10196C22.464 9.03778 22.7612 8.87916 22.9945 8.64617C23.2278 8.41318 23.3868 8.11627 23.4513 7.79299C23.5157 7.46972 23.4829 7.13459 23.3568 6.83C23.2307 6.5254 23.017 6.26502 22.7428 6.08178C22.4687 5.89853 22.1463 5.80065 21.8164 5.80052H21.8158C21.3737 5.80073 20.9497 5.9763 20.637 6.28867C20.3243 6.60104 20.1485 7.02467 20.1481 7.46652ZM8.78274 26.1863C7.42782 26.1246 6.69138 25.8991 6.20197 25.7085C5.55314 25.4561 5.0902 25.1554 4.60346 24.6696C4.11672 24.1839 3.81543 23.7216 3.56395 23.0732C3.37317 22.5843 3.14748 21.8481 3.08588 20.494C3.01851 19.03 3.00506 18.5902 3.00506 14.8812C3.00506 11.1722 3.01962 10.7336 3.08588 9.26841C3.14759 7.9143 3.37495 7.17952 3.56395 6.68919C3.81654 6.04074 4.11739 5.57808 4.60346 5.09163C5.08953 4.60519 5.55203 4.30408 6.20197 4.05274C6.69116 3.86208 7.42782 3.63652 8.78274 3.57497C10.2476 3.50763 10.6877 3.49419 14.3972 3.49419C18.1068 3.49419 18.5473 3.50874 20.0134 3.57497C21.3683 3.63663 22.1035 3.86385 22.5941 4.05274C23.243 4.30408 23.7059 4.60585 24.1926 5.09163C24.6794 5.57741 24.9796 6.04074 25.2322 6.68919C25.4229 7.17808 25.6486 7.9143 25.7102 9.26841C25.7776 10.7336 25.7911 11.1722 25.7911 14.8812C25.7911 18.5902 25.7776 19.0287 25.7102 20.494C25.6485 21.8481 25.4217 22.5841 25.2322 23.0732C24.9796 23.7216 24.6787 24.1843 24.1926 24.6696C23.7066 25.155 23.243 25.4561 22.5941 25.7085C22.105 25.8992 21.3683 26.1247 20.0134 26.1863C18.5485 26.2536 18.1084 26.2671 14.3972 26.2671C10.686 26.2671 10.2472 26.2536 8.78274 26.1863ZM8.66768 1.0763C7.18823 1.14363 6.17729 1.37808 5.29443 1.72141C4.3801 2.07597 3.60608 2.55163 2.83262 3.32341C2.05916 4.09519 1.58443 4.86997 1.22966 5.78374C0.88612 6.66663 0.651535 7.67641 0.584162 9.15497C0.515676 10.6359 0.5 11.1093 0.5 14.8811C0.5 18.6529 0.515676 19.1263 0.584162 20.6072C0.651535 22.0859 0.88612 23.0955 1.22966 23.9784C1.58443 24.8916 2.05927 25.6673 2.83262 26.4387C3.60597 27.2102 4.3801 27.6852 5.29443 28.0407C6.17896 28.3841 7.18823 28.6185 8.66768 28.6859C10.1502 28.7532 10.6232 28.77 14.3972 28.77C18.1713 28.77 18.645 28.7543 20.1268 28.6859C21.6063 28.6185 22.6166 28.3841 23.5 28.0407C24.4138 27.6852 25.1884 27.2105 25.9618 26.4387C26.7353 25.667 27.209 24.8916 27.5648 23.9784C27.9083 23.0955 28.144 22.0857 28.2103 20.6072C28.2777 19.1252 28.2933 18.6529 28.2933 14.8811C28.2933 11.1093 28.2777 10.6359 28.2103 9.15497C28.1429 7.6763 27.9083 6.66608 27.5648 5.78374C27.209 4.87052 26.7341 4.09641 25.9618 3.32341C25.1896 2.55041 24.4138 2.07597 23.5011 1.72141C22.6166 1.37808 21.6062 1.14252 20.1279 1.0763C18.6461 1.00897 18.1724 0.992188 14.3983 0.992188C10.6243 0.992188 10.1502 1.00785 8.66768 1.0763Z" fill="currentColor"/>
+                                </svg>  
+                            </a>
+                            <a href="#" class="block  text-gray-900 transition-all duration-500 hover:text-[#d6b685]">
+                                <svg class="w-[0.938rem] h-[1.625rem]" viewBox="0 0 15 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M13.7926 14.4697L14.5174 9.86889H10.0528V6.87836C10.0528 5.62033 10.6761 4.39105 12.6692 4.39105H14.7275V0.473179C13.5289 0.282204 12.3177 0.178886 11.1037 0.164062C7.42917 0.164062 5.0302 2.37101 5.0302 6.36077V9.86889H0.957031V14.4697H5.0302V25.5979H10.0528V14.4697H13.7926Z" fill="currentColor"/>
+                                </svg>
+                            </a>
+                            <a href="#" class="block  text-gray-900 transition-all duration-500 hover:text-[#d6b685]">
+                                <svg class="w-[1.875rem] h-[1.375rem]" viewBox="0 0 30 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M26.3106 1.27838C27.5782 1.62071 28.5745 2.61957 28.9113 3.88573C29.524 6.18356 29.524 10.9809 29.524 10.9809C29.524 10.9809 29.524 15.7782 28.9113 18.076C28.5698 19.3469 27.5735 20.3457 26.3106 20.6834C24.0186 21.2977 14.8226 21.2977 14.8226 21.2977C14.8226 21.2977 5.63122 21.2977 3.33456 20.6834C2.06695 20.3411 1.07063 19.3422 0.73385 18.076C0.121094 15.7782 0.121094 10.9809 0.121094 10.9809C0.121094 10.9809 0.121094 6.18356 0.73385 3.88573C1.07531 2.61488 2.07162 1.61602 3.33456 1.27838C5.63122 0.664062 14.8226 0.664062 14.8226 0.664062C14.8226 0.664062 24.0186 0.664062 26.3106 1.27838ZM19.5234 10.9809L11.885 15.403V6.55872L19.5234 10.9809Z" fill="currentColor"/>
+                                </svg>
+                            </a>
+                        </div>
+                        <span class="text-lg text-gray-500 text-center block">©<a href="https://pagedone.io/"> LawScheduler</a> 2024, All rights reserved.</span>
                 </div>
-                <div class="md:ml-96 md:mt-11 absolute md:left-80 mt-80 md:flex md:flex-col md:justify-items-start md:px-0 px-10 text-center md:text-start">
-                    <p class="font-serif md:text-3xl font-semibold  text-[#2B2B31]">Atty. Vincent Edward Dato </p>
-                    <p class=" md:text-1xl font-normal  text-[#2563EB] mt-2">Roll of Attorneys No. 49642 / Founder of Dato Law Office</p>
-                    <p class=" md:text-1xl font-extralight md:w-[70%] md:mt-6">A highly accomplished lawyer based in Lucena City, Quezon. He earned his Political Science degree, graduating cum laude from Far Eastern University (FEU), before pursuing his law degree at the FEU Institute of Law. As the founder and managing partner of Dato Law Office, he has built a reputable legal practice known for delivering outstanding legal services and establishing client trust. Throughout his career, he made significant strides in the legal profession and served as the president of the Integrated Bar of the Philippines (IBP) Quezon chapter, where he led efforts to elevate the standards of legal practice in the region.</p>
-                </div>
-            </div> 
-        </div>
+            </div>
+        </footer>
 </div>

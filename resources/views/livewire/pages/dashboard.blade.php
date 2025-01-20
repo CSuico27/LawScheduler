@@ -253,7 +253,7 @@
          <!-- Timeline -->
          <div>
             <div class="w-full mb-2 py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-yellow-100 text-yellow-800 disabled:opacity-50 disabled:pointer-events-none dark:text-yellow-500 dark:bg-yellow-800/30">
-                Upcoming Hearings
+                Upcoming Cases
             </div>
             @if (count($upcomingHearings) > 0)
                 @foreach($upcomingHearings as $date => $hearings)
