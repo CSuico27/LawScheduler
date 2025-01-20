@@ -158,7 +158,7 @@ class AppointmentPage extends LivewireCalendar
         $twilioNumber = env('TWILIO_FROM');
 
         $client = new Client($sid, $token);
-         $message = "CSWD - City Social Welfare Departmen(Tayabas City) \n
+        $message = "CSWD - City Social Welfare Departmen(Tayabas City) \n
                     There's an upcoming program titled '{$eventTitle}'. This program will be held in Tayabas City Municipal Covered Court \n 
                     Date: {$eventDate} \n
                     

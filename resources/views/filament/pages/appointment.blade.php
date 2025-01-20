@@ -1,5 +1,6 @@
 <x-filament-panels::page>
     @livewireScripts
+    @livewireStyles
     <wireui:scripts />
     @vite(['resources/css/custom.css', 'resources/css/app.css'])
     <livewire:pages.appointment-page 
