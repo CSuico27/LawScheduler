@@ -42,7 +42,7 @@
                 </tr>
             </thead>
             <tbody>
-                @if ($clientList->isEmpty())
+                @if(!$clientList->isEmpty() && count($clientList) < 2)
                     <tr>
                         <td colspan="12">
                             <div class="flex justify-center items-center text-center gap-2 py-10 w-full">
@@ -52,21 +52,26 @@
                     </tr>
                 @else
                     @foreach ($clientList as $client)
-                        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                {{ $client->last_name }}, {{ $client->first_name }}
-                            </th>
-                            <td class="px-6 py-4">
-                                {{ $client->barangay }} {{ $client->municipality }}, {{ $client->province }} - {{ $client->state }}
-                            </td>
-                            <td class="px-6 py-4">
-                                {{ $client->phone }} / {{ $client->email }}
-                            </td>
-                            <td class="px-12 py-4 flex gap-4">
-                                <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline" onclick="$openModal('editClientModal')" wire:click="getSelectedClientId({{ $client->id }})">Edit</a>
-                                <a href="#" class="font-medium text-red-600 dark:text-red-500 hover:underline" wire:click="deleteConfirmation({{ $client->id }}, '{{ $client->last_name }}, {{ $client->first_name }}')">Delete</a>
-                            </td>
-                        </tr>
+                        @if ($client->info)
+                            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    <div class="flex items-center gap-2">
+                                        <img src="{{ asset($client->profile_picture) }}" alt="{{ $client->name }}" class="w-8 h-8">
+                                        {{ $client->name }}
+                                    </div>
+                                </th>
+                                <td class="px-6 py-4">
+                                    {{ $client->info->barangay }} {{ $client->info->municipality }}, {{ $client->info->province }} - {{ $client->info->state }}
+                                </td>
+                                <td class="px-6 py-4">
+                                    {{ $client->info->phone }} / {{ $client->email }}
+                                </td>
+                                <td class="px-12 py-4 flex gap-4">
+                                    <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline" onclick="$openModal('editClientModal')" wire:click="getSelectedClientId({{ $client->id }})">Edit</a>
+                                    <a href="#" class="font-medium text-red-600 dark:text-red-500 hover:underline" wire:click="deleteConfirmation({{ $client->id }}, '{{ $client->info->last_name }}, {{ $client->info->first_name }}')">Delete</a>
+                                </td>
+                            </tr>
+                        @endif
                     @endforeach
                 @endif
             </tbody>            
@@ -279,7 +284,7 @@
                 @if ($editPhone)
                     <x-inputs.maskable
                         label="Phone"
-                        mask="###########"
+                        mask="['+63 ### ### ####']"
                         wire:model="editPhone"
                         placeholder="Phone number"
                     />

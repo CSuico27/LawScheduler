@@ -4,23 +4,32 @@ namespace App\Livewire\Pages;
 
 use App\Models\AppointmentsModel;
 use App\Models\BeneficiariesModel;
-use Illuminate\Support\Carbon;
+use App\Models\User;
+use App\Models\ZoomMeeting;
+use App\Models\ZoomToken;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 use WireUi\Traits\Actions;
 use Omnia\LivewireCalendar\LivewireCalendar;
 use Twilio\Rest\Client;
+use GuzzleHttp\Client as GuzClient;
+
+use Carbon\Carbon;
+use DateTime;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Validator;
 
 class AppointmentPage extends LivewireCalendar
 {
     use Actions;
-
+    
     // ADD
     public $title;
     public $description;
     public $date;
-
+    
     // EDIT
     public $editTitle;
     public $editDescription;
@@ -31,6 +40,22 @@ class AppointmentPage extends LivewireCalendar
 
     public $recipients = [];
 
+    // MEETING
+    public $meetingTopic;
+    public $meetingDescription;
+    public $meetingParticipant;
+    public $meetingDate;
+    public $meetingId;
+    public $meetingStartDate;
+    public $meetingDurationFrom;
+    public $meetingDurationTo;
+    public $meetingJoinUrl;
+    public $meetingHostId;
+    public $meetingPassword;
+    public $meetingAgenda;
+
+
+    
     public function newEvent(){
 
         $this->recipients = BeneficiariesModel::pluck('phone')->toArray();
@@ -121,6 +146,135 @@ class AppointmentPage extends LivewireCalendar
         return AppointmentsModel::whereNotNull('date')->get();
     }
 
+    public function getParticipant(Request $request){
+        $search = $request->input('search');
+        $selected = $request->input('selected');
+
+        if ($search) {
+            $users = User::where('name', 'like', '%' . $search . '%')
+                ->whereNotNull('profile_picture')
+                ->get();
+        } elseif ($selected) {
+
+            $selectedUsers = User::where('id', $selected)
+                ->whereNotNull('profile_picture')
+                ->get();
+
+            return response()->json($selectedUsers);
+            
+        } else {
+            $caseTypes = User::whereNotNull('profile_picture')->get();
+        }
+
+        return response()->json($caseTypes);
+    }
+
+    public function createMeeting()
+    {
+        $this->validate([
+            'meetingTopic' => 'required|string',
+            'meetingStartDate' => 'required|date',
+            'meetingParticipant' => 'required',
+            'meetingDurationFrom' => 'required',
+            'meetingDurationTo' => 'required'
+        ]);
+
+        try {
+            // Generate the Zoom token
+            $zoomTokenResponse = $this->generateToken();
+
+            if ($zoomTokenResponse && isset($zoomTokenResponse['access_token'])) {
+                $zoomToken = $zoomTokenResponse['access_token'];
+
+                $startTime = Carbon::parse($this->meetingStartDate)
+                    ->setTimeFromTimeString($this->meetingDurationFrom)
+                    ->toIso8601String();
+            
+                $endTime = Carbon::parse($this->meetingStartDate)
+                    ->setTimeFromTimeString($this->meetingDurationTo)
+                    ->toIso8601String();
+
+                // Create the Zoom meeting
+                $response = Http::withHeaders([
+                    'Authorization' => 'Bearer ' . $zoomToken,
+                    'Content-Type' => 'application/json',
+                ])->post("https://api.zoom.us/v2/users/me/meetings", [
+                    'topic' => $this->meetingTopic,
+                    'type' => 2, // 2 for scheduled meeting
+                    'start_time' => Carbon::parse($this->meetingStartDate)->format('Y-m-d\TH:i:s\Z'),
+                    'duration' => Carbon::parse($endTime)->diffInMinutes($startTime),
+                    "settings" => [
+                        "host_video" => true,
+                        "join_before_host"=> false,
+                        "mute_upon_entry"=> true
+                    ]
+                ]);
+                
+                // $response = Http::withHeaders([
+                //     'Authorization' => 'Bearer ' . $zoomToken,
+                //     // 'Content-Type' => 'application/x-www-form-urlencoded',
+                // ])->get("https://api.zoom.us/v2/users/me");
+
+                // Check for successful response
+                if ($response->successful()) {
+                    // Handle the successful response
+                    $responseData = $response->json();
+                    
+                    $appointment = AppointmentsModel::create([
+                        'title' => $this->meetingTopic,
+                        'description' => $this->meetingDescription,
+                        'date' => $this->meetingStartDate,
+                        'is_active' => 1
+                    ]);
+                    
+                    ZoomMeeting::create([
+                        'appointment_id' => $appointment->id,
+                        'meeting_id' => strval($responseData['id']),
+                        'topic' => $responseData['topic'],
+                        'start_time' => strtotime($responseData['start_time']),
+                        'duration' => $responseData['duration'],
+                        'timezone' => $responseData['timezone'],
+                        'join_url' => $responseData['join_url'],
+                        'host_id' => $responseData['host_id'],
+                        'password' => $responseData['password'] ?? null,
+                        'agenda' => $this->meetingDescription,
+                    ]);
+
+                    $this->notification()->success(
+                        $title = 'Meeting created',
+                        $description = 'Your meeting was already set!'
+                    );
+
+                    return $response->json();
+                } else {
+                    return response()->json(['error' => 'Failed to create Zoom meeting'], 500);
+                }
+            } else {
+                return response()->json(['error' => 'Failed to generate Zoom token'], 500);
+            }
+
+        } catch (\Throwable $th) {
+            return response()->json(['error' => $th->getMessage()], 500);
+        }
+    }
+    protected function generateToken()
+    {
+        try {
+            $base64String = base64_encode(env('ZOOM_CLIENT_ID') . ':' . env('ZOOM_CLIENT_SECRET'));
+            $accountId = env('ZOOM_ACCOUNT_ID');
+
+            $responseToken = Http::withHeaders([
+                "Content-Type" => "application/x-www-form-urlencoded",
+                "Authorization" => "Basic {$base64String}"
+            ])->post("https://zoom.us/oauth/token?grant_type=account_credentials&account_id={$accountId}");
+            return $responseToken;
+
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
+
+    // SMS
     public function sendSMS($eventTitle, $eventDate, $mobileNumbers){
         $sid = env('TWILIO_SID');
         $token = env('TWILIO_TOKEN');

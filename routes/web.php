@@ -5,6 +5,7 @@ use App\Livewire\Auth\LoginPage;
 use App\Livewire\Auth\RegisterPage;
 use App\Livewire\Auth\ResetPasswordPage;
 use App\Livewire\HomePage;
+use App\Livewire\Pages\AppointmentPage;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -25,6 +26,7 @@ Route::middleware('guest')->group(function () {
     Route::get('/login', LoginPage::class)->name('login');
     Route::get('/forgot', ForgotPasswordPage::class)->name('password.request');
     Route::get('/reset/{token}', ResetPasswordPage::class)->name('password.reset');
+    Route::post('/create-meeting', [AppointmentPage::class, 'createMeeting']);
 });
 
 Route::middleware('auth')->group(function (){

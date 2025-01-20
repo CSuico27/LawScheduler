@@ -13,9 +13,10 @@ return new class extends Migration
     {
         Schema::create('sub_case_types', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('case_type_id')->constrained('case_types');
+            $table->unsignedBigInteger('case_type_id');
             $table->string("name");
             $table->boolean('is_active')->default(true);
+            $table->foreign('case_type_id')->references('id')->on('case_types')->onDelete('cascade');
             $table->timestamps();
         });
     }

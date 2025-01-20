@@ -33,7 +33,7 @@
                     <th scope="col" colspan="4" class="px-6 py-3 text-blue-950">
                         Case Type Name
                     </th>
-                    <th scope="col" colspan="4" class="px-6 py-3 text-blue-950">
+                    <th scope="col" colspan="2" class="px-6 py-3 text-blue-950">
                         Status
                     </th>
                     <th scope="col" class="px-10 py-3 flex justify-end">
@@ -92,9 +92,9 @@
                             wire:model.blur="caseTypeId"
                             placeholder="Ex: Civil Case"
                             :async-data="route('api.case.types')"
-                            :template="[
+                            {{-- :template="[
                                 'name'   => 'user-option',
-                            ]"
+                            ]" --}}
                             option-label="name"
                             option-value="id"
                             option-description="name"

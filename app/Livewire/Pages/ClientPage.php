@@ -8,10 +8,15 @@ use App\Models\PHCities;
 use App\Models\PHProvinces;
 use App\Models\PHRegions;
 use App\Models\TemporaryClient;
+use App\Models\User;
+use App\Models\UserInfo;
 use Illuminate\Http\Request;
 use Livewire\Component;
 use Livewire\WithPagination;
 use WireUi\Traits\Actions;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+use Laravolt\Avatar\Facade as Avatar;
 
 class ClientPage extends Component
 {
@@ -70,55 +75,84 @@ class ClientPage extends Component
             'state' => 'required|max:255',
         ]);
 
-        $client = TemporaryClient::create([
+        $user = User::create([
+            'name' => $this->lastName . ", " . $this->firstName,
+            'email' => $this->email
+        ]);
+
+        // Generate the avatar
+        $avatar = Avatar::create($user->name)->getImageObject()->encode('png');
+        $avatarPath = 'avatars/' . $user->id . '.png';
+        Storage::disk('public')->put($avatarPath, (string) $avatar);
+
+        $user->profile_picture = asset('storage/' . $avatarPath);
+        $user->save();
+
+        $client = UserInfo::create([
+            'user_id' => $user->id,
             'first_name' => $this->firstName,
             'middle_name' => $this->middleName,
             'last_name' => $this->lastName,
-            'phone' => $this->phone,
-            'email' => $this->email,
+            'phone' => '+63' . $this->phone,
             'region' => $this->region,
             'province' => $this->province,
             'municipality' => $this->municipality,
             'barangay' => $this->barangay,
             'state' => $this->state,
         ]);
+        
         $this->dispatch('reload');
         $this->reset();
         return redirect()->back();
     }
 
-    public function getSelectedClientId($id){
+    public function getSelectedClientId($id)
+    {
         $this->selectedClientId = $id;
 
-        if($this->selectedClientId){
-            $this->selectedClient = TemporaryClient::find($id);
+        if ($this->selectedClientId) {
+            $this->selectedClient = User::with('info')->find($id);
         }
 
         if (!$this->selectedClient) {
             $this->selectedClient = null;
         } else {
-            $this->editFirstName = $this->selectedClient->first_name;
-            $this->editMiddleName = $this->selectedClient->middle_name;
-            $this->editLastName = $this->selectedClient->last_name;
-            $this->editPhone = $this->selectedClient->phone;
+            $userInfo = $this->selectedClient->info;
+
+            if ($userInfo) {
+                $this->editFirstName = $userInfo->first_name;
+                $this->editMiddleName = $userInfo->middle_name;
+                $this->editLastName = $userInfo->last_name;
+                $this->editPhone = $userInfo->phone;
+                $this->editRegion = $userInfo->region;
+                $this->editProvince = $userInfo->province;
+                $this->editMunicipality = $userInfo->municipality;
+                $this->editBarangay = $userInfo->barangay;
+                $this->editState = $userInfo->state;
+            }
+
             $this->editEmail = $this->selectedClient->email;
-            $this->editRegion = $this->selectedClient->region;
-            $this->editProvince = $this->selectedClient->province;
-            $this->editMunicipality = $this->selectedClient->municipality;
-            $this->editBarangay = $this->selectedClient->barangay;
-            $this->editState = $this->selectedClient->state;
         }
     }
 
     public function updateClientDetails($id){
-        $this->selectedClient = TemporaryClient::findOrFail($id);
+        $this->selectedClient = User::with('info')->findOrFail($id);
 
         $this->selectedClient->update([
+            'name' => $this->editLastName . ', ' . $this->editFirstName,
+            'email' => $this->editEmail
+        ]);
+
+        $phone = $this->editPhone;
+        if (!Str::startsWith($phone, '+63')) {
+            $phone = '+63' . $phone;
+        }
+
+        $this->selectedClient->info()->update([
             'first_name' => $this->editFirstName,
             'middle_name' => $this->editMiddleName,
             'last_name' => $this->editLastName,
-            'phone' => $this->editPhone,
-            'email' => $this->editEmail,
+            'phone' => $phone,
             'region' => $this->editRegion,
             'province' => $this->editProvince,
             'municipality' => $this->editMunicipality,
@@ -141,7 +175,22 @@ class ClientPage extends Component
     }
 
     public function deleteClient($id){
-        TemporaryClient::find($id)->delete();
+        $user = User::find($id);
+        if ($user) {
+            // Get the avatar path
+            $avatarPath = $user->profile_picture;
+
+            $relativePath = str_replace('/storage/', '', $avatarPath);
+    
+            // Delete the avatar file from the storage if it exists
+            if (Storage::disk('public')->exists($relativePath)) {
+                Storage::disk('public')->delete($relativePath);
+            }
+    
+            // Delete the user record from the database
+            $user->delete();
+        }
+
         return redirect()->back();
     }
 
@@ -226,14 +275,16 @@ class ClientPage extends Component
     {
         
         if ($this->searchTerm) {
-            $searchItems = TemporaryClient::where('last_name', 'like', '%' . $this->searchTerm . '%')
-                ->orWhere('first_name', 'like', '%' . $this->searchTerm . '%')
-                ->latest()
-                ->paginate(8);
+            $searchItems = User::whereHas('info', function ($query) {
+                $query->where('last_name', 'like', '%' . $this->searchTerm . '%')
+                      ->orWhere('first_name', 'like', '%' . $this->searchTerm . '%');
+            })
+            ->latest()
+            ->paginate(8);            
 
             $clientList = $searchItems;
         } else {
-            $clientList = TemporaryClient::latest()->paginate(8);
+            $clientList = User::with('info')->latest()->paginate(8);
         }
 
         return view('livewire.pages.client-page', [

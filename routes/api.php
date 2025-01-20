@@ -3,8 +3,10 @@
 use App\Http\Controllers\Api\BarangaysController;
 use App\Http\Controllers\Api\RegionsController;
 use App\Livewire\Auth\RegisterPage;
+use App\Livewire\Pages\AppointmentPage;
 use App\Livewire\Pages\CaseSubType;
 use App\Livewire\Pages\ClientPage;
+use App\Models\AppointmentsModel;
 use App\Models\PHRegions;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -32,9 +34,18 @@ Route::get('/api/barangays', [RegisterPage::class, 'getBarangays'])->name('api.b
 
 // EDIT CLIENT
 Route::get('/api/client/regions', [ClientPage::class, 'getRegions'])->name('api.regions.client');
-Route::get('/api/client//provinces', [ClientPage::class, 'getProvinces'])->name('api.provinces.client');
-Route::get('/api/client//municipalities', [ClientPage::class, 'getMunicipalities'])->name('api.municipalities.client');
-Route::get('/api/client//barangays', [ClientPage::class, 'getBarangays'])->name('api.barangays.client');
+Route::get('/api/client/provinces', [ClientPage::class, 'getProvinces'])->name('api.provinces.client');
+Route::get('/api/client/municipalities', [ClientPage::class, 'getMunicipalities'])->name('api.municipalities.client');
+Route::get('/api/client/barangays', [ClientPage::class, 'getBarangays'])->name('api.barangays.client');
 
 // CASE SUB TYPE
 Route::get('/api/case/types', [CaseSubType::class, 'getCaseTypes'])->name('api.case.types');
+
+// USER
+Route::get('/api/user/participant', [AppointmentPage::class, 'getParticipant'])->name('api.user.participant');
+Route::post('/law-sched-admin/appointment', [AppointmentPage::class, 'createMeeting']);
+
+// ZOOM
+// Route::get('/zoom/authorize', [AppointmentPage::class, 'redirectToZoom'])->name('zoom.authorize');
+// Route::get('/zoom/callback', [AppointmentPage::class, 'handleZoomCallback']);
+// Route::post('/zoom-meetings', [AppointmentPage::class, 'createMeeting']);

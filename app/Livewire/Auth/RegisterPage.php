@@ -15,6 +15,8 @@ use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Attributes\Url;
 use Livewire\Component;
+use Illuminate\Support\Facades\Storage;
+use Laravolt\Avatar\Facade as Avatar;
 
 #[Title('Register')]
 class RegisterPage extends Component
@@ -87,6 +89,14 @@ class RegisterPage extends Component
                 'email' => $this->email,
                 'password' => Hash::make($this->password)
             ]);
+
+            // Generate the avatar
+            $avatar = Avatar::create($user->name)->getImageObject()->encode('png');
+            $avatarPath = 'avatars/' . $user->id . '.png';
+            Storage::disk('public')->put($avatarPath, (string) $avatar);
+
+            $user->profile_picture = $avatarPath;
+            $user->save();
     
             $userInfo = UserInfo::create([
                 'user_id' => $user->id,
