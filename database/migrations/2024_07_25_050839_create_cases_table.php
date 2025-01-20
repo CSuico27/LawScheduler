@@ -13,30 +13,30 @@ return new class extends Migration
     {
         Schema::create('cases', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('petitioner_id')->constrained('users')->cascadeOnDelete();
-            $table->string('respondents');
-            $table->string('case_no');
-            $table->string('case_type');
-            $table->string('case_sub_type');
+            $table->date('date_received');
+            $table->string('time_received');
+            $table->string('receiving_staff');
+            $table->string('nps_docket_no');
+            $table->string('assign_to');
+            $table->date('date_assigned');
             $table->string('case_stage');
             $table->string('priority_level');
-            $table->string('act');
-            $table->string('filing_number');
-            $table->date('filing_date');
-            $table->string('registration_number');
-            $table->date('registration_date');
-            $table->date('first_hearing_date');
-            $table->string('cnr_number');
-            $table->string('description')->nullable();
-            $table->string('police_station');
-            $table->string('fir_number');
-            $table->date('fir_date');
-            $table->string('court_number');
-            $table->string('court_type');
-            $table->string('court');
-            $table->string('judge_type');
-            $table->string('judge_name');
-            $table->string('remarks')->nullable();
+
+            $table->string('complainants');
+            $table->string('respondents');
+            $table->string('laws_violated');
+            $table->string('witnesses');
+
+            $table->string('date_time_commission');
+            $table->string('place_of_commission');
+
+            $table->boolean('question_one')->default(false);
+            $table->boolean('question_two')->default(false);
+            $table->boolean('question_three')->default(false);
+
+            $table->string('is_no');
+            $table->string('handling_prosecutor');
+            
             $table->timestamps();
         });
     }

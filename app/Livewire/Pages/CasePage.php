@@ -24,59 +24,57 @@ class CasePage extends Component
     // SEARCH
     public $searchTerm;
     
-    // STEP 1
-    public $respondents = [''];
-    public $petitioner;
-    public $caseNumber;
-    public $caseType;
-    public $caseSubType;
+    public $NPSDocketNumber;
+    public $dateReceived;
+    public $timeReceived;
+    public $receivingStaff;
+    public $assignTo;
+    public $dateAssigned;
     public $caseStage;
     public $priorityLevel;
-    public $act;
-    public $filingNumber;
-    public $filingDate;
-    public $registrationNumber;
-    public $registrationDate;
-    public $firstHearingDate;
-    public $CNRNumber;
-    public $description;
-    // STEP 2
-    public $policeStation;
-    public $FIRNumber;
-    public $FIRDate;
-    public $courtNumber;
-    public $courtType;
-    public $court;
-    public $judgeType;
-    public $judgeName;
-    public $remarks;
 
-    public $editRespondents = [''];
-    public $editPetitioner;
-    public $editCaseNumber;
-    public $editCaseType;
-    public $editCaseSubType;
+    public $complainants = [''];
+    public $respondents = [''];
+    public $laws = [''];
+    public $witnesses = [''];
+
+    public $dateTimeCommission;
+    public $placeOfCommission;
+
+    public bool $questionOne;
+    public bool $questionTwo;
+    public bool $questionThree;
+
+    public $ISNo;
+    public $handlingProsecutor;
+    
+    // EDIT
+    public $editNPSDocketNumber;
+    public $editDateReceived;
+    public $editTimeReceived;
+    public $editReceivingStaff;
+    public $editAssignTo;
+    public $editDateAssigned;
     public $editCaseStage;
     public $editPriorityLevel;
-    public $editAct;
-    public $editFilingNumber;
-    public $editFilingDate;
-    public $editRegistrationNumber;
-    public $editRegistrationDate;
-    public $editFirstHearingDate;
-    public $editCNRNumber;
-    public $editDescription;
-    // STEP 2
-    public $editPoliceStation;
-    public $editFIRNumber;
-    public $editFIRDate;
-    public $editCourtNumber;
-    public $editCourtType;
-    public $editCourt;
-    public $editJudgeType;
-    public $editJudgeName;
-    public $editRemarks;
 
+    public $editComplainants = [''];
+    public $editRespondents = [''];
+    public $editLaws = [''];
+    public $editWitnesses = [''];
+    
+    public $editDateTimeCommission;
+    public $editPlaceOfCommission;
+
+    public bool $editQuestionOne;
+    public bool $editQuestionTwo;
+    public bool $editQuestionThree;
+
+    public $editISNo;
+    public $editHandlingProsecutor;
+
+    // STEP 2
+   
     public $newCaseModal;
 
     public int $currentStep;
@@ -100,30 +98,29 @@ class CasePage extends Component
 
     public function createCase(){
         $this->validate([
-            'respondents.*' => 'required|max:255',
-            'petitioner' => 'required|exists:users,id',
-            'caseNumber' => 'required|max:255',
-            'caseType' => 'required|max:255',
-            'caseSubType' => 'required|max:255',
+            'NPSDocketNumber' => 'required|max:255',
+            'dateReceived' => 'required|max:255',
+            'timeReceived' => 'required|max:255',
+            'receivingStaff' => 'required|max:255',
+            'assignTo' => 'required|max:255',
+            'dateAssigned' => 'required|max:255',
             'caseStage' => 'required|max:255',
             'priorityLevel' => 'required|max:255',
-            'act' => 'required|max:255',
-            'filingNumber' => 'required|max:255',
-            'filingDate' => 'required|date',
-            'registrationNumber' => 'required|max:255',
-            'registrationDate' => 'required|date',
-            'firstHearingDate' => 'required|date',
-            'CNRNumber' => 'required|max:255',
-            'description' => 'nullable|max:255',
-            'policeStation' => 'required|max:255',
-            'FIRNumber' => 'required|max:255',
-            'FIRDate' => 'required|date',
-            'courtNumber' => 'required|max:255',
-            'courtType' => 'required|max:255',
-            'court' => 'required|max:255',
-            'judgeType' => 'required|max:255',
-            'judgeName' => 'required|max:255',
-            'remarks' => 'nullable|max:255',
+
+            'complainants.*' => 'required|max:255',
+            'respondents.*' => 'required|max:255',
+            'laws.*' => 'required|max:255',
+            'witnesses.*' => 'required|max:255',
+            
+            'dateTimeCommission' => 'required|max:255',
+            'placeOfCommission' => 'required|max:255',
+
+            'questionOne' => 'required|boolean',
+            'questionTwo' => 'required|boolean',
+            'questionThree' => 'required|boolean',
+
+            'ISNo' => 'required|max:255',
+            'handlingProsecutor' => 'required|max:255',
         ]);
 
         $parsedRespondents = array_map(function($respondent) {
@@ -136,31 +133,40 @@ class CasePage extends Component
             ];
         }, $this->respondents);
 
+        $parsedWitnesses = array_map(function($witness) {
+            $parts = explode(',', $witness);
+            return [
+                'name' => trim($parts[0] ?? ''),
+                'sex' => trim($parts[1] ?? ''),
+                'age' => trim($parts[2] ?? ''),
+                'address' => trim($parts[3] ?? ''),
+            ];
+        }, $this->witnesses);
+
         $case = Cases::create([
-            'petitioner_id' => $this->petitioner,
-            'respondents' => json_encode($parsedRespondents),
-            'case_no' => $this->caseNumber,
-            'case_type' => $this->caseType,
-            'case_sub_type' => $this->caseSubType,
+            'nps_docket_no' => $this->NPSDocketNumber,
+            'date_received' => $this->dateReceived,
+            'time_received' => $this->timeReceived,
+            'receiving_staff' => $this->receivingStaff,
+            'assign_to' => $this->assignTo,
+            'date_assigned' => $this->dateAssigned,
             'case_stage' => $this->caseStage,
             'priority_level' => $this->priorityLevel,
-            'act' => $this->act,
-            'filing_number' => $this->filingNumber,
-            'filing_date' => $this->filingDate,
-            'registration_number' => $this->registrationNumber,
-            'registration_date' => $this->registrationDate,
-            'first_hearing_date' => $this->firstHearingDate,
-            'cnr_number' => $this->CNRNumber,
-            'description' => $this->description,
-            'police_station' => $this->policeStation,
-            'fir_number' => $this->FIRNumber,
-            'fir_date' => $this->FIRDate,
-            'court_number' => $this->courtNumber,
-            'court_type' => $this->courtType,
-            'court' => $this->court,
-            'judge_type' => $this->judgeType,
-            'judge_name' => $this->judgeName,
-            'remarks' => $this->remarks
+
+            'complainants' => json_encode($this->complainants),
+            'respondents' => json_encode($parsedRespondents),
+            'laws_violated' => json_encode($this->laws),
+            'witnesses' => json_encode($parsedWitnesses),
+            
+            'date_time_commission' => $this->dateTimeCommission,
+            'place_of_commission' => $this->placeOfCommission,
+
+            'question_one' => $this->questionOne,
+            'question_two' => $this->questionTwo,
+            'question_three' => $this->questionThree,
+
+            'is_no' => $this->ISNo,
+            'handling_prosecutor' => $this->handlingProsecutor
         ]);
 
         Notification::make()
@@ -188,30 +194,29 @@ class CasePage extends Component
             $caseInfo = $this->selectedCase;
             
             if ($caseInfo) {
-                $this->editPetitioner = $caseInfo->petitioner_id;
-                $this->editRespondents = RespondentHelper::formatRespondents(json_decode($caseInfo->respondents, true));
-                $this->editCaseNumber = $caseInfo->case_no;
-                $this->editCaseType = $caseInfo->case_type;
-                $this->editCaseSubType = $caseInfo->case_sub_type;
+                $this->editNPSDocketNumber = $caseInfo->nps_docket_no;
+                $this->editDateReceived = $caseInfo->date_received;
+                $this->editTimeReceived = $caseInfo->time_received;
+                $this->editReceivingStaff = $caseInfo->receiving_staff;
+                $this->editAssignTo = $caseInfo->assign_to;
+                $this->editDateAssigned = $caseInfo->date_assigned;
                 $this->editCaseStage = $caseInfo->case_stage;
                 $this->editPriorityLevel = $caseInfo->priority_level;
-                $this->editAct = $caseInfo->act;
-                $this->editFilingNumber = $caseInfo->filing_number;
-                $this->editFilingDate = $caseInfo->filing_date;
-                $this->editRegistrationNumber = $caseInfo->registration_number;
-                $this->editRegistrationDate = $caseInfo->registration_date;
-                $this->editFirstHearingDate = $caseInfo->first_hearing_date;
-                $this->editCNRNumber = $caseInfo->cnr_number;
-                $this->editDescription = $caseInfo->description;
-                $this->editPoliceStation = $caseInfo->police_station;
-                $this->editFIRNumber = $caseInfo->fir_number;
-                $this->editFIRDate = $caseInfo->fir_date;
-                $this->editCourtNumber = $caseInfo->court_number;
-                $this->editCourtType = $caseInfo->court_type;
-                $this->editCourt = $caseInfo->court;
-                $this->editJudgeType = $caseInfo->judge_type;
-                $this->editJudgeName = $caseInfo->judge_name;
-                $this->editRemarks = $caseInfo->remarks;
+                
+                $this->editComplainants = json_decode($caseInfo->complainants, true);
+                $this->editRespondents = RespondentHelper::formatRespondents(json_decode($caseInfo->respondents, true));
+                $this->editLaws = json_decode($caseInfo->laws_violated, true);
+                $this->editWitnesses = RespondentHelper::formatRespondents(json_decode($caseInfo->witnesses, true));
+                
+                $this->editDateTimeCommission = $caseInfo->date_time_commission;
+                $this->editPlaceOfCommission = $caseInfo->place_of_commission;
+
+                $this->editQuestionOne = $caseInfo->question_one;
+                $this->editQuestionTwo = $caseInfo->question_two;
+                $this->editQuestionThree = $caseInfo->question_three;
+
+                $this->editISNo = $caseInfo->is_no;
+                $this->editHandlingProsecutor = $caseInfo->handling_prosecutor;
             }
         }
     }
@@ -229,31 +234,40 @@ class CasePage extends Component
             ];
         }, $this->editRespondents);
 
+        $parsedWitnesses = array_map(function($witness) {
+            $parts = explode(',', $witness);
+            return [
+                'name' => trim($parts[0] ?? ''),
+                'sex' => trim($parts[1] ?? ''),
+                'age' => trim($parts[2] ?? ''),
+                'address' => trim($parts[3] ?? ''),
+            ];
+        }, $this->editWitnesses);
+
         $this->selectedCase->update([
-            'petitioner_id' => $this->editPetitioner,
-            'respondents' => json_encode($parsedRespondents),
-            'case_no' => $this->editCaseNumber,
-            'case_type' => $this->editCaseType,
-            'case_sub_type' => $this->editCaseSubType,
+            'nps_docket_no' => $this->editNPSDocketNumber,
+            'date_received' => $this->editDateReceived,
+            'time_received' => $this->editTimeReceived,
+            'receiving_staff' => $this->editReceivingStaff,
+            'assign_to' => $this->editAssignTo,
+            'date_assigned' => $this->editDateAssigned,
             'case_stage' => $this->editCaseStage,
             'priority_level' => $this->editPriorityLevel,
-            'act' => $this->editAct,
-            'filing_number' => $this->editFilingNumber,
-            'filing_date' => $this->editFilingDate,
-            'registration_number' => $this->editRegistrationNumber,
-            'registration_date' => $this->editRegistrationDate,
-            'first_hearing_date' => $this->editFirstHearingDate,
-            'cnr_number' => $this->editCNRNumber,
-            'description' => $this->editDescription,
-            'police_station' => $this->editPoliceStation,
-            'fir_number' => $this->editFIRNumber,
-            'fir_date' => $this->editFIRDate,
-            'court_number' => $this->editCourtNumber,
-            'court_type' => $this->editCourtType,
-            'court' => $this->editCourt,
-            'judge_type' => $this->editJudgeType,
-            'judge_name' => $this->editJudgeName,
-            'remarks' => $this->editRemarks
+
+            'complainants' => json_encode($this->editComplainants),
+            'respondents' => json_encode($parsedRespondents),
+            'laws_violated' => json_encode($this->editLaws),
+            'witnesses' => json_encode($parsedWitnesses),
+            
+            'date_time_commission' => $this->editDateTimeCommission,
+            'place_of_commission' => $this->editPlaceOfCommission,
+
+            'question_one' => $this->editQuestionOne,
+            'question_two' => $this->editQuestionTwo,
+            'question_three' => $this->editQuestionThree,
+
+            'is_no' => $this->editISNo,
+            'handling_prosecutor' => $this->editHandlingProsecutor
         ]);
 
         Notification::make()
@@ -287,6 +301,24 @@ class CasePage extends Component
         $this->editRespondents[] = '';  
     }
 
+    public function addComplainant()
+    {
+        $this->complainants[] = '';  
+        $this->editComplainants[] = '';  
+    }
+
+    public function addWitness()
+    {
+        $this->witnesses[] = '';  
+        $this->editWitnesses[] = '';  
+    }
+
+    public function addLaw()
+    {
+        $this->laws[] = '';  
+        $this->editLaws[] = '';  
+    }
+
     public function removeRespondent($index)
     {
         if (count($this->respondents) > 1) {
@@ -297,6 +329,45 @@ class CasePage extends Component
         if (count($this->editRespondents) > 1) {
             unset($this->editRespondents[$index]);
             $this->editRespondents = array_values($this->editRespondents);
+        }
+    }
+
+    public function removeComplainant($index)
+    {
+        if (count($this->complainants) > 1) {
+            unset($this->complainants[$index]);
+            $this->complainants = array_values($this->complainants);
+        }
+
+        if (count($this->editComplainants) > 1) {
+            unset($this->editComplainants[$index]);
+            $this->editComplainants = array_values($this->editComplainants);
+        }
+    }
+
+    public function removeWitness($index)
+    {
+        if (count($this->witnesses) > 1) {
+            unset($this->witnesses[$index]);
+            $this->witnesses = array_values($this->witnesses);
+        }
+
+        if (count($this->editWitnesses) > 1) {
+            unset($this->editWitnesses[$index]);
+            $this->editWitnesses = array_values($this->editWitnesses);
+        }
+    }
+
+    public function removeLaw($index)
+    {
+        if (count($this->laws) > 1) {
+            unset($this->laws[$index]);
+            $this->laws = array_values($this->laws);
+        }
+
+        if (count($this->editLaws) > 1) {
+            unset($this->editLaws[$index]);
+            $this->editLaws = array_values($this->editLaws);
         }
     }
 
@@ -330,24 +401,40 @@ class CasePage extends Component
     public function render()
     {
         if ($this->searchTerm) {
-            $searchItems = Cases::where('case_no', 'like', '%' . $this->searchTerm . '%')
-            ->with('user')
-            ->with('caseType')
+            $searchItems = Cases::where('nps_docket_no', 'like', '%' . $this->searchTerm . '%')
             ->with('caseSubType')
             ->with('caseStage')
-            ->with('courtName')
             ->latest()
             ->paginate(5);
+            
+            foreach($searchItems as $case){
+                $complainantIds = json_decode($case->complainants);
+                $complainants = User::with('info')->whereIn('id', $complainantIds)->get();
+                $case->complainantDetails = $complainants;
+            }
+            foreach($searchItems as $case){
+                $lawsViolatedIds = json_decode($case->laws_violated);
+                $laws = SubCaseType::whereIn('id', $lawsViolatedIds)->get();
+                $case->lawsViolated = $laws;
+            }
 
             $caseList = $searchItems;
         } else {
-            $caseList = Cases::with('user')
-            ->with('caseType')
-            ->with('caseSubType')
-            ->with('caseStage')
-            ->with('courtName')
-            ->latest()
-            ->paginate(5);
+            $caseList = Cases::with('caseSubType')
+                ->with('caseStage')
+                ->latest()
+                ->paginate(5);
+
+            foreach($caseList as $case){
+                $complainantIds = json_decode($case->complainants);
+                $complainants = User::with('info')->whereIn('id', $complainantIds)->get();
+                $case->complainantDetails = $complainants;
+            }
+            foreach($caseList as $case){
+                $lawsViolatedIds = json_decode($case->laws_violated);
+                $laws = SubCaseType::whereIn('id', $lawsViolatedIds)->get();
+                $case->lawsViolated = $laws;
+            }
         }
 
         return view('livewire.pages.case-page', [

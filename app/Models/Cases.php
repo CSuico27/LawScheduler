@@ -12,41 +12,36 @@ class Cases extends Model
     use HasFactory;
 
     protected $fillable = [
-        'petitioner_id',
-        'respondents',
-        'case_no',
-        'case_type',
-        'case_sub_type',
+        'date_received',
+        'time_received',
+        'receiving_staff',
+        'nps_docket_no',
+        'assign_to',
+        'date_assigned',
         'case_stage',
         'priority_level',
-        'act',
-        'filing_number',
-        'filing_date',
-        'registration_number',
-        'registration_date',
-        'first_hearing_date',
-        'cnr_number',
-        'description',
-        'police_station',
-        'fir_number',
-        'fir_date',
-        'court_number',
-        'court_type',
-        'court',
-        'judge_type',
-        'judge_name',
-        'remarks',
+        'complainants',
+        'respondents',
+        'laws_violated',
+        'witnesses',
+        'date_time_commission',
+        'place_of_commission',
+        'question_one',
+        'question_two',
+        'question_three',
+        'is_no',
+        'handling_prosecutor'
     ];
 
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'petitioner_id');
+        return $this->belongsTo(User::class);
     }
 
-    public function caseType(): BelongsTo
-    {
-        return $this->belongsTo(CaseType::class, 'case_type');
-    }
+    // public function caseType(): BelongsTo
+    // {
+    //     return $this->belongsTo(CaseType::class, 'case_type');
+    // }
 
     public function caseSubType(): BelongsTo
     {

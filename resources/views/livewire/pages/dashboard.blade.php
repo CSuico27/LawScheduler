@@ -116,7 +116,8 @@
                 <img src="{{ asset('/images/zoom-logo.webp') }}" alt="zoom" class="w-8 h-8">
                 Upcoming Zoom Meetings
             </div>
-            @if ($upcomingZoomMeetings)
+            
+            @if (count($upcomingZoomMeetings) > 0)
                 @foreach($upcomingZoomMeetings as $date => $meetings)
                     <!-- Heading -->
                     <div class="ps-2 my-2 first:mt-0">
@@ -182,7 +183,7 @@
             <div class="w-full mb-2 py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-teal-100 text-teal-800 disabled:opacity-50 disabled:pointer-events-none dark:text-teal-500 dark:bg-teal-800/30">
                 Upcoming Appointments
             </div>
-            @if ($upcomingAppointments)
+            @if (count($upcomingAppointments) > 0)
                 @foreach($upcomingAppointments as $date => $appointments)
                     <!-- Heading -->
                     <div class="ps-2 my-2 first:mt-0">
@@ -254,7 +255,7 @@
             <div class="w-full mb-2 py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-yellow-100 text-yellow-800 disabled:opacity-50 disabled:pointer-events-none dark:text-yellow-500 dark:bg-yellow-800/30">
                 Upcoming Hearings
             </div>
-            @if ($upcomingHearings)
+            @if (count($upcomingHearings) > 0)
                 @foreach($upcomingHearings as $date => $hearings)
                     <!-- Heading -->
                     <div class="ps-2 my-2 first:mt-0">
