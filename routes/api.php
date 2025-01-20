@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\ApiController;
+use App\Http\Controllers\Api\AutomaticEmailController;
 use App\Http\Controllers\Api\BarangaysController;
 use App\Http\Controllers\Api\RegionsController;
 use App\Livewire\Auth\RegisterPage;
@@ -70,3 +71,8 @@ Route::get('/api/services', [ApiController::class, 'getServices'])->name('api.se
 Route::get('/location/province/{regionCode}', [ApiController::class, 'getProvincesByRegion'])->name('location.province');
 Route::get('/location/municipalities/{provinceCode}', [ApiController::class, 'getMunicipalitiesByProvince'])->name('location.municipality');
 Route::get('/location/barangay/{municipalityCode}', [ApiController::class, 'getBarangaysByMunicipality'])->name('location.barangay');
+
+Route::get('/appointments', [AutomaticEmailController::class, 'index']);
+Route::get('/cases', [AutomaticEmailController::class, 'getCaseDetails']);
+Route::post('/send-appointment-reminder', [AutomaticEmailController::class, 'sendAppointmentReminder']);
+Route::post('/send-case-reminder', [AutomaticEmailController::class, 'sendCaseReminder']);
