@@ -1,6 +1,7 @@
 <?php
 
 use App\Livewire\Auth\AccountActivationPage;
+use App\Livewire\Auth\AccountVerification;
 use App\Livewire\Auth\ForgotPasswordPage;
 use App\Livewire\Auth\LoginPage;
 use App\Livewire\Auth\RegisterPage;
@@ -39,7 +40,7 @@ Route::middleware('guest')->group(function () {
     Route::get('/reset/{token}', ResetPasswordPage::class)->name('password.reset');
     Route::post('/create-meeting', [AppointmentPage::class, 'createMeeting']);
     Route::get('/activate-account/{token}', AccountActivationPage::class)->name('activate-account');
-
+    Route::get('/account-verification/{user_id}', AccountVerification::class)->name('account.verify');
     
 });
 

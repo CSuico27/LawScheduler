@@ -3,74 +3,6 @@
         <h1 class="md:text-3xl text-2xl font-medium text-center">Create your account</h1>
         <p class="text-center">Sign up now and get an appointment.</p>
         <div class="w-full flex flex-col justify-center items-center">
-            {{-- <div class="space-y-6 w-[50%]">
-                <div class="relative">
-                    <input type="email" class="peer py-3 pe-0 ps-8 block w-full bg-transparent border-t-transparent border-b-2 border-x-transparent border-b-gray-200 text-sm focus:border-t-transparent focus:border-x-transparent focus:border-b-blue-500 focus:ring-0 disabled:opacity-50 disabled:pointer-events-none dark:border-b-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600 dark:focus:border-b-neutral-600" placeholder="Enter email">
-                    <div class="absolute inset-y-0 start-0 flex items-center pointer-events-none ps-2 peer-disabled:opacity-50 peer-disabled:pointer-events-none">
-                    <svg class="flex-shrink-0 size-4 text-gray-500 dark:text-neutral-500" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
-                        <circle cx="12" cy="7" r="4"></circle>
-                    </svg>
-                    </div>
-                </div>
-                
-                <div class="relative">
-                    <input type="password" class="peer py-3 pe-0 ps-8 block w-full bg-transparent border-t-transparent border-b-2 border-x-transparent border-b-gray-200 text-sm focus:border-t-transparent focus:border-x-transparent focus:border-b-blue-500 focus:ring-0 disabled:opacity-50 disabled:pointer-events-none dark:border-b-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600 dark:focus:border-b-neutral-600" placeholder="Enter password">
-                    <div class="absolute inset-y-0 start-0 flex items-center pointer-events-none ps-2 peer-disabled:opacity-50 peer-disabled:pointer-events-none">
-                    <svg class="flex-shrink-0 size-4 text-gray-500 dark:text-neutral-500" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M2 18v3c0 .6.4 1 1 1h4v-3h3v-3h2l1.4-1.4a6.5 6.5 0 1 0-4-4Z"></path>
-                        <circle cx="16.5" cy="7.5" r=".5"></circle>
-                    </svg>
-                    </div>
-                </div>
-                <div class="flex justify-end">
-                    <a href="#" class="underline">Forgot password</a>
-                </div>
-            </div> --}}
-            {{-- <div class="w-[80%] flex gap-2">
-                <div class="w-full space-y-3">
-                    <div>
-                        <label for="hs-trailing-icon" class="block text-sm font-medium mb-2 dark:text-white"></label>
-                        <div class="relative">
-                            <x-input label="First name" placeholder="ex: John" class="py-3 -mt-1" />
-                        </div>
-                    </div>
-                </div>
-                <div class="w-full space-y-3">
-                    <div>
-                        <label for="hs-trailing-icon" class="block text-sm font-medium mb-2 dark:text-white"></label>
-                        <div class="relative">
-                            <x-input label="Middle name" placeholder="ex: Kramer" class="py-3 -mt-1" />
-                        </div>
-                    </div>
-                </div>
-                <div class="w-full space-y-3">
-                    <div>
-                        <label for="hs-trailing-icon" class="block text-sm font-medium mb-2 dark:text-white"></label>
-                        <div class="relative">
-                            <x-input label="Last name" placeholder="ex: Doe" class="py-3 -mt-1" />
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="w-[80%] flex gap-2 mt-5">
-                <div class="w-full space-y-3">
-                    <div>
-                        <label for="hs-trailing-icon" class="block text-sm font-medium mb-2 dark:text-white"></label>
-                        <div class="relative">
-                            <x-input label="Email" placeholder="ex: johndoe@gmai.com" class="py-3 -mt-1" />
-                        </div>
-                    </div>
-                </div>
-                <div class="w-full space-y-3">
-                    <div>
-                        <label for="hs-trailing-icon" class="block text-sm font-medium mb-2 dark:text-white"></label>
-                        <div class="relative">
-                            <x-inputs.phone label="Mobile No." placeholder="+63 912 345 6789" mask="['+63 ### ### ####']" class="py-3 -mt-1" />
-                        </div>
-                    </div>
-                </div>
-            </div> --}}
             <form wire:submit.prevent="register" class="w-full flex justify-center">
                 <div  class="w-full md:w-[90%]">
                     <ul class="relative flex flex-row gap-x-2 mb-3 md:mb-2">
@@ -99,6 +31,21 @@
                             </span>
                             <span class="ms-2 text-sm font-medium text-gray-800 dark:text-neutral-200">
                                 Create Account
+                            </span>
+                            </span>
+                            <div class="w-full h-px flex-1 bg-gray-200 group-last:hidden hs-stepper-success:bg-blue-600 hs-stepper-completed:bg-teal-600 dark:bg-neutral-700 dark:hs-stepper-success:bg-blue-600 dark:hs-stepper-completed:bg-teal-600"></div>
+                        </li>
+
+                        <li class="flex items-center gap-x-2 shrink basis-0 flex-1 group">
+                            <span class="min-w-7 min-h-7 group inline-flex items-center text-xs align-middle">
+                            <span class="size-7 flex justify-center items-center flex-shrink-0 font-medium text-gray-800 rounded-full {{ $currentStep == 2 || $isFinishedStepOne == true ? 'bg-blue-600 text-white' : 'text-gray-800'}}">
+                                <span class="hs-stepper-success:hidden hs-stepper-completed:hidden">3</span>
+                                <svg class="hidden flex-shrink-0 size-3 hs-stepper-success:block" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                            </span>
+                            <span class="ms-2 text-sm font-medium text-gray-800 dark:text-neutral-200">
+                                Verify Account
                             </span>
                             </span>
                             <div class="w-full h-px flex-1 bg-gray-200 group-last:hidden hs-stepper-success:bg-blue-600 hs-stepper-completed:bg-teal-600 dark:bg-neutral-700 dark:hs-stepper-success:bg-blue-600 dark:hs-stepper-completed:bg-teal-600"></div>
@@ -292,7 +239,8 @@
                                 </div>
                             </div>
                         </div>
-                        
+                    @elseif($currentStep == 3)
+                    
                     @endif
                     <div class="flex">
                         @if ($currentStep > 1)

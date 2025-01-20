@@ -2,6 +2,8 @@
 
 namespace App\Livewire\Auth;
 
+use App\Mail\SendOtp;
+use App\Mail\SendOtpMail;
 use App\Models\PHBarangays;
 use App\Models\PHCities;
 use App\Models\PHProvinces;
@@ -11,6 +13,7 @@ use App\Models\UserInfo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Attributes\Url;
@@ -70,7 +73,8 @@ class RegisterPage extends Component
         }
     }
 
-    public function register(){
+    public function register()
+    {
         $this->validate([
             'firstName' => 'required|max:255',
             'lastName' => 'required|max:255',
@@ -82,16 +86,20 @@ class RegisterPage extends Component
             'municipality' => 'required|max:255',
             'barangay' => 'required|max:255',
             'state' => 'required|max:255',
-            'password' => 'required|min:8|max:255', 
+            'password' => 'required|min:8|max:255',
             'confirmPassword' => 'required|same:password|min:8|max:255',
         ]);
 
         try {
+            $otp = mt_rand(100000, 999999);  // Generate a 6-digit OTP
+
             $user = User::create([
                 'name' => $this->lastName . ", " . $this->firstName,
                 'email' => $this->email,
                 'role' => 'user',
-                'password' => Hash::make($this->password)
+                'password' => Hash::make($this->password),
+                'otp' => $otp,
+                'is_verified' => false
             ]);
 
             // Generate the avatar
@@ -101,7 +109,8 @@ class RegisterPage extends Component
 
             $user->profile_picture = asset('storage/' . $avatarPath);
             $user->save();
-    
+
+            // Create UserInfo record
             $userInfo = UserInfo::create([
                 'user_id' => $user->id,
                 'first_name' => $this->firstName,
@@ -114,14 +123,19 @@ class RegisterPage extends Component
                 'barangay' => $this->barangay,
                 'state' => $this->state,
             ]);
-    
-            auth()->login($user);
-    
-            return redirect()->intended();
+
+            // Send OTP email
+            Mail::to($user->email)->send(new SendOtp($user->otp));
+
+            // Redirect to OTP verification page
+            return redirect()->route('account.verify', ['user_id' => $user->id]);
+            // return redirect()->route('verify.otp')->with('userId', $user->id);
+
         } catch (\Exception $e) {
             Log::error('Error registering user: ' . $e->getMessage());
         }
     }
+
 
     public function updatedRegion($value)
     {
