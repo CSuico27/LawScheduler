@@ -52,7 +52,6 @@ class BeneficiaryPage extends Component
             $this->beneficiariesList = BeneficiariesModel::where('last_name', 'like', '%' . $this->searchTerm . '%')
                 ->orWhere('first_name', 'like', '%' . $this->searchTerm . '%')
                 ->get();
-            dd($this->beneficiariesList);
         } 
     }
 
@@ -157,6 +156,7 @@ class BeneficiaryPage extends Component
     public function render()
     {
         $this->beneficiariesList = BeneficiariesModel::all();
+        $this->searchBeneficiary();
         return view('livewire.pages.beneficiary-page');
     }
 }
