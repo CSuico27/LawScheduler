@@ -5,6 +5,8 @@ namespace App\Livewire\Pages;
 use App\Models\AppointmentDetails;
 use App\Models\AppointmentsModel;
 use App\Models\BeneficiariesModel;
+use App\Models\Orders;
+use App\Models\Services;
 use Filament\Notifications\Notification;
 use App\Models\User;
 use App\Models\ZoomMeeting;
@@ -33,14 +35,24 @@ class AppointmentPage extends LivewireCalendar
     public $description;
     public $date;
     public $time;
+    public $payment_method;
+    public $payment_status;
+    public $grand_total;
+    public $status;
+    public $services = [''];
     
     // EDIT
     public $editTitle;
     public $editDescription;
     public bool $isActive;
+    public $editPayment_method;
+    public $editPayment_status;
+    public $editGrand_total;
+    public $editStatus;
     public $eventID;
     public $cardModal;
     public $selectedEvent;
+    public $editServices = [''];
 
     public $recipients = [];
 
@@ -58,6 +70,8 @@ class AppointmentPage extends LivewireCalendar
     public $meetingPassword;
     public $meetingAgenda;
 
+    public $servicePrices = [];
+
     // Click Event
     public $selectedMeetingId;
     public $meetingFullDetails;
@@ -68,7 +82,7 @@ class AppointmentPage extends LivewireCalendar
         if ($this->selectedMeetingId) {
             $this->meetingFullDetails = AppointmentsModel::where('id', $this->selectedMeetingId)
                 ->with('zoomMeet')
-                ->with('appointmentDetails')
+                ->with('appointmentDetails.orders')
                 ->get();
     
             foreach ($this->meetingFullDetails as $detail) {
@@ -82,9 +96,48 @@ class AppointmentPage extends LivewireCalendar
                     $detail->participantsDetails = $participants;
                 }
             }
+        
         }
     }
 
+    public function addService()
+    {
+        $this->services[] = '';  
+        $this->editServices[] = '';  
+    }
+
+    public function removeService($index)
+    {
+        if (count($this->services) > 1) {
+            unset($this->services[$index]);
+            unset($this->servicePrices[$index]);
+            $this->services = array_values($this->services);
+            $this->servicePrices = array_values($this->servicePrices);
+        }
+
+        if (count($this->editServices) > 1) {
+            unset($this->editServices[$index]);
+            $this->editServices = array_values($this->editServices);
+        }
+    }
+
+    public function updatedServices($value, $index)
+    {
+        $service = Services::find($value);
+    
+        if ($service) {
+            $this->servicePrices[$index] = $service->price;
+        } else {
+            $this->servicePrices[$index] = 0;
+        }
+    }
+    
+    
+
+    public function getTotalPriceProperty()
+    {
+        return array_sum($this->servicePrices);
+    }
 
     public function resetModal(){
         $this->reset();
@@ -100,6 +153,8 @@ class AppointmentPage extends LivewireCalendar
             'date' => 'required|date',
             'client' => 'required|exists:users,id', 
             'time' => 'required|date_format:H:i',
+            'services.*' => 'required|max:255',
+            'payment_status' => 'required'
         ]);
 
         $event = AppointmentsModel::create([
@@ -115,6 +170,15 @@ class AppointmentPage extends LivewireCalendar
             'date' => $this->date,
             'time' => $this->time,
             'description' => $this->description
+        ]);
+
+        $order = Orders::create([
+            'appointment_detail_id' => $appointDetails->id,
+            'services_ids' => json_encode($this->services),
+            'payment_method' => 'Cash',
+            'payment_status' => $this->payment_status,
+            'grand_total' => self::getTotalPriceProperty(),
+            'status' => 'unclaimed'
         ]);
 
         // $this->sendSingleSMS($this->title, $this->date);
@@ -161,7 +225,7 @@ class AppointmentPage extends LivewireCalendar
             // Get the meeting details with Zoom meeting data
             $this->meetingFullDetails = AppointmentsModel::where('id', $eventId)
                 ->with('zoomMeet')
-                ->with('appointmentDetails')
+                ->with('appointmentDetails.orders')
                 ->get();
         
             // Prepare data to pass to the event
@@ -175,6 +239,14 @@ class AppointmentPage extends LivewireCalendar
                     $participantId = $detail->appointmentDetails->client_id;
                     $participants = User::with('info')->where('id', $participantId)->get();
                     $detail->participantsDetails = $participants;
+
+                    $order = $detail->appointmentDetails->orders;
+            
+                    if ($order && $order->services_ids) {
+                        $serviceIds = json_decode($order->services_ids, true);
+                        $services = Services::whereIn('id', $serviceIds)->get();
+                        $order->services = $services;
+                    }
                 }
                 
                 
@@ -211,7 +283,6 @@ class AppointmentPage extends LivewireCalendar
     {   
         $appointment  = AppointmentsModel::where('id', $eventId)->update(['date' => $year . '-' . $month . '-' . $day]);
         $event = AppointmentsModel::where('id', $eventId)->with('zoomMeet')->first();
-
         // $this->sendSingleUpdatedSMS($event->title, $event->date);
 
         $newDate = Carbon::create($year, $month, $day)->toDateString();
@@ -272,7 +343,15 @@ class AppointmentPage extends LivewireCalendar
     
     public function events() : Collection
     {
-        return AppointmentsModel::whereNotNull('date')->get();
+        // return AppointmentsModel::whereNotNull('date')->get();
+        return AppointmentsModel::whereNotNull('date')
+            ->where('date', '>=', Carbon::now()->startOfDay()->toDateString())
+            ->whereHas('appointmentDetails.orders', function ($query) {
+                $query->where('payment_status', 'Unpaid')
+                    ->orWhere('status', 'Unclaimed');
+            })
+            ->get();
+
     }
 
     public function createMeeting()
@@ -454,4 +533,5 @@ class AppointmentPage extends LivewireCalendar
     public function cancel(){
         $this->reset();
     }
+
 }

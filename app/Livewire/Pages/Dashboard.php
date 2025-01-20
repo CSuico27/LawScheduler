@@ -4,6 +4,7 @@ namespace App\Livewire\Pages;
 
 use App\Models\AppointmentsModel;
 use App\Models\Cases;
+use App\Models\Services;
 use App\Models\SubCaseType;
 use App\Models\User;
 use Carbon\Carbon;
@@ -20,7 +21,7 @@ class Dashboard extends Component
         
         $this->zoomMeetingFullDetails = AppointmentsModel::where('id', $this->zoomMeetingId)
             ->with('zoomMeet')
-            ->with('appointmentDetails')
+            ->with('appointmentDetails.orders')
             ->get();
 
         foreach ($this->zoomMeetingFullDetails as $detail) {
@@ -32,6 +33,16 @@ class Dashboard extends Component
                 $participantId = $detail->appointmentDetails->client_id;
                 $participants = User::with('info')->where('id', $participantId)->get();
                 $detail->participantsDetails = $participants;
+
+                
+                $order = $detail->appointmentDetails->orders;
+            
+                if ($order && $order->services_ids) {
+                    $serviceIds = json_decode($order->services_ids, true);
+                    $services = Services::whereIn('id', $serviceIds)->get();
+                    $order->services = $services;
+                }
+                
             }
         }
     }

@@ -60,6 +60,7 @@ Route::post('/law-sched-admin/appointment', [AppointmentPage::class, 'createMeet
 
 // SERVICES
 Route::get('/api/services/types', [ApiController::class, 'getServiceTypes'])->name('api.services.types');
+Route::get('/api/services', [ApiController::class, 'getServices'])->name('api.services');
 
 // ZOOM
 // Route::get('/zoom/authorize', [AppointmentPage::class, 'redirectToZoom'])->name('zoom.authorize');

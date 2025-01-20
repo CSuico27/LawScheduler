@@ -28,4 +28,9 @@ class AppointmentDetails extends Model
     public function user(): HasOne{
         return $this->hasOne(User::class, 'client_id');
     }
+
+    public function orders(): HasOne
+    {
+        return $this->hasOne(Orders::class, 'appointment_detail_id'); 
+    }
 }

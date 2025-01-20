@@ -4,6 +4,8 @@ namespace App\Livewire\Pages;
 
 use App\Models\AppointmentDetails;
 use App\Models\AppointmentsModel;
+use App\Models\Orders;
+use App\Models\Services;
 use App\Models\User;
 use Filament\Notifications\Notification;
 use Livewire\Component;
@@ -20,7 +22,14 @@ class AppointmentList extends Component
     public $description;
     public $date;
     public $time;
+    public $payment_method;
+    public $payment_status;
+    public $grand_total;
+    public $status;
+    public $services = [''];
     public bool $isActive;
+
+    public $servicePrices = [];
 
     // SEARCH
     public $searchTerm;
@@ -32,7 +41,7 @@ class AppointmentList extends Component
     
         if ($this->selectedMeetingId) {
             $this->meetingFullDetails = AppointmentsModel::where('id', $this->selectedMeetingId)
-                ->with('appointmentDetails')
+                ->with('appointmentDetails.orders')
                 ->get();
             
             if($this->meetingFullDetails[0]->appointmentDetails){
@@ -42,6 +51,21 @@ class AppointmentList extends Component
                 $this->date = $this->meetingFullDetails[0]->date;
                 $this->time = $this->meetingFullDetails[0]->appointmentDetails->time;
                 $this->isActive = $this->meetingFullDetails[0]->is_active;
+                $this->services = json_decode($this->meetingFullDetails[0]->appointmentDetails->orders->services_ids, true);
+                $this->payment_status = $this->meetingFullDetails[0]->appointmentDetails->orders->payment_status;
+                $this->payment_method = $this->meetingFullDetails[0]->appointmentDetails->orders->payment_method;
+                $this->status = $this->meetingFullDetails[0]->appointmentDetails->orders->status;
+                
+                $order = $this->meetingFullDetails[0]->appointmentDetails->orders;
+                if ($order && $order->services_ids) {
+                    $serviceIds = json_decode($order->services_ids, true);
+                    $this->services = array_combine($serviceIds, $serviceIds);
+                    $this->servicePrices = Services::whereIn('id', $serviceIds)
+                        ->pluck('price', 'id')
+                        ->toArray();
+
+                    $this->grand_total = $this->getTotalPriceProperty();
+                }
             }
         
             foreach ($this->meetingFullDetails as $detail) {
@@ -49,7 +73,50 @@ class AppointmentList extends Component
                 $participants = User::with('info')->where('id', $participantId)->get();
                 $detail->participantsDetails = $participants;
             }
+
+            foreach ($this->meetingFullDetails as $detail) {
+                $order = $detail->appointmentDetails->orders;
+            
+                if ($order && $order->services_ids) {
+                    $serviceIds = json_decode($order->services_ids, true);
+                    $services = Services::whereIn('id', $serviceIds)->get();
+                    $order->services = $services;
+                }
+            }
         }
+    }
+
+    public function addService()
+    {
+        $this->services[] = '';  
+        $this->servicePrices[] = 0;
+        $this->grand_total = $this->getTotalPriceProperty(); 
+    }
+
+    public function removeService($index)
+    {
+        if (count($this->services) > 1) {
+            unset($this->services[$index]);
+            unset($this->servicePrices[$index]);
+            $this->services = array_values($this->services);
+            $this->servicePrices = array_values($this->servicePrices);
+        }
+    }
+
+    public function updatedServices($value, $index)
+    {
+        $service = Services::find($value);
+    
+        if ($service) {
+            $this->servicePrices[$index] = $service->price;
+        } else {
+            $this->servicePrices[$index] = 0;
+        }
+    }
+
+    public function getTotalPriceProperty()
+    {
+        return array_sum($this->servicePrices);
     }
 
     public function editAppointment($id){
@@ -72,6 +139,17 @@ class AppointmentList extends Component
             'time' => $this->time,
             'description' => $this->description,
         ]);
+
+        $order = Orders::where('id', $selectedAppointment->appointmentDetails->orders->id);
+
+        $order->update([
+            'services_ids' => json_encode($this->services),
+            'payment_method' => $this->payment_method,
+            'payment_status' => $this->payment_status,
+            'grand_total' => self::getTotalPriceProperty(),
+            'status' => $this->status
+        ]);
+
         
 
         $this->dispatch('reload');
@@ -109,12 +187,20 @@ class AppointmentList extends Component
         ]);
     }
     public function cancel(){
-        $this->reset();
+        $this->client = "";
+        $this->title = "";
+        $this->description = "";
+        $this->date = "";
+        $this->time = "";
+        $this->payment_method = "";
+        $this->payment_status = "";
+        $this->grand_total = "";
+        $this->status = "";
     }
     public function render()
     {
         if ($this->searchTerm) {
-            $searchItems = AppointmentsModel::whereHas('appointmentDetails', function ($query) {
+            $searchItems = AppointmentsModel::whereHas('appointmentDetails.orders', function ($query) {
                 $query->where('title', 'like', '%' . $this->searchTerm . '%');
             })
             ->latest()
@@ -122,7 +208,7 @@ class AppointmentList extends Component
 
             $appointmentList = $searchItems;
         } else {
-            $appointmentList = AppointmentsModel::with('appointmentDetails')->latest()->paginate(8);
+            $appointmentList = AppointmentsModel::with(['appointmentDetails.orders'])->latest()->paginate(8);
         }
 
         foreach ($appointmentList as $appointment) {
@@ -140,8 +226,19 @@ class AppointmentList extends Component
             }
         }
 
+        foreach ($appointmentList as $appointment) {
+            $order = $appointment->appointmentDetails->orders;
+        
+            if ($order && $order->services_ids) {
+                $serviceIds = json_decode($order->services_ids, true);
+                $services = Services::whereIn('id', $serviceIds)->get();
+                $order->services = $services;
+            }
+        }
+
         return view('livewire.pages.appointment-list',[
-            'appointmentList' => $appointmentList
+            'appointmentList' => $appointmentList,
+            'grand_total' => $this->getTotalPriceProperty(),
         ]);
     }
 }

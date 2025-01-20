@@ -10,6 +10,7 @@ use App\Models\PHBarangays;
 use App\Models\PHCities;
 use App\Models\PHProvinces;
 use App\Models\PHRegions;
+use App\Models\Services;
 use App\Models\ServiceType;
 use App\Models\SubCaseType;
 use App\Models\User;
@@ -251,5 +252,28 @@ class ApiController extends Controller
         }
 
         return response()->json($serviceTypes);
+    }
+
+    public function getServices(Request $request){
+        $search = $request->input('search');
+        $selected = $request->input('selected');
+
+        if ($search) {
+            $services = Services::where('name', 'like', '%' . $search . '%')
+                ->where('is_active', 1)
+                ->get();
+        } elseif ($selected) {
+
+            $selectedService = Services::where('id', $selected)
+                ->where('is_active', 1)
+                ->get();
+
+            return response()->json($selectedService);
+            
+        } else {
+            $services = Services::where('is_active', 1)->get();
+        }
+
+        return response()->json($services);
     }
 }

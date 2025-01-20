@@ -13,7 +13,18 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('appointment_detail_id');
+            $table->string('services_ids');
+            $table->string('payment_method');
+            $table->string('payment_status');
+            $table->decimal('grand_total', 10, 2);
+            $table->enum('status', ['Unclaimed', 'Claimed'])->default('Unclaimed');
             $table->timestamps();
+
+            $table->foreign('appointment_detail_id')
+                ->references('id')
+                ->on('appointment_details')
+                ->onDelete('cascade');
         });
     }
 

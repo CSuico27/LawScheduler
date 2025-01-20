@@ -400,7 +400,6 @@
                                     <div class="w-full rounded-md dashed-container">
                                         <p class="text-base font-semibold">Participants</p>
                                         <div class="flex gap-2 my-3">
-                                            {{-- @dump($detail->participantsDetails) --}}
                                             @if ($detail->participantsDetails)
                                                 @foreach($detail->participantsDetails as $participant)
                                                     <img src="{{ asset($participant->profile_picture) }}" alt="profile" class="w-10 h-10">
@@ -443,7 +442,8 @@
                         <x-slot name="footer">
                             <div class="flex justify-end gap-x-4">
                                 <div class="flex">
-                                    <x-button flat label="Close" x-on:click="close" wire:click="resetDetails" />
+                                    <x-button flat label="Close" x-on:click="close" />
+                                    {{-- <x-button primary label="Save"/> --}}
                                 </div>
                             </div>
                         </x-slot>
@@ -489,12 +489,102 @@
                                         </div>
                                     </span>
                                 </div>
-                            </div> 
+
+                                <div class="mt-5 border border-dashed border-gray-800 rounded-xl">
+                                    <div class="grid grid-cols-2 w-full h-auto m-3">
+                                    <div class="flex items-center gap-3">
+                                            <span>Payment Method: </span>
+                                            @if ($detail->appointmentDetails->orders)
+                                                @if ($detail->appointmentDetails->orders->payment_method == 'Cash')
+                                                    <div>
+                                                        <span class="py-1 px-1.5 inline-flex items-center gap-x-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-full dark:bg-blue-500/10 dark:text-blue-500">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
+                                                                <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0 1 15.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 0 1 3 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 0 0-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 0 1-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 0 0 3 15h-.75M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm3 0h.008v.008H18V10.5Zm-12 0h.008v.008H6V10.5Z" />
+                                                            </svg> 
+                                                        Cash
+                                                        </span>
+                                                    </div>
+                                                @else
+                                                    <div>
+                                                        <span class="py-1 px-2 inline-flex items-center gap-x-1 text-xs font-medium bg-teal-100 text-teal-800 rounded-full dark:bg-teal-500/10 dark:text-teal-500">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 0 0 2.25-2.25V6.75A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25v10.5A2.25 2.25 0 0 0 4.5 19.5Z" />
+                                                        </svg>
+                                                            
+                                                        Stripe
+                                                        </span>
+                                                    </div>
+                                                @endif
+                                            @endif
+                                    </div>
+                                    <div class="flex items-center gap-3">
+                                            <span>Payment Status: </span>
+                                            @if ($detail->appointmentDetails->orders)
+                                                @if ($detail->appointmentDetails->orders->payment_status == 'Paid')
+                                                    <span class="py-1 px-2 inline-flex items-center gap-x-1 text-xs font-medium bg-green-100 text-teal-800 rounded-full dark:bg-teal-500/10 dark:text-teal-500">
+                                                        <svg class="shrink-0 size-3" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                        <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"></path>
+                                                        <path d="m9 12 2 2 4-4"></path>
+                                                        </svg>
+                                                        {{ $detail->appointmentDetails->orders->payment_status }}
+                                                    </span>
+                                                @else
+                                                    <span class="py-1 px-2 inline-flex items-center gap-x-1 text-xs font-medium bg-red-100 text-red-800 rounded-full dark:bg-red-500/10 dark:text-red-500">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                                                        </svg>                                          
+                                                        {{ $detail->appointmentDetails->orders->payment_status }}
+                                                    </span>
+                                                @endif
+                                            @endif
+                                        </div>
+                                        <div class="flex items-center gap-3 mt-2">
+                                            <span>Request Status: </span>
+                                            @if ($detail->appointmentDetails->orders)
+                                                @if ($detail->appointmentDetails->orders->status == 'Claimed')
+                                                    <span class="py-1 px-2 inline-flex items-center gap-x-1 text-xs capitalize font-medium bg-green-100 text-teal-800 rounded-full dark:bg-teal-500/10 dark:text-teal-500">
+                                                        <svg class="shrink-0 size-3" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                        <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"></path>
+                                                        <path d="m9 12 2 2 4-4"></path>
+                                                        </svg>
+                                                        {{ $detail->appointmentDetails->orders->status }}
+                                                    </span>
+                                                @else
+                                                    <span class="py-1 px-2 inline-flex items-center gap-x-1 text-xs capitalize font-medium bg-red-100 text-red-800 rounded-full dark:bg-red-500/10 dark:text-red-500">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                                                        </svg>                                          
+                                                        {{ $detail->appointmentDetails->orders->status }}
+                                                    </span>
+                                                @endif
+                                            @endif
+                                        </div>
+                                    </div>
+                                    <div class="flex gap-3 m-3 border-t border-dashed border-gray-500">
+                                        <span class="mt-2">Request/s: </span>
+                                        @if ($detail->appointmentDetails->orders->services)
+                                            <div class="flex flex-col">
+                                                @foreach($detail->appointmentDetails->orders->services as $service)
+                                                    <span class="inline-flex w-fit items-center gap-x-1.5 py-1.5 px-3 rounded-full text-xs font-medium bg-gray-100 text-gray-800 dark:bg-white/10 dark:text-white mt-2">{{ $service->name }}</span>
+                                                @endforeach
+                                            </div>
+                                        @endif
+                                    </div>
+                                    <div class="flex gap-3 m-3 border-t border-dashed border-gray-500">
+                                        <div class="mt-6 text-sm font-medium">
+                                            @if ($detail->appointmentDetails->orders)
+                                                Total Price: <span class="font-bold text-green-500">{{ Number::currency($detail->appointmentDetails->orders->grand_total, 'PHP') }}</span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <x-slot name="footer">
                             <div class="flex justify-end gap-x-4">
                                 <div class="flex">
-                                    <x-button flat label="Close" x-on:click="close" wire:click="resetDetails" />
+                                    <x-button flat label="Close" x-on:click="close"/>
+                                    {{-- <x-button primary label="Save"/> --}}
                                 </div>
                             </div>
                         </x-slot>
