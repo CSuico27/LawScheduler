@@ -53,43 +53,45 @@
                         </td>
                     </tr>
                 @else
-                    @foreach ($scheduleList as $schedule)
-                        @if ($schedule->zoomMeet)
-                            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                <td class="px-4 py-2">
-                                    {{ $schedule->zoomMeet->meeting_id }}
-                                </td>
-                                <th scope="row" class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                    <div class="hs-tooltip inline-block">
-                                        <a onclick="$openModal('showFullDetails')" wire:click="getSelectedMeetingId({{ $schedule->id }})"  class="hs-tooltip-toggle underline cursor-pointer hover:text-blue-600">
-                                            {{ $schedule->zoomMeet->topic }}
-                                            <span class="hs-tooltip-content hs-tooltip-shown:opacity-100 hs-tooltip-shown:visible opacity-0 transition-opacity inline-block absolute invisible z-10 py-1 px-2 bg-gray-900 text-xs font-medium text-white rounded shadow-sm dark:bg-neutral-700" role="tooltip">
-                                                Full Details
-                                            </span>
-                                        </a>
-                                    </div>
-                                </th>
-                                <td class="px-4 py-2">
-                                    {{ \Carbon\Carbon::parse($schedule->zoomMeet->start_time)->format('F j, Y') }}
-                                </td>
-                                <td class="px-4 py-2">
-                                    @foreach($schedule->participantsDetails as $participant)
-                                        <div class="flex items-center gap-2">
-                                            <img src="{{ asset($participant->profile_picture) }}" alt="{{ $participant->profile_picture }}" class="w-8 h-8">
-                                            {{ $participant->name }}
+                    @if ($scheduleList)
+                        @foreach ($scheduleList as $schedule)
+                            @if ($schedule->zoomMeet)
+                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                                    <td class="px-4 py-2">
+                                        {{ $schedule->zoomMeet->meeting_id }}
+                                    </td>
+                                    <th scope="row" class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                        <div class="hs-tooltip inline-block">
+                                            <a onclick="$openModal('showFullDetails')" wire:click="getSelectedMeetingId({{ $schedule->id }})"  class="hs-tooltip-toggle underline cursor-pointer hover:text-blue-600">
+                                                {{ $schedule->zoomMeet->topic }}
+                                                <span class="hs-tooltip-content hs-tooltip-shown:opacity-100 hs-tooltip-shown:visible opacity-0 transition-opacity inline-block absolute invisible z-10 py-1 px-2 bg-gray-900 text-xs font-medium text-white rounded shadow-sm dark:bg-neutral-700" role="tooltip">
+                                                    Full Details
+                                                </span>
+                                            </a>
                                         </div>
-                                    @endforeach
-                                </td>
-                                <td class="px-4 py-2 flex gap-4">
-                                    <a href="{{ $schedule->zoomMeet->join_url }}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline" target="_blank">
-                                        Join
-                                    </a>
-                                    <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline" onclick="$openModal('editMeetingModal')" wire:click="getSelectedMeetingId({{ $schedule->id }})">Edit</a>
-                                    <a href="#" class="font-medium text-red-600 dark:text-red-500 hover:underline" wire:click="deleteConfirmation({{ $schedule->id }}, '{{  $schedule->title }}')">Delete</a>
-                                </td>
-                            </tr>
-                        @endif
-                    @endforeach
+                                    </th>
+                                    <td class="px-4 py-2">
+                                        {{ \Carbon\Carbon::parse($schedule->zoomMeet->start_time)->format('F j, Y') }}
+                                    </td>
+                                    <td class="px-4 py-2">
+                                        @foreach($schedule->participantsDetails as $participant)
+                                            <div class="flex items-center gap-2">
+                                                <img src="{{ asset($participant->profile_picture) }}" alt="{{ $participant->profile_picture }}" class="w-8 h-8">
+                                                {{ $participant->name }}
+                                            </div>
+                                        @endforeach
+                                    </td>
+                                    <td class="px-4 py-2 flex gap-4">
+                                        <a href="{{ $schedule->zoomMeet->join_url }}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline" target="_blank">
+                                            Join
+                                        </a>
+                                        <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline" onclick="$openModal('editMeetingModal')" wire:click="getSelectedMeetingId({{ $schedule->id }})">Edit</a>
+                                        <a href="#" class="font-medium text-red-600 dark:text-red-500 hover:underline" wire:click="deleteConfirmation({{ $schedule->id }}, '{{  $schedule->title }}')">Delete</a>
+                                    </td>
+                                </tr>
+                            @endif
+                        @endforeach
+                    @endif
                 @endif
             </tbody>            
         </table>        

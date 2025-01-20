@@ -24,10 +24,10 @@
             </svg>  
             Create Meeting
         </button>
-        {{-- <button type="button" wire:loading.attr="disabled" wire:loading.class="!cursor-wait" onclick="$openModal('cardModal')" class="text-white bg-[#4285F4] hover:bg-[#4285F4]/90 focus:ring-4 focus:outline-none focus:ring-[#4285F4]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-[#4285F4]/55">
+        <button type="button" wire:loading.attr="disabled" wire:loading.class="!cursor-wait" onclick="$openModal('cardModal')" class="text-white bg-[#4285F4] hover:bg-[#4285F4]/90 focus:ring-4 focus:outline-none focus:ring-[#4285F4]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-[#4285F4]/55">
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
             New Appointment
-        </button> --}}
+        </button>
     </div>
 
     <x-modal.card title="New Meeting" blur wire:model.defer="newMeetingModal" align="center" max-width="md">
@@ -211,7 +211,7 @@
 
 
     
-    {{-- <x-modal.card title="Add New Appointment" blur wire:model.defer="cardModal" align="center">
+    <x-modal.card title="Add New Appointment" blur wire:model.defer="cardModal" align="center">
         <form >
             <div class="grid grid-cols-12 sm:grid-cols-1 gap-4">
                 <div class="col-span-1 sm:col-span-2">
@@ -266,7 +266,7 @@
                 </div>
             </x-slot>
         </form>
-    </x-modal.card> --}}
+    </x-modal.card>
     <script>
         window.addEventListener('showFullDetails', event => {
             $openModal('showFullDetailsCalendar');

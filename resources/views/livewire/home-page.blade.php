@@ -1,12 +1,13 @@
-<div class="w-full h-screen flex justify-center items-center px-52">
-    <div class="flex flex-row h-full">
-        <div class="flex flex-col justify-center gap-10 w-full mt-28">
+<div class="w-full h-screen px-10 md:px-24">
+    {{-- HERO SECTION --}}
+    <div class="flex flex-col h-full md:flex md:flex-row">
+        <div class="flex flex-col justify-center gap-5 w-full mt-5 md:mt-32">
             <p class="font-medium text-sm">-GETTING IT DONE.</p>
-            <p class="font-serif text-7xl pr-56">Trusted legal solutions for the real world.</p>
-            <p class="pr-96 text-lg">
+            <p class="font-serif text-4xl font-semibold md:text-6xl">Trusted legal solutions for the real world.</p>
+            <p class="md:pr-20">
                 Organize your tasks, lists and reminders in one app, it will help you a lot.
             </p>
-            <div class="flex flex-row items-center gap-16">
+            <div class="flex flex-col items-center gap-5 mt-5 md:flex md:flex-row">
                 <button type="button" class="py-3 px-6 inline-flex items-center gap-x-2 text-sm font-semibold border border-transparent bg-[#d1ab70] text-white hover:bg-[#d6b685] disabled:opacity-50 disabled:pointer-events-none">
                     Book Appointment
                 </button>
@@ -21,22 +22,24 @@
                 </div>
             </div>
         </div>
-        <div class="w-full relative mt-28">
-            <div class="w-[80%] h-full pl-10">
+        <div class="w-full relative mt-24 md:pl-14">
+            <div class="w-full h-full">
                 <img src="{{ asset('images/tao2.png')}}" alt="" class="w-full h-full object-contain object-left">
             </div>
-            <div class="w-96 h-72 flex flex-col justify-center items-center gap-6 absolute right-0 bottom-20 bg-white opacity-95">
+            <div class="w-48 h-36 md:w-72 md:h-44 flex flex-col justify-center items-center gap-1 md:gap-2 absolute -right-5 bottom-20 bg-white shadow-2xl opacity-95">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#d1ab70" class="size-10">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 0 1-1.043 3.296 3.745 3.745 0 0 1-3.296 1.043A3.745 3.745 0 0 1 12 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 0 1-3.296-1.043 3.745 3.745 0 0 1-1.043-3.296A3.745 3.745 0 0 1 3 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 0 1 1.043-3.296 3.746 3.746 0 0 1 3.296-1.043A3.746 3.746 0 0 1 12 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 0 1 3.296 1.043 3.746 3.746 0 0 1 1.043 3.296A3.745 3.745 0 0 1 21 12Z" />
                 </svg>
                 <div class="flex justify-center items-center">
-                    <span class="text-7xl font-semibold">10</span>
-                    <span class="text-5xl font-extralight">+</span>
+                    <span class="text-2xl md:text-5xl font-semibold">10</span>
+                    <span class="text-xl md:text-3xl font-extralight">+</span>
                 </div>
-                <p class="px-24 text-center">
+                <p class="text-center text-xs px-5 md:text-base">
                     Years of experience in this field.
                 </p>
             </div>
         </div>
     </div>
+    
+    {{-- SERVICES SECTION --}}
 </div>

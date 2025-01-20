@@ -1,6 +1,6 @@
-<header class="flex flex-wrap sm:justify-start sm:flex-nowrap w-full text-sm py-10 bg-transparent fixed z-10">
+<header class="flex flex-wrap sm:justify-start sm:flex-nowrap w-full text-sm py-8 md:py-5 bg-transparent md:fixed z-10">
     <nav class="max-w-[97rem] w-full mx-auto px-4 flex flex-wrap basis-full items-center justify-between" aria-label="Global">
-        <a href="/" class="flex items-center space-x-3 rtl:space-x-reverse text-[#2b2b31] font-bold text-lg md:text-xl md:mx-auto md:mb-3 lg:text-3xl lg:mx-px">
+        <a href="/" class="flex items-center space-x-3 rtl:space-x-reverse text-[#2b2b31] font-bold text-lg md:text-lg md:mx-auto md:mb-3 lg:text-3xl lg:mx-px">
             <img src="{{ asset('images/sched-logo.png') }}" class="h-14" alt="Flowbite Logo">
             LawScheduler
         </a>

@@ -1,8 +1,8 @@
-<div class="w-full h-full flex flex-row">
-    <div class="w-[50%] h-screen flex flex-col justify-center items-center gap-5">
-        <h1 class="text-4xl font-medium">Create your account</h1>
-        <p>Sign up now and get an appointment.</p>
-        <div class="w-full flex flex-col justify-center items-center mt-10">
+<div class="w-full h-full flex flex-row justify-center">
+    <div class="w-[90%] md:w-[50%] h-screen flex flex-col justify-center items-center gap-3 mt-28 md:mt-0 md:pt-12">
+        <h1 class="text-3xl font-medium text-center">Create your account</h1>
+        <p class="text-center">Sign up now and get an appointment.</p>
+        <div class="w-full flex flex-col justify-center items-center">
             {{-- <div class="space-y-6 w-[50%]">
                 <div class="relative">
                     <input type="email" class="peer py-3 pe-0 ps-8 block w-full bg-transparent border-t-transparent border-b-2 border-x-transparent border-b-gray-200 text-sm focus:border-t-transparent focus:border-x-transparent focus:border-b-blue-500 focus:ring-0 disabled:opacity-50 disabled:pointer-events-none dark:border-b-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600 dark:focus:border-b-neutral-600" placeholder="Enter email">
@@ -72,7 +72,7 @@
                 </div>
             </div> --}}
             <form wire:submit.prevent="register" class="w-full flex justify-center">
-                <div  class="w-[80%]">
+                <div  class="w-full md:w-[90%]">
                     <ul class="relative flex flex-row gap-x-2 mb-5">
                         <li class="flex items-center gap-x-2 shrink basis-0 flex-1 group">
                             <span class="min-w-7 min-h-7 group inline-flex items-center text-xs align-middle">
@@ -107,8 +107,8 @@
                     </ul>
                     @if ($currentStep == 1)
                         <div class="p-4 h-auto bg-gray-50 flex justify-center items-center border border-dashed border-gray-200 rounded-xl dark:bg-neutral-800 dark:border-neutral-700">
-                            <div class="w-[90%]">
-                                <div class="w-full flex gap-2">
+                            <div class="w-full md:w-[95%]">
+                                <div class="w-full flex flex-col md:flex-row gap-2">
                                     <div class="w-full space-y-3">
                                         <div>
                                             <label for="hs-trailing-icon" class="block text-sm font-medium mb-2 dark:text-white"></label>
@@ -134,7 +134,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="w-full flex gap-5 mt-5">
+                                <div class="w-full flex flex-col md:flex-row gap-5 mt-5">
                                     <x-select
                                         label="Select Region"
                                         wire:model.blur="region"
@@ -179,7 +179,7 @@
                                     @endif
                                 </div>
 
-                                <div class="w-full flex gap-5 mt-5 mb-4">
+                                <div class="w-full flex flex-col md:flex-row gap-5 mt-5 mb-4">
 
                                     @if (!$region || !$province)
                                         <x-select
@@ -307,7 +307,7 @@
                         @endif
 
                         @if ($currentStep < 2)
-                            <button wire:click="nextStep" type="button" class="ml-auto mt-4 py-2 px-3 inline-flex items-center gap-x-1 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
+                            <button wire:click="nextStep" type="button" class="ml-auto mt-4 py-2 px-3 inline-flex items-center gap-x-1 text-base font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
                             {{ !$firstName || !$middleName || !$lastName  ? 'disabled="disabled"' : '' }}
                             >
                                 Next
@@ -330,15 +330,15 @@
                 </div>
             </form>
         </div>
-        <div class="flex flex-col mt-5 lg:-mt-11">
+        <div class="flex flex-col mt-5 lg:-mt-11 pb-5">
             <div class="flex gap-1">
                 <p>Already have an account?</p>
-                <a href="{{ route('login')}}">Sign in</a>
+                <a href="{{ route('login')}}" class="font-bold">Sign in</a>
             </div>
-            <img src="{{ asset('images/sign-2.png')}}" alt="" class="w-16 self-end -mt-1">
+            <img src="{{ asset('images/sign-2.png')}}" alt="" class="w-20 self-end pl-6">
         </div>
     </div>
-    <div class="w-[50%] h-screen rounded-l-[8%] overflow-hidden relative">
+    <div class="w-[50%] h-screen rounded-l-[8%] overflow-hidden relative hidden md:block">
         <img src="{{ asset('images/building2.jpg') }}" alt="" class="object-cover object-right-bottom w-auto h-full">
         <a class="flex items-center justify-center text-white font-medium text-5xl absolute inset-0 m-auto">
             <img src="{{ asset('images/logo-white.png') }}" alt="">
