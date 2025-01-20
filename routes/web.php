@@ -10,6 +10,7 @@ use App\Livewire\Client\Booking;
 use App\Livewire\Client\CancelPage;
 use App\Livewire\Client\InvoicePage as ClientInvoicePage;
 use App\Livewire\Client\SuccessPage;
+use App\Livewire\Client\TermsAndCondition;
 use App\Livewire\HomePage;
 use App\Livewire\Pages\AppointmentPage;
 use App\Livewire\Pages\InvoicePage;
@@ -33,6 +34,7 @@ Route::middleware('guest')->group(function () {
     // AUTH
     Route::get('/register', RegisterPage::class)->name('register');
     Route::get('/login', LoginPage::class)->name('login');
+    Route::get('/terms-&-condition', TermsAndCondition::class)->name('terms&condition');
     Route::get('/forgot', ForgotPasswordPage::class)->name('password.request');
     Route::get('/reset/{token}', ResetPasswordPage::class)->name('password.reset');
     Route::post('/create-meeting', [AppointmentPage::class, 'createMeeting']);

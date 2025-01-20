@@ -337,6 +337,13 @@
             </div>
             <img src="{{ asset('images/sign-2.png')}}" alt="" class="w-20 self-end pl-6">
         </div>
+        
+        <div class="flex flex-col mt-5 w-[50%]">
+            <hr>
+            <div class="flex mt-3">
+                <p>By signing in, creating an account, or checking out as a Guest you are agreeing to our <a href="{{ route('terms&condition')}}" class="font-base underline text-blue-500">Terms and Conditions.</a></p>
+            </div>
+        </div>
     </div>
     <div class="w-[50%] h-screen rounded-l-[8%] overflow-hidden relative hidden md:block">
         <img src="{{ asset('images/building2.jpg') }}" alt="" class="object-cover object-right-bottom w-auto h-full">
