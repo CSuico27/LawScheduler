@@ -24,7 +24,7 @@
         </div>  
         <div class="w-full relative mt-24 md:mb-14">
             <div class="w-full h-full ">
-                <img src="{{ asset('images/justice.jpg')}} " alt="" class="w-full h-full object-contain object-center  ">
+                <img src="{{ asset('images/justice.jpg')}} " alt="" class="w-full h-full object-contain object-center hidden md:block">
                 <div class="absolute inset-0 bg-gradient-to-r from-[#f1f4f6] via-transparent to-transparent"></div>
             </div> 
            

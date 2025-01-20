@@ -1,6 +1,6 @@
-<div class="w-full h-full flex flex-row ">
+<div class="w-full h-full flex flex-row">
     <div class="w-full md:w-[40%] h-screen flex flex-col justify-center items-center gap-5 -mt-32 md:-mt-10">
-        <h1 class="text-4xl font-medium text-center">Forgot Password</h1>
+        <h1 class="text-2xl md:text-4xl font-medium text-center">Forgot Password</h1>
         <p class="text-center">No worries, We'll send you instruction for reset.</p>
         <form wire:submit.prevent="forgot" class="w-full flex flex-col justify-center items-center mt-2">
             <div class="w-full flex flex-col justify-center items-center mb-2">

@@ -31,7 +31,7 @@
                     </div>
                 </div>
             </div>
-            <button type="submit" class="w-[90%] py-3 px-4 mt-5 inline-flex justify-center items-center gap-x-2 text-base font-medium rounded-lg border border-transparent bg-[#2b2b31] text-white hover:bg-slate-950 disabled:opacity-50 disabled:pointer-events-none">
+            <button type="submit" class="w-[90%] md:w-[70%] py-3 px-4 mt-5 inline-flex justify-center items-center gap-x-2 text-base font-medium rounded-lg border border-transparent bg-[#2b2b31] text-white hover:bg-slate-950 disabled:opacity-50 disabled:pointer-events-none">
                 Log in
             </button>
         </form>
