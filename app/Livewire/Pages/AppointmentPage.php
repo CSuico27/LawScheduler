@@ -169,7 +169,8 @@ class AppointmentPage extends LivewireCalendar
             'title' => $this->title,
             'date' => $this->date,
             'time' => $this->time,
-            'description' => $this->description
+            'description' => $this->description,
+            'is_viewed' => 'new'
         ]);
 
         $order = Orders::create([
@@ -182,6 +183,17 @@ class AppointmentPage extends LivewireCalendar
         ]);
 
         // $this->sendSingleSMS($this->title, $this->date);
+        try {
+            $this->sendSMS($this->title, $this->date);
+        } catch (\Throwable $e) {
+            $this->dispatch('reload');
+            // Log::error('Error sending SMS: ' . $e->getMessage());
+            Notification::make()
+                ->title('Error!')
+                ->body('Failed to send SMS.')
+                ->danger()
+                ->send();
+        }
 
         Notification::make()
             ->title('Success!')
@@ -430,7 +442,8 @@ class AppointmentPage extends LivewireCalendar
                         'host_id' => $responseData['host_id'],
                         'password' => $responseData['password'] ?? null,
                         'agenda' => $this->meetingDescription,
-                        'participants' => $participantToString
+                        'participants' => $participantToString,
+                        'is_viewed' => 'new'
                     ]);
 
                     Notification::make()
@@ -438,6 +451,18 @@ class AppointmentPage extends LivewireCalendar
                             ->body('Meeting has been created.')
                             ->success()
                             ->send();
+
+                    try {
+                        $this->sendSMS($responseData['join_url'], $this->meetingStartDate);
+                    } catch (\Throwable $e) {
+                        $this->dispatch('reload');
+                        // Log::error('Error sending SMS: ' . $e->getMessage());
+                        Notification::make()
+                            ->title('Error!')
+                            ->body('Failed to send SMS.')
+                            ->danger()
+                            ->send();
+                    }
 
                     $this->dispatch('reload');
                    
@@ -473,66 +498,15 @@ class AppointmentPage extends LivewireCalendar
     }
 
     // SMS
-    public function sendSMS($eventTitle, $eventDate, $mobileNumbers){
+    public function sendSMS($appointmentNumber, $appointmentDate){
         $sid = env('TWILIO_SID');
         $token = env('TWILIO_TOKEN');
         $twilioNumber = env('TWILIO_FROM');
 
         $client = new Client($sid, $token);
-
-        foreach ($mobileNumbers as $number) {
-
-            if (!preg_match('/^09\d{9}$/', $number)) {
-                Log::error("Invalid phone number format: $number");
-                continue; // Skip invalid numbers
-            }
-
-            $formattedNumber = '+63' . ltrim($number, '0');
-
-            $message = "CSWD - City Social Welfare Departmen(Tayabas City) \n
-                    There's an upcoming program titled '{$eventTitle}'. This program will be held in Tayabas City Municipal Covered Court \n 
-                    Date: {$eventDate} \n
-                    
-                    For more info visit: https://egive-mo.com";
-            $client->messages->create(
-                '+63 930 655 8025',
-                [
-                    'from' => $twilioNumber,
-                    'body' => $message
-                ]
-            );
-        }
-    }
-
-    public function sendSingleSMS($eventTitle, $eventDate){
-        $sid = env('TWILIO_SID');
-        $token = env('TWILIO_TOKEN');
-        $twilioNumber = env('TWILIO_FROM');
-
-        $client = new Client($sid, $token);
-        $message = "CSWD - City Social Welfare Departmen(Tayabas City) \n
-                    There's an upcoming program titled '{$eventTitle}'. This program will be held in Tayabas City Municipal Covered Court \n 
-                    Date: {$eventDate} \n
-                    
-                    For more info visit: https://egive-mo.com";
+        $message = "LawScheduler\nWe created a Zoom Meeting!\n Date: {$appointmentDate}\nYour Zoom Meeting URL is: {$appointmentNumber}";
         $client->messages->create(
-            '+63 930 655 8025',
-            [
-                'from' => $twilioNumber,
-                'body' => $message
-            ]
-        ); 
-    }
-
-    public function sendSingleUpdatedSMS($eventTitle, $eventDate){
-        $sid = env('TWILIO_SID');
-        $token = env('TWILIO_TOKEN');
-        $twilioNumber = env('TWILIO_FROM');
-
-        $client = new Client($sid, $token);
-        $message = "LawScheduler\nYou have upcoming meeting titled '{$eventTitle}' \n Date: {$eventDate}";
-        $client->messages->create(
-            '+63 930 655 8025',
+            '+639633366707',
             [
                 'from' => $twilioNumber,
                 'body' => $message

@@ -1,23 +1,72 @@
 <div class="w-full h-svh flex flex-col items-center pt-20 md:pt-32 ">
     <div class="flex">
-        <div class="flex bg-gray-200 hover:bg-gray-200 rounded-lg transition p-1 dark:bg-neutral-700 dark:hover:bg-neutral-600">
+        <div class="flex bg-gray-200 hover:bg-gray-200 rounded-lg transition p-1 dark:bg-neutral-700 dark:hover:bg-neutral-600" wire:ignore>
             <nav class="flex gap-x-1" aria-label="Tabs" role="tablist" aria-orientation="horizontal">
-                <button type="button" class="hs-tab-active:bg-white hs-tab-active:text-gray-700 hs-tab-active:dark:bg-neutral-800 hs-tab-active:dark:text-neutral-400 dark:hs-tab-active:bg-gray-800 py-2 px-3 inline-flex items-center gap-x-2 bg-transparent text-xs md:py-3 md:px-4 md:text-sm text-gray-500 hover:text-gray-700 focus:outline-none focus:text-gray-700 font-medium rounded-lg hover:hover:text-blue-600 disabled:opacity-50 disabled:pointer-events-none dark:text-neutral-400 dark:hover:text-white dark:focus:text-white active" id="segment-item-1" aria-selected="true" data-hs-tab="#segment-1" aria-controls="segment-1" role="tab">
+                <button type="button" wire:ignore class="hs-tab-active:bg-white hs-tab-active:text-gray-700 hs-tab-active:dark:bg-neutral-800 hs-tab-active:dark:text-neutral-400 dark:hs-tab-active:bg-gray-800 py-2 px-3 inline-flex items-center gap-x-2 bg-transparent text-xs md:py-3 md:px-4 md:text-sm text-gray-500 hover:text-gray-700 focus:outline-none focus:text-gray-700 font-medium rounded-lg hover:hover:text-blue-600 disabled:opacity-50 disabled:pointer-events-none dark:text-neutral-400 dark:hover:text-white dark:focus:text-white active" id="segment-item-1" aria-selected="true" data-hs-tab="#segment-1" aria-controls="segment-1" role="tab">
                     Details
                 </button>
-                <button type="button" class="hs-tab-active:bg-white hs-tab-active:text-gray-700 hs-tab-active:dark:bg-neutral-800 hs-tab-active:dark:text-neutral-400 dark:hs-tab-active:bg-gray-800 py-2 px-3 inline-flex items-center gap-x-2 bg-transparent text-xs md:py-3 md:px-4 md:text-sm text-gray-500 hover:text-gray-700 focus:outline-none focus:text-gray-700 font-medium rounded-lg hover:hover:text-blue-600 disabled:opacity-50 disabled:pointer-events-none dark:text-neutral-400 dark:hover:text-white dark:focus:text-white" id="segment-item-2" aria-selected="false" data-hs-tab="#segment-2" aria-controls="segment-2" role="tab">
-                    Appointments
-                </button>
-                <button type="button" class="hs-tab-active:bg-white hs-tab-active:text-gray-700 hs-tab-active:dark:bg-neutral-800 hs-tab-active:dark:text-neutral-400 dark:hs-tab-active:bg-gray-800 py-2 px-3 inline-flex items-center gap-x-2 bg-transparent text-xs md:py-3 md:px-4 md:text-sm text-gray-500 hover:text-gray-700 focus:outline-none focus:text-gray-700 font-medium rounded-lg hover:hover:text-blue-600 disabled:opacity-50 disabled:pointer-events-none dark:text-neutral-400 dark:hover:text-white dark:focus:text-white" id="segment-item-3" aria-selected="false" data-hs-tab="#segment-3" aria-controls="segment-3" role="tab">
+                <div class="relative">
+                    @php
+                        $hasUnviewedAppointments = false;
+                    @endphp
+
+                    @foreach ($selectedClientFullDetails['appointments'] as $appointment)
+                        @if (isset($appointment['is_viewed']) && $appointment['is_viewed'] === 'new')
+                            @php
+                                $hasUnviewedAppointments = true;
+                                break; // No need to continue once a new meeting is found
+                            @endphp
+                        @endif
+                    @endforeach
+
+                    @if ($hasUnviewedAppointments)
+                        <span class="flex absolute top-0 end-0 size-3 -mt-1.5 -me-1.5">
+                            <span class="animate-ping absolute inline-flex size-full rounded-full bg-red-400 opacity-75 dark:bg-red-600"></span>
+                            <span class="relative inline-flex rounded-full size-3 bg-red-500"></span>
+                        </span>
+                    @else
+                        
+                    @endif
+
+                    <button type="button" wire:click="markAllAsViewedAppointment" class="hs-tab-active:bg-white hs-tab-active:text-gray-700 hs-tab-active:dark:bg-neutral-800 hs-tab-active:dark:text-neutral-400 dark:hs-tab-active:bg-gray-800 py-2 px-3 inline-flex items-center gap-x-2 bg-transparent text-xs md:py-3 md:px-4 md:text-sm text-gray-500 hover:text-gray-700 focus:outline-none focus:text-gray-700 font-medium rounded-lg hover:hover:text-blue-600 disabled:opacity-50 disabled:pointer-events-none dark:text-neutral-400 dark:hover:text-white dark:focus:text-white" id="segment-item-2" aria-selected="false" data-hs-tab="#segment-2" aria-controls="segment-2" role="tab">
+                        Appointments
+                    </button>
+                </div>
+                
+                <button type="button" wire:ignore class="hs-tab-active:bg-white hs-tab-active:text-gray-700 hs-tab-active:dark:bg-neutral-800 hs-tab-active:dark:text-neutral-400 dark:hs-tab-active:bg-gray-800 py-2 px-3 inline-flex items-center gap-x-2 bg-transparent text-xs md:py-3 md:px-4 md:text-sm text-gray-500 hover:text-gray-700 focus:outline-none focus:text-gray-700 font-medium rounded-lg hover:hover:text-blue-600 disabled:opacity-50 disabled:pointer-events-none dark:text-neutral-400 dark:hover:text-white dark:focus:text-white" id="segment-item-3" aria-selected="false" data-hs-tab="#segment-3" aria-controls="segment-3" role="tab">
                     Cases
                 </button>
-                <button type="button" class="hs-tab-active:bg-white hs-tab-active:text-gray-700 hs-tab-active:dark:bg-neutral-800 hs-tab-active:dark:text-neutral-400 dark:hs-tab-active:bg-gray-800 py-2 px-3 inline-flex items-center gap-x-2 bg-transparent text-xs md:py-3 md:px-4 md:text-sm text-gray-500 hover:text-gray-700 focus:outline-none focus:text-gray-700 font-medium rounded-lg hover:hover:text-blue-600 disabled:opacity-50 disabled:pointer-events-none dark:text-neutral-400 dark:hover:text-white dark:focus:text-white" id="segment-item-4" aria-selected="false" data-hs-tab="#segment-4" aria-controls="segment-4" role="tab">
-                    Zoom Meetings
-                </button>
+                <div class="relative">
+                    @php
+                        $hasUnviewedMeetings = false;
+                    @endphp
+
+                    @foreach ($selectedClientFullDetails['zoom_meetings'] as $meeting)
+                        @if (isset($meeting['is_viewed']) && $meeting['is_viewed'] === 'new')
+                            @php
+                                $hasUnviewedMeetings = true;
+                                break; // No need to continue once a new meeting is found
+                            @endphp
+                        @endif
+                    @endforeach
+
+                    @if ($hasUnviewedMeetings)
+                        <span class="flex absolute top-0 end-0 size-3 -mt-1.5 -me-1.5">
+                            <span class="animate-ping absolute inline-flex size-full rounded-full bg-red-400 opacity-75 dark:bg-red-600"></span>
+                            <span class="relative inline-flex rounded-full size-3 bg-red-500"></span>
+                        </span>
+                    @else
+                        
+                    @endif
+                    <button type="button"  wire:click="markAllAsViewed" class="hs-tab-active:bg-white hs-tab-active:text-gray-700 hs-tab-active:dark:bg-neutral-800 hs-tab-active:dark:text-neutral-400 dark:hs-tab-active:bg-gray-800 py-2 px-3 inline-flex items-center gap-x-2 bg-transparent text-xs md:py-3 md:px-4 md:text-sm text-gray-500 hover:text-gray-700 focus:outline-none focus:text-gray-700 font-medium rounded-lg hover:hover:text-blue-600 disabled:opacity-50 disabled:pointer-events-none dark:text-neutral-400 dark:hover:text-white dark:focus:text-white" id="segment-item-4" aria-selected="false" data-hs-tab="#segment-4" aria-controls="segment-4" role="tab">
+                        Zoom Meetings
+                    </button>
+                </div>
+                
             </nav>
         </div>
     </div>
-    <div class="mt-5 w-full h-auto flex flex-col justify-center items-center">
+    <div class="mt-5 w-full h-auto flex flex-col justify-center items-center" wire:ignore>
         <div id="segment-1" role="tabpanel" aria-labelledby="segment-item-1" class="w-[95%] md:w-[50%] h-96 rounded-lg">
             @foreach ($accountDetails as $detail)
                 <div class="bg-gray-200 w-full h-auto rounded-3xl overflow-hidden">
@@ -226,13 +275,15 @@
                                     </div>
                                     <div class="mx-auto md:ml-auto w-fit">
                                         @if (\Carbon\Carbon::parse($meeting->start_time)->isSameDay(\Carbon\Carbon::now()))
-                                            <button type="button" class="relative w-32 py-3 px-4 inline-flex items-center justify-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-none focus:bg-gray-50 disabled:opacity-50 dark:bg-neutral-900 dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-800 dark:focus:bg-neutral-800">
-                                                Join Now
-                                                <span class="flex absolute top-0 end-0 size-3 -mt-1.5 -me-1.5">
-                                                    <span class="animate-ping absolute inline-flex size-full rounded-full bg-red-400 opacity-75 dark:bg-red-600"></span>
-                                                    <span class="relative inline-flex rounded-full size-3 bg-red-500"></span>
-                                                </span>
-                                            </button>
+                                            <a href="{{$meeting->join_url}}" target="blank>
+                                                <button type="button" class="relative w-32 py-3 px-4 inline-flex items-center justify-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-none focus:bg-gray-50 disabled:opacity-50 dark:bg-neutral-900 dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-800 dark:focus:bg-neutral-800">
+                                                    Join Now
+                                                    <span class="flex absolute top-0 end-0 size-3 -mt-1.5 -me-1.5">
+                                                        <span class="animate-ping absolute inline-flex size-full rounded-full bg-red-400 opacity-75 dark:bg-red-600"></span>
+                                                        <span class="relative inline-flex rounded-full size-3 bg-red-500"></span>
+                                                    </span>
+                                                </button>
+                                            </a>
                                         @else
                                             <button type="button" disabled class="relative w-32 py-3 px-4 inline-flex items-center justify-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-none focus:bg-gray-50 disabled:opacity-50 dark:bg-neutral-900 dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-800 dark:focus:bg-neutral-800">
                                                 Join Now

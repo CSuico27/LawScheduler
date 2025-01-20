@@ -61,6 +61,32 @@ class AccountPage extends Component
             ];
         }
     }
+
+    public function markAsViewed($meetingId)
+    {
+        $meeting = ZoomMeeting::find($meetingId);
+
+        if ($meeting && $meeting->is_viewed === 'new') {
+            $meeting->update(['is_viewed' => 'viewed']);
+           
+        } else {
+        
+        }
+    }
+
+    public function markAllAsViewed()
+    {
+
+        $updatedMeetings = ZoomMeeting::where('is_viewed', 'new')->update(['is_viewed' => 'viewed']);
+
+    }
+
+    public function markAllAsViewedAppointment()
+    {
+
+        $updatedAppointment = AppointmentDetails::where('is_viewed', 'new')->update(['is_viewed' => 'viewed']);
+
+    }
     
     public function render()
     {

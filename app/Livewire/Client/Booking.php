@@ -140,7 +140,8 @@ class Booking extends Component
             'title' => 'Appointment of ' . auth()->user()->name,
             'date' => $this->appointmentDate,
             'time' => $this->selectedTimeSlot,
-            'description' => auth()->user()->name . ', create a appointment. Purpose of Appointment: (' . $this->getServiceNames() . ').'
+            'description' => auth()->user()->name . ', create a appointment. Purpose of Appointment: (' . $this->getServiceNames() . ').',
+            'is_viewed' => 'new'
         ]);
 
         $order = Orders::create([

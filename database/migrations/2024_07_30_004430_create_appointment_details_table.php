@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('date');
             $table->time('time');
             $table->string('description');
+            $table->string('is_viewed');
             $table->timestamps();
 
             $table->foreign('appointment_id')

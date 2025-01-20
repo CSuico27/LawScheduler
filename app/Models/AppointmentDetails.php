@@ -17,7 +17,8 @@ class AppointmentDetails extends Model
         'title',
         'date',
         'time',
-        'description'
+        'description',
+        'is_viewed'
     ];
 
     public function appointment(): BelongsTo
