@@ -2,37 +2,37 @@
     <div class="flex">
         <div class="flex bg-gray-200 hover:bg-gray-200 rounded-lg transition p-1 dark:bg-neutral-700 dark:hover:bg-neutral-600">
             <nav class="flex gap-x-1" aria-label="Tabs" role="tablist" aria-orientation="horizontal">
-                <button type="button" class="hs-tab-active:bg-white hs-tab-active:text-gray-700 hs-tab-active:dark:bg-neutral-800 hs-tab-active:dark:text-neutral-400 dark:hs-tab-active:bg-gray-800 py-3 px-4 inline-flex items-center gap-x-2 bg-transparent text-sm text-gray-500 hover:text-gray-700 focus:outline-none focus:text-gray-700 font-medium rounded-lg hover:hover:text-blue-600 disabled:opacity-50 disabled:pointer-events-none dark:text-neutral-400 dark:hover:text-white dark:focus:text-white active" id="segment-item-1" aria-selected="true" data-hs-tab="#segment-1" aria-controls="segment-1" role="tab">
+                <button type="button" class="hs-tab-active:bg-white hs-tab-active:text-gray-700 hs-tab-active:dark:bg-neutral-800 hs-tab-active:dark:text-neutral-400 dark:hs-tab-active:bg-gray-800 py-2 px-3 inline-flex items-center gap-x-2 bg-transparent text-xs md:py-3 md:px-4 md:text-sm text-gray-500 hover:text-gray-700 focus:outline-none focus:text-gray-700 font-medium rounded-lg hover:hover:text-blue-600 disabled:opacity-50 disabled:pointer-events-none dark:text-neutral-400 dark:hover:text-white dark:focus:text-white active" id="segment-item-1" aria-selected="true" data-hs-tab="#segment-1" aria-controls="segment-1" role="tab">
                     Details
                 </button>
-                <button type="button" class="hs-tab-active:bg-white hs-tab-active:text-gray-700 hs-tab-active:dark:bg-neutral-800 hs-tab-active:dark:text-neutral-400 dark:hs-tab-active:bg-gray-800 py-3 px-4 inline-flex items-center gap-x-2 bg-transparent text-sm text-gray-500 hover:text-gray-700 focus:outline-none focus:text-gray-700 font-medium rounded-lg hover:hover:text-blue-600 disabled:opacity-50 disabled:pointer-events-none dark:text-neutral-400 dark:hover:text-white dark:focus:text-white" id="segment-item-2" aria-selected="false" data-hs-tab="#segment-2" aria-controls="segment-2" role="tab">
+                <button type="button" class="hs-tab-active:bg-white hs-tab-active:text-gray-700 hs-tab-active:dark:bg-neutral-800 hs-tab-active:dark:text-neutral-400 dark:hs-tab-active:bg-gray-800 py-2 px-3 inline-flex items-center gap-x-2 bg-transparent text-xs md:py-3 md:px-4 md:text-sm text-gray-500 hover:text-gray-700 focus:outline-none focus:text-gray-700 font-medium rounded-lg hover:hover:text-blue-600 disabled:opacity-50 disabled:pointer-events-none dark:text-neutral-400 dark:hover:text-white dark:focus:text-white" id="segment-item-2" aria-selected="false" data-hs-tab="#segment-2" aria-controls="segment-2" role="tab">
                     Appointments
                 </button>
-                <button type="button" class="hs-tab-active:bg-white hs-tab-active:text-gray-700 hs-tab-active:dark:bg-neutral-800 hs-tab-active:dark:text-neutral-400 dark:hs-tab-active:bg-gray-800 py-3 px-4 inline-flex items-center gap-x-2 bg-transparent text-sm text-gray-500 hover:text-gray-700 focus:outline-none focus:text-gray-700 font-medium rounded-lg hover:hover:text-blue-600 disabled:opacity-50 disabled:pointer-events-none dark:text-neutral-400 dark:hover:text-white dark:focus:text-white" id="segment-item-3" aria-selected="false" data-hs-tab="#segment-3" aria-controls="segment-3" role="tab">
+                <button type="button" class="hs-tab-active:bg-white hs-tab-active:text-gray-700 hs-tab-active:dark:bg-neutral-800 hs-tab-active:dark:text-neutral-400 dark:hs-tab-active:bg-gray-800 py-2 px-3 inline-flex items-center gap-x-2 bg-transparent text-xs md:py-3 md:px-4 md:text-sm text-gray-500 hover:text-gray-700 focus:outline-none focus:text-gray-700 font-medium rounded-lg hover:hover:text-blue-600 disabled:opacity-50 disabled:pointer-events-none dark:text-neutral-400 dark:hover:text-white dark:focus:text-white" id="segment-item-3" aria-selected="false" data-hs-tab="#segment-3" aria-controls="segment-3" role="tab">
                     Cases
                 </button>
-                <button type="button" class="hs-tab-active:bg-white hs-tab-active:text-gray-700 hs-tab-active:dark:bg-neutral-800 hs-tab-active:dark:text-neutral-400 dark:hs-tab-active:bg-gray-800 py-3 px-4 inline-flex items-center gap-x-2 bg-transparent text-sm text-gray-500 hover:text-gray-700 focus:outline-none focus:text-gray-700 font-medium rounded-lg hover:hover:text-blue-600 disabled:opacity-50 disabled:pointer-events-none dark:text-neutral-400 dark:hover:text-white dark:focus:text-white" id="segment-item-4" aria-selected="false" data-hs-tab="#segment-4" aria-controls="segment-4" role="tab">
+                <button type="button" class="hs-tab-active:bg-white hs-tab-active:text-gray-700 hs-tab-active:dark:bg-neutral-800 hs-tab-active:dark:text-neutral-400 dark:hs-tab-active:bg-gray-800 py-2 px-3 inline-flex items-center gap-x-2 bg-transparent text-xs md:py-3 md:px-4 md:text-sm text-gray-500 hover:text-gray-700 focus:outline-none focus:text-gray-700 font-medium rounded-lg hover:hover:text-blue-600 disabled:opacity-50 disabled:pointer-events-none dark:text-neutral-400 dark:hover:text-white dark:focus:text-white" id="segment-item-4" aria-selected="false" data-hs-tab="#segment-4" aria-controls="segment-4" role="tab">
                     Zoom Meetings
                 </button>
             </nav>
         </div>
     </div>
     <div class="mt-5 w-full h-auto flex flex-col justify-center items-center">
-        <div id="segment-1" role="tabpanel" aria-labelledby="segment-item-1" class="w-[50%] h-96 rounded-lg">
+        <div id="segment-1" role="tabpanel" aria-labelledby="segment-item-1" class="w-[95%] md:w-[50%] h-96 rounded-lg">
             @foreach ($accountDetails as $detail)
                 <div class="bg-gray-200 w-full h-auto rounded-3xl overflow-hidden">
                     <div class="w-full h-auto relative pb-10">
                         <img src="{{ asset('/images/profile-bg.jpg')}}" alt="" class="w-full h-60 object-fill object-top">
-                        <div class="w-auto h-40 absolute z-10 top-40 left-5 flex">
-                            <div class="w-40 h-40 rounded-full border-4">
+                        <div class="w-auto h-40 absolute z-10 top-40 left-5 flex flex-col justify-center items-center md:flex md:flex-row">
+                            <div class="w-40 h-fit rounded-full border-4">
                                 <img src="{{ $detail->profile_picture }}" alt="" class="w-full h-auto object-fill object-center">
                             </div>
-                            <div class="w-auto  h-40 flex flex-col justify-end">
-                                <h1 class="font-bold text-3xl">{{ $detail->name }}</h1>
-                                <h3 class="text-base uppercase"> {{ $detail->info->barangay }}, {{ $detail->info->municipality }}, {{ $detail->info->province }}, {{ $detail->info->state }} </h3>
+                            <div class="w-auto h-40 flex flex-col justify-end">
+                                <h1 class="font-bold text-3xl text-center md:text-left">{{ $detail->name }}</h1>
+                                <h3 class="text-base uppercase text-center md:text-left"> {{ $detail->info->barangay }}, {{ $detail->info->municipality }}, {{ $detail->info->province }}, {{ $detail->info->state }} </h3>
                             </div>
                         </div>
-                        <div class="mt-24 px-10">
+                        <div class="mt-32 px-10 md:mt-24">
                             <div class="py-3 flex items-center text-sm text-gray-800 after:flex-1 after:border-t after:border-gray-500 after:ms-6 dark:text-white dark:after:border-neutral-600">Contact Details</div>
                             <div class="flex flex-col gap-3">
                                 <div class="flex items-center gap-2">
@@ -53,14 +53,14 @@
                 </div>
             @endforeach
         </div>
-        <div id="segment-2" class="hidden w-[50%] h-96 rounded-lg" role="tabpanel" aria-labelledby="segment-item-2">
+        <div id="segment-2" class="hidden w-[95%] h-96 rounded-lg md:w-[50%]" role="tabpanel" aria-labelledby="segment-item-2">
             @if ($selectedClientFullDetails)
                 @if (count($selectedClientFullDetails['appointments']) > 0)
                     <div class="w-full h-auto flex flex-col bg-white border shadow-sm rounded-xl dark:bg-neutral-900 dark:border-neutral-700 dark:shadow-neutral-700/70 p-5">
                         <div class="py-3 flex items-center text-sm text-gray-800 after:flex-1 after:border-t after:border-gray-200 after:ms-6 dark:text-white dark:after:border-neutral-600">Upcoming Appoitnments</div>
                         @foreach ($selectedClientFullDetails['appointments'] as $appointment)
                             @if (\Carbon\Carbon::parse($appointment->date)->startOfDay()->gte(\Carbon\Carbon::now()->startOfDay()))
-                                <div class="w-full h-auto rounded-lg shadow-md flex items-center p-2 gap-3 border mt-2">
+                                <div class="w-full h-auto rounded-lg shadow-md flex flex-col items-center p-2 gap-3 border mt-2 md:flex-row">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#287bff" class="size-10">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5m-9-6h.008v.008H12v-.008ZM12 15h.008v.008H12V15Zm0 2.25h.008v.008H12v-.008ZM9.75 15h.008v.008H9.75V15Zm0 2.25h.008v.008H9.75v-.008ZM7.5 15h.008v.008H7.5V15Zm0 2.25h.008v.008H7.5v-.008Zm6.75-4.5h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V15Zm0 2.25h.008v.008h-.008v-.008Zm2.25-4.5h.008v.008H16.5v-.008Zm0 2.25h.008v.008H16.5V15Z" />
                                     </svg>
@@ -70,7 +70,7 @@
                                         </h3>
                                         <p class="text-xs italic text-blue-500">{{$appointment->description}}</p>
                                     </div>
-                                    <div class="ml-auto w-fit">
+                                    <div class="mx-auto w-fit md:ml-auto">
                                         <span class="mt-2 inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-800/30 dark:text-blue-500">
                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#287bff" class="size-6">
                                                 <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5m-9-6h.008v.008H12v-.008ZM12 15h.008v.008H12V15Zm0 2.25h.008v.008H12v-.008ZM9.75 15h.008v.008H9.75V15Zm0 2.25h.008v.008H9.75v-.008ZM7.5 15h.008v.008H7.5V15Zm0 2.25h.008v.008H7.5v-.008Zm6.75-4.5h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V15Zm0 2.25h.008v.008h-.008v-.008Zm2.25-4.5h.008v.008H16.5v-.008Zm0 2.25h.008v.008H16.5V15Z" />
@@ -93,7 +93,7 @@
                         <div class="py-3 flex items-center text-sm text-gray-800 after:flex-1 after:border-t after:border-gray-200 after:ms-6 dark:text-white dark:after:border-neutral-600 mt-5">Appointments History</div>
                         @foreach ($selectedClientFullDetails['appointments'] as $appointment)
                             @if(\Carbon\Carbon::parse($appointment->date)->startOfDay()->lt(\Carbon\Carbon::now()->startOfDay()))
-                                <div class="w-full h-auto rounded-lg shadow-md flex items-center p-2 gap-3 border mt-2">
+                                <div class="w-full h-auto rounded-lg shadow-md flex flex-col items-center p-2 gap-3 border mt-2 md:flex-row">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#287bff" class="size-10">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5m-9-6h.008v.008H12v-.008ZM12 15h.008v.008H12V15Zm0 2.25h.008v.008H12v-.008ZM9.75 15h.008v.008H9.75V15Zm0 2.25h.008v.008H9.75v-.008ZM7.5 15h.008v.008H7.5V15Zm0 2.25h.008v.008H7.5v-.008Zm6.75-4.5h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V15Zm0 2.25h.008v.008h-.008v-.008Zm2.25-4.5h.008v.008H16.5v-.008Zm0 2.25h.008v.008H16.5V15Z" />
                                     </svg>
@@ -103,7 +103,7 @@
                                         </h3>
                                         <p class="text-xs italic text-blue-500">{{$appointment->description}}</p>
                                     </div>
-                                    <div class="ml-auto w-fit">
+                                    <div class="mx-auto w-fit md:ml-auto">
                                         <span class="mt-2 inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-800/30 dark:text-blue-500">
                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#287bff" class="size-6">
                                                 <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5m-9-6h.008v.008H12v-.008ZM12 15h.008v.008H12V15Zm0 2.25h.008v.008H12v-.008ZM9.75 15h.008v.008H9.75V15Zm0 2.25h.008v.008H9.75v-.008ZM7.5 15h.008v.008H7.5V15Zm0 2.25h.008v.008H7.5v-.008Zm6.75-4.5h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V15Zm0 2.25h.008v.008h-.008v-.008Zm2.25-4.5h.008v.008H16.5v-.008Zm0 2.25h.008v.008H16.5V15Z" />
@@ -131,7 +131,7 @@
                 @endif
             @endif
         </div>
-        <div id="segment-3" class="hidden w-[50%] h-96 rounded-lg" role="tabpanel" aria-labelledby="segment-item-3">
+        <div id="segment-3" class="hidden w-[95%] h-96 rounded-lg md:w-[50%]" role="tabpanel" aria-labelledby="segment-item-3">
             @if ($selectedClientFullDetails)
                 @if (count($selectedClientFullDetails['cases']) > 0)
                     <div class="flex flex-col bg-white border shadow-sm rounded-xl dark:bg-neutral-900 dark:border-neutral-700 dark:shadow-neutral-700/70 p-10">
@@ -202,14 +202,14 @@
                 @endif
             @endif
         </div>
-        <div id="segment-4" class="hidden w-[50%] h-96 rounded-lg" role="tabpanel" aria-labelledby="segment-item-4">
+        <div id="segment-4" class="hidden w-[95%] h-96 rounded-lg md:w-[50%]" role="tabpanel" aria-labelledby="segment-item-4">
             @if ($selectedClientFullDetails)
                 @if (count($selectedClientFullDetails['zoom_meetings']) > 0)
                     <div class="w-full h-auto flex flex-col bg-white border shadow-sm rounded-xl dark:bg-neutral-900 dark:border-neutral-700 dark:shadow-neutral-700/70 p-5">
                         <div class="py-3 flex items-center text-sm text-gray-800 after:flex-1 after:border-t after:border-gray-200 after:ms-6 dark:text-white dark:after:border-neutral-600">Upcoming Meetings</div>
                         @foreach ($selectedClientFullDetails['zoom_meetings'] as $meeting)
                             @if (\Carbon\Carbon::parse($meeting->start_time)->startOfDay()->gte(\Carbon\Carbon::now()->startOfDay()))
-                                <div class="w-full h-auto rounded-lg shadow-md flex items-center p-2 gap-3 border mt-2">
+                                <div class="w-full h-auto rounded-lg shadow-md flex flex-col items-center p-2 gap-3 border mt-2 md:flex-row">
                                     <img src="{{ asset('/images/zoom-logo.webp') }}" alt="zoom" class="w-8 h-8">
                                     <div class="border border-dashed w-full h-auto rounded-lg px-5 py-3">
                                         <h3 class="font-semibold text-base">
@@ -224,7 +224,7 @@
                                             {{ \Carbon\Carbon::parse($meeting->start_time)->format('F j, Y') }}
                                         </span>
                                     </div>
-                                    <div class="ml-auto w-fit">
+                                    <div class="mx-auto md:ml-auto w-fit">
                                         @if (\Carbon\Carbon::parse($meeting->start_time)->isSameDay(\Carbon\Carbon::now()))
                                             <button type="button" class="relative w-32 py-3 px-4 inline-flex items-center justify-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-none focus:bg-gray-50 disabled:opacity-50 dark:bg-neutral-900 dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-800 dark:focus:bg-neutral-800">
                                                 Join Now
@@ -245,26 +245,25 @@
                         <div class="py-3 flex items-center text-sm text-gray-800 after:flex-1 after:border-t after:border-gray-200 after:ms-6 dark:text-white dark:after:border-neutral-600 mt-5">Appointments History</div>
                         @foreach ($selectedClientFullDetails['zoom_meetings'] as $meeting)
                             @if(\Carbon\Carbon::parse($meeting->start_time)->startOfDay()->lt(\Carbon\Carbon::now()->startOfDay()))
-                                    <div class="w-full h-auto rounded-lg shadow-md flex items-center p-2 gap-3 border mt-2">
-                                        <img src="{{ asset('/images/zoom-logo.webp') }}" alt="zoom" class="w-8 h-8">
-                                        <div class="border border-dashed w-full h-auto rounded-lg px-5 py-3">
-                                            <h3 class="font-semibold text-base">
-                                                {{ $meeting->topic }}
-                                            </h3>
-                                            <p class="text-xs italic text-blue-500">{{$meeting->agenda}}</p>
-                                            <span class="mt-2 inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-800/30 dark:text-blue-500">
-                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#287bff" class="size-6">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5m-9-6h.008v.008H12v-.008ZM12 15h.008v.008H12V15Zm0 2.25h.008v.008H12v-.008ZM9.75 15h.008v.008H9.75V15Zm0 2.25h.008v.008H9.75v-.008ZM7.5 15h.008v.008H7.5V15Zm0 2.25h.008v.008H7.5v-.008Zm6.75-4.5h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V15Zm0 2.25h.008v.008h-.008v-.008Zm2.25-4.5h.008v.008H16.5v-.008Zm0 2.25h.008v.008H16.5V15Z" />
-                                                </svg>
-                                                
-                                                {{ \Carbon\Carbon::parse($meeting->start_time)->format('F j, Y') }}
-                                            </span>
-                                        </div>
-                                        <div class="ml-auto w-fit">
-                                            <button type="button" disabled class="relative w-80 py-3 px-4 inline-flex items-center justify-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-none focus:bg-gray-50 disabled:opacity-50 dark:bg-neutral-900 dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-800 dark:focus:bg-neutral-800">
-                                                Meeting Not Available
-                                            </button>
-                                        </div>
+                                <div class="w-full h-auto rounded-lg shadow-md flex flex-col items-center p-2 gap-3 border mt-2 md:flex-row">
+                                    <img src="{{ asset('/images/zoom-logo.webp') }}" alt="zoom" class="w-8 h-8">
+                                    <div class="border border-dashed w-full h-auto rounded-lg px-5 py-3">
+                                        <h3 class="font-semibold text-base">
+                                            {{ $meeting->topic }}
+                                        </h3>
+                                        <p class="text-xs italic text-blue-500">{{$meeting->agenda}}</p>
+                                        <span class="mt-2 inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-800/30 dark:text-blue-500">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#287bff" class="size-6">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5m-9-6h.008v.008H12v-.008ZM12 15h.008v.008H12V15Zm0 2.25h.008v.008H12v-.008ZM9.75 15h.008v.008H9.75V15Zm0 2.25h.008v.008H9.75v-.008ZM7.5 15h.008v.008H7.5V15Zm0 2.25h.008v.008H7.5v-.008Zm6.75-4.5h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V15Zm0 2.25h.008v.008h-.008v-.008Zm2.25-4.5h.008v.008H16.5v-.008Zm0 2.25h.008v.008H16.5V15Z" />
+                                            </svg>
+                                            
+                                            {{ \Carbon\Carbon::parse($meeting->start_time)->format('F j, Y') }}
+                                        </span>
+                                    </div>
+                                    <div class="mx-auto md:ml-auto w-fit">
+                                        <button type="button" disabled class="relative w-72 md:w-80 py-3 px-4 inline-flex items-center justify-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-none focus:bg-gray-50 disabled:opacity-50 dark:bg-neutral-900 dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-800 dark:focus:bg-neutral-800">
+                                            Meeting Not Available
+                                        </button>
                                     </div>
                                 </div>
                             @endif
