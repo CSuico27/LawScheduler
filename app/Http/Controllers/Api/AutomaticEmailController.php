@@ -5,10 +5,12 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Mail\AutomaticEmailer;
 use App\Mail\CaseEmailer;
+use App\Mail\ZoomEmailer;
 use App\Models\AppointmentDetails;
 use App\Models\Cases;
 use App\Models\CaseStage;
 use App\Models\User;
+use App\Models\ZoomMeeting;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
@@ -18,8 +20,9 @@ class AutomaticEmailController extends Controller
 {
     public function index(): JsonResponse
     {
-        $appointments = AppointmentDetails::all(['title', 'client_id', 'date', 'time']);
-        
+        $appointments = AppointmentDetails::where('is_accepted', 'accepted')
+            ->get(['title', 'client_id', 'date', 'time']);
+
         $parsedAppointments = $appointments->map(function ($appointment) {
             $datetime = Carbon::createFromFormat(
                 strpos($appointment['date'], '-') === 4 ? 'Y-m-d' : 'd-m-Y',
@@ -79,7 +82,27 @@ class AutomaticEmailController extends Controller
         return response()->json($parsedCases);
     }
 
+    public function getZoomDetails(): JsonResponse
+    {
+        $zooms = ZoomMeeting::where('is_accepted', 'accepted')->get(['meeting_id', 'topic', 'start_time', 'participants']);
+        
+        $parsedZoom = $zooms->map(function ($zoom) {
+           
+            $participants = json_decode($zoom->participants, true); 
+            $user = User::find($participants[0]);
+            $email = $user ? $user->email : null;
+            
+            return [
+                'meeting_id' => $zoom->meeting_id,
+                'topic' => $zoom->topic,
+                'start_time' => $zoom->start_time,
+                'participants' => $email
+            ];
+           
+        });
 
+        return response()->json($parsedZoom);
+    }
 
     public function sendAppointmentReminder(Request $request)
     {
@@ -122,5 +145,26 @@ class AutomaticEmailController extends Controller
         }
 
         return response()->json(['message' => 'Reminder email(s) sent successfully']);
+    }
+
+    public function sendZoomReminder(Request $request)
+    {
+        $data = $request->validate([
+            'meeting_id' => 'required',
+            'topic' => 'required|string',
+            'start_time' => 'required|date',
+            'participants' => 'required|email',
+        ]);
+
+        $formattedDatetime = Carbon::parse($data['start_time'])->format('F d, Y');
+        
+        try {
+            Mail::to($data['participants'])->send(new ZoomEmailer($data['meeting_id'], $data['topic'], $formattedDatetime));
+        } catch (\Exception $e) {
+            
+            return response()->json(['error' => 'Failed to send email reminder: ' . $e->getMessage()], 500);
+        }
+
+        return response()->json(['message' => 'Reminder email sent successfully']);
     }
 }

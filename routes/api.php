@@ -74,5 +74,8 @@ Route::get('/location/barangay/{municipalityCode}', [ApiController::class, 'getB
 
 Route::get('/appointments', [AutomaticEmailController::class, 'index']);
 Route::get('/cases', [AutomaticEmailController::class, 'getCaseDetails']);
+Route::get('/zooms', [AutomaticEmailController::class, 'getZoomDetails']);
+
 Route::post('/send-appointment-reminder', [AutomaticEmailController::class, 'sendAppointmentReminder']);
 Route::post('/send-case-reminder', [AutomaticEmailController::class, 'sendCaseReminder']);
+Route::post('/send-zoom-reminder', [AutomaticEmailController::class, 'sendZoomReminder']);
