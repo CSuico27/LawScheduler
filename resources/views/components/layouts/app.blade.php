@@ -10,11 +10,13 @@
         @wireUiScripts
     </head>
     <body class="bg-[#f1f4f6]">
+        <x-notifications />
         @livewire('partials.navbar')
         <main>
             {{ $slot }}
         </main>
         @livewire('partials.footer')
         @livewireScripts
+        {{-- <script src="https://cdn.jsdelivr.net/npm/preline@2.0.2/dist/preline.min.js"></script> --}}
     </body>
 </html>

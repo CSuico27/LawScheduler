@@ -1,6 +1,6 @@
-<div class="w-full h-full px-52">
-    <div class="flex flex-row h-[80vh]">
-        <div class="flex flex-col justify-center gap-10 w-full">
+<div class="w-full h-screen flex justify-center items-center px-52">
+    <div class="flex flex-row h-full">
+        <div class="flex flex-col justify-center gap-10 w-full mt-28">
             <p class="font-medium text-sm">-GETTING IT DONE.</p>
             <p class="font-serif text-7xl pr-56">Trusted legal solutions for the real world.</p>
             <p class="pr-96 text-lg">
@@ -21,9 +21,9 @@
                 </div>
             </div>
         </div>
-        <div class="w-full relative">
-            <div class="w-[90%] h-full pl-10">
-                <img src="{{ asset('images/tao.png')}}" alt="" class="w-full h-full object-contain object-left">
+        <div class="w-full relative mt-28">
+            <div class="w-[80%] h-full pl-10">
+                <img src="{{ asset('images/tao2.png')}}" alt="" class="w-full h-full object-contain object-left">
             </div>
             <div class="w-96 h-72 flex flex-col justify-center items-center gap-6 absolute right-0 bottom-20 bg-white opacity-95">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#d1ab70" class="size-10">

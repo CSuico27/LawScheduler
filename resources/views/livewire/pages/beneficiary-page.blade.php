@@ -138,7 +138,7 @@
                 </x-select>
 
                 <div class="col-span-1 sm:col-span-2">
-                <x-select
+                    <x-select
                         label="Zip Code"
                         placeholder="Select Zip Code"
                         wire:model.defer="zipCode"
