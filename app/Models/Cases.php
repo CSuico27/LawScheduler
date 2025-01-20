@@ -57,4 +57,9 @@ class Cases extends Model
     {
         return $this->belongsTo(CaseStage::class, 'case_stage');
     }
+
+    public function courtName(): BelongsTo
+    {
+        return $this->belongsTo(Court::class, 'court');
+    }
 }

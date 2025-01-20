@@ -394,7 +394,8 @@ class CasePage extends Component
             ->with('user')
             ->with('caseType')
             ->with('caseSubType')
-            ->with('caseStage') // Eager load the petitioner (user) relationship
+            ->with('caseStage')
+            ->with('courtName')
             ->latest()
             ->paginate(5);
 
@@ -403,7 +404,8 @@ class CasePage extends Component
             $caseList = Cases::with('user')
             ->with('caseType')
             ->with('caseSubType')
-            ->with('caseStage') // Eager load the petitioner (user) relationship
+            ->with('caseStage')
+            ->with('courtName')
             ->latest()
             ->paginate(5);
         }

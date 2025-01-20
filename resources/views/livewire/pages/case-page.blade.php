@@ -91,7 +91,11 @@
                                     <td scope="row" class="px-4 py-2 h-auto" >
                                        <div>
                                             <div>
-                                                Court: <span class="font-medium text-gray-900">{{ $case->court }}</span>
+                                                Court: <span class="font-medium text-gray-900">
+                                                    @if ($case->courtName)
+                                                        {{ $case->courtName->name }}
+                                                    @endif
+                                                </span>
                                             </div>
                                             <div>
                                                 No: <span class="font-medium text-gray-900">{{ $case->court_number }}</span>
