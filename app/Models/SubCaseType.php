@@ -11,8 +11,8 @@ class SubCaseType extends Model
     use HasFactory;
 
     protected $fillable = [
-        'case_type_id',
         'name',
+        'case_type_id',
         'is_active', 
     ];
 

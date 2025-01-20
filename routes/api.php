@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\BarangaysController;
 use App\Http\Controllers\Api\RegionsController;
 use App\Livewire\Auth\RegisterPage;
+use App\Livewire\Pages\CaseSubType;
 use App\Livewire\Pages\ClientPage;
 use App\Models\PHRegions;
 use Illuminate\Http\Request;
@@ -34,3 +35,6 @@ Route::get('/api/client/regions', [ClientPage::class, 'getRegions'])->name('api.
 Route::get('/api/client//provinces', [ClientPage::class, 'getProvinces'])->name('api.provinces.client');
 Route::get('/api/client//municipalities', [ClientPage::class, 'getMunicipalities'])->name('api.municipalities.client');
 Route::get('/api/client//barangays', [ClientPage::class, 'getBarangays'])->name('api.barangays.client');
+
+// CASE SUB TYPE
+Route::get('/api/case/types', [CaseSubType::class, 'getCaseTypes'])->name('api.case.types');

@@ -1,9 +1,9 @@
 <div class="w-full h-full">
     <div class="container dashed-container flex flex-col-reverse md:flex-row md:flex">
         <div class="w-full flex md:justify-start md:mt-0 items-center justify-center mt-3 ">
-            <button type="button" wire:loading.attr="disabled" wire:loading.class="!cursor-wait" onclick="$openModal('newCaseTypeModal')" class="text-white bg-[#4285F4] hover:bg-[#4285F4]/90 focus:ring-4 focus:outline-none focus:ring-[#4285F4]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-[#4285F4]/55">
+            <button type="button" wire:loading.attr="disabled" wire:loading.class="!cursor-wait" onclick="$openModal('newCaseSubTypeModal')" class="text-white bg-[#4285F4] hover:bg-[#4285F4]/90 focus:ring-4 focus:outline-none focus:ring-[#4285F4]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-[#4285F4]/55">
                 <x-icon name="document-add" class="w-5 h-5" />
-                New Case Type
+                New Case Sub Type
             </button>
         </div>
 
@@ -28,7 +28,10 @@
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
                     <th scope="col" colspan="4" class="px-6 py-3 text-blue-950">
-                        Name
+                        Sub Case Type Name
+                    </th>
+                    <th scope="col" colspan="4" class="px-6 py-3 text-blue-950">
+                        Case Type Name
                     </th>
                     <th scope="col" colspan="4" class="px-6 py-3 text-blue-950">
                         Status
@@ -39,7 +42,7 @@
                 </tr>
             </thead>
             <tbody>
-                @if ($caseTypeList->isEmpty())
+                @if ($caseSubTypeList->isEmpty())
                     <tr>
                         <td colspan="12">
                             <div class="flex justify-center items-center text-center gap-2 py-10 w-full">
@@ -48,21 +51,24 @@
                         </td>
                     </tr>
                 @else
-                    @foreach ($caseTypeList as $caseType)
+                    @foreach ($caseSubTypeList as $caseSubType)
                         <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                             <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white" colspan="4">
-                                {{ $caseType->name }}
+                                {{ $caseSubType->name }}
+                            </th>
+                            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white" colspan="4">
+                                {{ $caseSubType->caseType->name }}
                             </th>
                             <td class="px-6 py-4" colspan="4">
-                                @if ($caseType->is_active)
+                                @if ($caseSubType->is_active)
                                     <span class="inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-800/30 dark:text-yellow-500">Active</span>
                                 @else
                                     <span class="inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-800/30 dark:text-red-500">Not Active</span>
                                 @endif
                             </td>
                             <td class="px-12 py-4 flex justify-end gap-4" colspan="4">
-                                <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline" onclick="$openModal('editCaseTypeModal')" wire:click="getSelectedCaseTypeId({{ $caseType->id }})">Edit</a>
-                                <a href="#" class="font-medium text-red-600 dark:text-red-500 hover:underline" wire:click="deleteConfirmation({{ $caseType->id }}, '{{ $caseType->name }}')">Delete</a>
+                                <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline" onclick="$openModal('editCaseSubTypeModal')" wire:click="getSelectedCaseSubTypeId({{ $caseSubType->id }})">Edit</a>
+                                <a href="#" class="font-medium text-red-600 dark:text-red-500 hover:underline" wire:click="deleteConfirmation({{ $caseSubType->id }}, '{{ $caseSubType->name }}')">Delete</a>
                             </td>
                         </tr>
                     @endforeach
@@ -70,18 +76,29 @@
             </tbody>            
         </table>
         <div class="w-full flex justify-end items-end py-5 px-2">
-            {{ $caseTypeList->links() }}
+            {{ $caseSubTypeList->links() }}
         </div>
-        
     </div>
 
     {{-- ADD MODAL --}}
-    <x-modal blur name="newCaseTypeModal" align="center" max-width="md">
-        <x-card title="Add New Case Type">
+    <x-modal blur name="newCaseSubTypeModal" align="center" max-width="md">
+        <x-card title="Add New Case Sub Type">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div class="col-span-1 sm:col-span-2">
                     <div class="grid grid-cols-1 gap-5">
-                        <x-input label="Case Type Name" placeholder="Ex: Civil Cases" class="py-3 mt-1" wire:model="name" />
+                        <x-input label="Case Sub Type Name" placeholder="Ex: Murder" class="py-3 mt-1" wire:model="name" />
+                        <x-select
+                            label="Select Case Type"
+                            wire:model.blur="caseTypeId"
+                            placeholder="Ex: Civil Case"
+                            :async-data="route('api.case.types')"
+                            :template="[
+                                'name'   => 'user-option',
+                            ]"
+                            option-label="name"
+                            option-value="id"
+                            option-description="name"
+                        />
                         <x-toggle lg wire:model.defer="isActive" left-label="Is Active"/>
                     </div>
                 </div>
@@ -90,7 +107,7 @@
                 <div class="flex justify-end gap-x-4">
                     <div class="flex">
                         <x-button flat label="Cancel" x-on:click="close" />
-                        <x-button primary label="Save" wire:click="addNewCaseType" />
+                        <x-button primary label="Save" wire:click="addNewCaseSubType" />
                     </div>
                 </div>
             </x-slot>
@@ -98,13 +115,13 @@
     </x-modal>
 
     {{-- EDIT MODAL --}}
-    <x-modal blur name="editCaseTypeModal" align="center" max-width="md" persistent>
-        <x-card title="Edit Case Type Details" >
+    <x-modal blur name="editCaseSubTypeModal" align="center" max-width="md" persistent>
+        <x-card title="Edit Case Sub Type Details" >
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div class="col-span-1 sm:col-span-2">
                     <div class="grid grid-cols-1 gap-5">
                         @if ($editName)
-                            <x-input label="Case Type Name" placeholder="Ex: Civil Cases" class="py-3 mt-1" wire:model="editName" />
+                            <x-input label="Case Sub Type Name" placeholder="Ex: Murder" class="py-3 mt-1" wire:model="editName" />
                         @else
                             <div class="relative w-full h-full">
                                 <x-input label="Case Type Name" placeholder="" wire:model="editName" disabled />
@@ -117,7 +134,18 @@
                                 </div>
                             </div>
                         @endif
-                    
+                        <x-select
+                            label="Select Case Type"
+                            wire:model.blur="editCaseTypeId"
+                            placeholder="Ex: Civil Case"
+                            :async-data="route('api.case.types')"
+                            :template="[
+                                'name'   => 'user-option',
+                            ]"
+                            option-label="name"
+                            option-value="id"
+                            option-description="name"
+                        />
                         <x-toggle lg wire:model="editIsActive" left-label="Is Active"/>
                     </div>
                 </div>
@@ -127,7 +155,7 @@
                 <div class="flex justify-end gap-x-4">
                     <div class="flex">
                         <x-button flat label="Cancel" x-on:click="close" wire:click="resetModal" />
-                        <x-button primary label="Save" wire:click="updateCaseTypeDetails({{ $selectedCaseTypeId }})" />
+                        <x-button primary label="Save" wire:click="updateCaseSubTypeDetails({{ $selectedCaseSubTypeId }})" />
                     </div>
                 </div>
             </x-slot>
