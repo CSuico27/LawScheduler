@@ -41,9 +41,7 @@ class BeneficiaryPage extends Component
     public $selectedBeneficiaryId;
 
     public function mount(){
-        $this->city = 'Tayabas City';
-        $this->state = 'Philippines';
-        $this->zipCode = '4306';
+        $this->initialData();
     }
 
     public function initialData(){
