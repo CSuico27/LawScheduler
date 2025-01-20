@@ -270,7 +270,13 @@
                             <!-- Icon -->
                             <div class="relative last:after:hidden after:absolute after:top-7 after:bottom-0 after:start-3.5 after:w-px after:-translate-x-[0.5px] after:bg-gray-200 dark:after:bg-neutral-700">
                                 <div class="relative z-10 size-7 flex justify-center items-center">
-                                    <img class="shrink-0 size-7 rounded-full" src="{{ $hearing->user->profile_picture }}" alt="Avatar">
+                                    <div class="flex -space-x-2">
+                                        @if ($hearing->complainantDetails)
+                                            @foreach ($hearing->complainantDetails as $complainant)
+                                                <img class="inline-block size-[20px] rounded-full" src="{{ $complainant->profile_picture }}" alt="Avatar">
+                                            @endforeach 
+                                        @endif
+                                      </div>
                                 </div>
                             </div>
                             <!-- End Icon -->
@@ -282,7 +288,7 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v17.25m0 0c-1.472 0-2.882.265-4.185.75M12 20.25c1.472 0 2.882.265 4.185.75M18.75 4.97A48.416 48.416 0 0 0 12 4.5c-2.291 0-4.545.16-6.75.47m13.5 0c1.01.143 2.01.317 3 .52m-3-.52 2.62 10.726c.122.499-.106 1.028-.589 1.202a5.988 5.988 0 0 1-2.031.352 5.988 5.988 0 0 1-2.031-.352c-.483-.174-.711-.703-.59-1.202L18.75 4.971Zm-16.5.52c.99-.203 1.99-.377 3-.52m0 0 2.62 10.726c.122.499-.106 1.028-.589 1.202a5.989 5.989 0 0 1-2.031.352 5.989 5.989 0 0 1-2.031-.352c-.483-.174-.711-.703-.59-1.202L5.25 4.971Z" />
                                     </svg>
                                     
-                                    {{ $hearing->case_no }}
+                                    {{ $hearing->nps_docket_no }}
                                     <span class="inline-flex items-center gap-x-1.5 py-1 px-3 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-800/30 dark:text-blue-500">{{ $hearing->caseStage->name }}</span>
                                 </h3>
                                 <p class="mt-1 text-sm text-gray-600 dark:text-neutral-400">
@@ -291,23 +297,28 @@
                                 
                                 <div class="dashed-container-no-padding mt-1">
                                     <div class="flex justify-between">
-                                        <div class="w-1/2">
-                                            <h3 class="text-sm font-bold">Petitioner</h3>
-                                            <button type="button" class="mt-1 -ms-1 p-1 inline-flex items-center gap-x-2 text-xs rounded-lg border border-transparent text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:text-neutral-400 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700">
-                                                <img class="shrink-0 size-4 rounded-full" src="{{ $hearing->user->profile_picture }}" alt="Avatar">
-                                                {{ $hearing->user->name }}
-                                            </button>
+                                        <div class="w-1/2 flex flex-col">
+                                            <h3 class="text-sm font-bold">Complainant/s</h3>
+                                            @if ($hearing->complainantDetails)
+                                                @foreach ($hearing->complainantDetails as $complainant)
+                                                    <button type="button" class="mt-1 -ms-1 p-1 inline-flex items-center gap-x-2 text-xs rounded-lg border border-transparent text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:text-neutral-400 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700">
+                                                        <img class="shrink-0 size-5.5 rounded-full" src="{{ $complainant->profile_picture }}" alt="Avatar">
+                                                        {{ $complainant->name }}   
+                                                    </button>
+                                                @endforeach 
+                                            @endif
                                         </div>
                                         <div class="w-1/2">
-                                            <h3 class="text-sm font-bold">Respondents</h3>
+                                            <h3 class="text-sm font-bold">Respondent/s</h3>
                                             <div class="mt-1">
                                                 @foreach (json_decode($hearing->respondents) as $respondent)
                                                     <button type="button" class="-ms-1 p-1 inline-flex items-center gap-x-2 text-xs rounded-lg border border-transparent text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:text-neutral-400 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
-                                                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
-                                                        </svg>
-                                                          
-                                                        {{ $respondent }}
+                                                        <div class="flex items-center">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                                                                <path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                                                            </svg>                                                  
+                                                            <span class="font-medium text-gray-900">{{ $respondent->name }}</span>
+                                                        </div>  
                                                     </button>
                                                 @endforeach
                                             </div>
@@ -315,18 +326,20 @@
                                         </div>
                                     </div>
                                     <div class="border-t border-gray-300 border-dashed">
-                                        <div class="py-1 flex items-center gap-2">
-                                            <h3 class="font-semibold">{{ $hearing->caseType->name }} : </h3>
-                                            <span class="text-sm italic">
-                                                {{ $hearing->caseSubType->name }}
-                                            </span>
+                                        <div class="py-1 flex gap-2">
+                                            <h3 class="font-semibold">Law/s Violated : </h3>
+                                            <div class="flex flex-col">
+                                                @foreach ($hearing->lawsViolated as $law)
+                                                    <p class="text-sm italic">
+                                                        {{ $law->name }}
+                                                    </p>
+                                                @endforeach
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <!-- End Right Content -->
                         </div>
-                        <!-- End Item -->
                     @endforeach
                 @endforeach
             @else

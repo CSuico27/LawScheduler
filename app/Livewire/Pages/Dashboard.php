@@ -4,6 +4,7 @@ namespace App\Livewire\Pages;
 
 use App\Models\AppointmentsModel;
 use App\Models\Cases;
+use App\Models\SubCaseType;
 use App\Models\User;
 use Carbon\Carbon;
 use Livewire\Component;
@@ -82,9 +83,28 @@ class Dashboard extends Component
             }
         } 
 
-        $upcomingHearings = Cases::with('caseStage')->with('caseSubType')->with('caseType')->with('user')->get()->groupBy(function($item) {
-            return $item->first_hearing_date;
+        $upcomingHearings = Cases::with('caseStage')->get()->groupBy(function($item) {
+            return $item->created_at;
         });
+
+        foreach ($upcomingHearings as $date => $cases) {
+            foreach ($cases as $case) {
+                
+                $complainantIds = json_decode($case->complainants, true);
+                if (is_array($complainantIds)) {
+                    $complainants = User::with('info')->whereIn('id', $complainantIds)->get();
+                    $case->complainantDetails = $complainants;
+                }
+        
+                
+                $lawsViolatedIds = json_decode($case->laws_violated, true); 
+                if (is_array($lawsViolatedIds)) {
+                    $laws = SubCaseType::whereIn('id', $lawsViolatedIds)->get();
+                    $case->lawsViolated = $laws;
+                }
+            }
+        }
+        
 
         $clientsCount = User::whereNotNull('profile_picture')->get()->count();
         $clientsAddedThisMonth = User::whereNotNull('profile_picture')

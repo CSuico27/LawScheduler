@@ -4,14 +4,18 @@ namespace App\Livewire\Pages;
 
 use App\Mail\ClientActivation;
 use App\Models\AccountActivation;
+use App\Models\AppointmentDetails;
 use App\Models\BeneficiariesModel;
+use App\Models\Cases;
 use App\Models\PHBarangays;
 use App\Models\PHCities;
 use App\Models\PHProvinces;
 use App\Models\PHRegions;
+use App\Models\SubCaseType;
 use App\Models\TemporaryClient;
 use App\Models\User;
 use App\Models\UserInfo;
+use App\Models\ZoomMeeting;
 use Filament\Notifications\Notification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
@@ -28,6 +32,8 @@ class ClientPage extends Component
     use WithPagination;
     // SEARCH
     public $searchTerm;
+    public $fullClientDetialsModal;
+    public $currentTab;
 
     // ADD
     public $firstName;
@@ -56,12 +62,23 @@ class ClientPage extends Component
     public $selectedClient;
     public $selectedClientId;
 
+    public $selectedClientFullDetails;
+
     public function mount(){
         $this->initialData();
     }
 
     public function initialData(){
         $this->state = 'Philippines';
+        $this->currentTab = "userDetailsTab";
+    }
+
+    public function changeTab($tabName){
+        $this->currentTab = $tabName;
+    }
+    public function resetTab(){
+        $this->currentTab = "userDetailsTab";
+        $this->selectedClientFullDetails = "";
     }
 
     public function addNewClient(){
@@ -154,6 +171,39 @@ class ClientPage extends Component
 
             $this->editEmail = $this->selectedClient->email;
         }
+    }
+
+    public function getSelectedClientFullDetails($id)
+    {
+        $user = User::with('info', 'appointmentDetails')->find($id);
+
+        if ($user) {
+            $zoomMeetings = ZoomMeeting::whereJsonContains('participants', $user->id)->get();
+            $appointments = AppointmentDetails::where('client_id', $user->id)->get();
+            $cases = Cases::whereJsonContains('complainants',  $user->id)->with('caseStage')->get();
+
+            foreach ($cases as $case) {
+                $complainantIds = json_decode($case->complainants, true);
+                if (is_array($complainantIds)) {
+                    $complainants = User::with('info')->whereIn('id', $complainantIds)->get();
+                    $case->complainantDetails = $complainants;
+                }
+
+                $lawsViolatedIds = json_decode($case->laws_violated, true);
+                if (is_array($lawsViolatedIds)) {
+                    $laws = SubCaseType::whereIn('id', $lawsViolatedIds)->get();
+                    $case->lawsViolated = $laws;
+                }
+            }
+        }
+
+        $casesArray = $cases->toArray();
+        $this->selectedClientFullDetails = [
+            'user' => $user,
+            'zoom_meetings' => $zoomMeetings,
+            'appointments' => $appointments,
+            'cases' => $casesArray
+        ];
     }
 
     public function updateClientDetails($id){

@@ -12,4 +12,5 @@
             window.location.reload();
         })
     </script>
+    @vite(['resources/js/app.js'])
 </x-filament-panels::page>
