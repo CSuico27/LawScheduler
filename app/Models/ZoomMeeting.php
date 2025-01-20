@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class ZoomMeeting extends Model
 {
     use HasFactory;
-
+    protected $table = 'zoom_meetings';
     protected $fillable = [
         'appointment_id',
         'meeting_id', 
@@ -25,6 +25,6 @@ class ZoomMeeting extends Model
 
     public function appointment(): BelongsTo
     {
-        return $this->belongsTo(AppointmentsModel::class);
+        return $this->belongsTo(AppointmentsModel::class, 'appointment_id');
     }
 }

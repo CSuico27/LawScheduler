@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class AppointmentsModel extends Model
 {
+    protected $table = 'appointments_models';
     use HasFactory;
     protected $fillable = [
         'title',
@@ -16,7 +17,7 @@ class AppointmentsModel extends Model
         'is_active'
     ];
 
-    public function zoomMeeting(): HasOne{
-        return $this->hasOne(ZoomMeeting::class);
+    public function zoomMeet(): HasOne{
+        return $this->hasOne(ZoomMeeting::class, 'appointment_id');
     }
 }

@@ -55,7 +55,10 @@ class AppointmentPage extends LivewireCalendar
     public $meetingAgenda;
 
 
-    
+    public function resetModal(){
+        $this->reset();
+    }
+
     public function newEvent(){
 
         $this->recipients = BeneficiariesModel::pluck('phone')->toArray();
@@ -240,12 +243,10 @@ class AppointmentPage extends LivewireCalendar
                         'agenda' => $this->meetingDescription,
                     ]);
 
-                    $this->notification()->success(
-                        $title = 'Meeting created',
-                        $description = 'Your meeting was already set!'
-                    );
-
+                    $this->dispatch('reload');
+                   
                     return $response->json();
+                    
                 } else {
                     return response()->json(['error' => 'Failed to create Zoom meeting'], 500);
                 }
@@ -257,6 +258,7 @@ class AppointmentPage extends LivewireCalendar
             return response()->json(['error' => $th->getMessage()], 500);
         }
     }
+
     protected function generateToken()
     {
         try {
