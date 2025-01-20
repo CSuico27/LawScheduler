@@ -148,11 +148,12 @@ class BeneficiaryPage extends Component
         if ($this->searchTerm) {
             $searchItems = BeneficiariesModel::where('last_name', 'like', '%' . $this->searchTerm . '%')
                 ->orWhere('first_name', 'like', '%' . $this->searchTerm . '%')
+                ->latest()
                 ->paginate(8);
 
             $beneficiariesList = $searchItems;
         } else {
-            $beneficiariesList = BeneficiariesModel::paginate(8);
+            $beneficiariesList = BeneficiariesModel::latest()->paginate(8);
         }
 
         return view('livewire.pages.beneficiary-page', [
