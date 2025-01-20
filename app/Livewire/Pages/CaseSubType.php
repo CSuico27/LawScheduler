@@ -98,7 +98,7 @@ class CaseSubType extends Component
         $selected = $request->input('selected');
 
         if ($search) {
-            $caseTypes = ModelsCaseType::where('name', 'like', '%' . $search . '%')->get();
+            $caseTypes = ModelsCaseType::where('name', 'like', '%' . $search . '%')->where('is_active', 1)->get();
         } elseif ($selected) {
 
             $selectedCaseType = ModelsCaseType::where('id', $selected)->get();
@@ -106,7 +106,7 @@ class CaseSubType extends Component
             return response()->json($selectedCaseType);
             
         } else {
-            $caseTypes = ModelsCaseType::all();
+            $caseTypes = ModelsCaseType::where('is_active', 1)->get();
         }
 
         return response()->json($caseTypes);

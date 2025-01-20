@@ -1,9 +1,9 @@
 <div class="w-full h-full">
     <div class="container dashed-container flex flex-col-reverse md:flex-row md:flex">
         <div class="w-full flex md:justify-start md:mt-0 items-center justify-center mt-3 ">
-            <button type="button" wire:loading.attr="disabled" wire:loading.class="!cursor-wait" onclick="$openModal('newCaseSubTypeModal')" class="text-white bg-[#4285F4] hover:bg-[#4285F4]/90 focus:ring-4 focus:outline-none focus:ring-[#4285F4]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-[#4285F4]/55">
+            <button type="button" wire:loading.attr="disabled" wire:loading.class="!cursor-wait" onclick="$openModal('newCourtModal')" class="text-white bg-[#4285F4] hover:bg-[#4285F4]/90 focus:ring-4 focus:outline-none focus:ring-[#4285F4]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-[#4285F4]/55">
                 <x-icon name="document-add" class="w-5 h-5" />
-                New Case Sub Type
+                New Court
             </button>
         </div>
 
@@ -27,48 +27,48 @@
         <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
-                    <th scope="col" colspan="4" class="px-6 py-3 text-blue-950">
-                        Sub Case Type Name
+                    <th scope="col" class="px-6 py-3 text-blue-950" colspan="4">
+                        Court Name
                     </th>
-                    <th scope="col" colspan="4" class="px-6 py-3 text-blue-950">
-                        Case Type Name
+                    <th scope="col" class="px-6 py-3 text-blue-950" colspan="4">
+                        Court Type
                     </th>
-                    <th scope="col" colspan="2" class="px-6 py-3 text-blue-950">
+                    <th scope="col" class="px-6 py-3 text-blue-950" colspan="2">
                         Status
                     </th>
-                    <th scope="col" colspan="2" class="px-6 py-3 text-blue-950">
+                    <th scope="col" class="px-6 py-3 text-blue-950" colspan="2">
                         Actions
                     </th>
                 </tr>
             </thead>
             <tbody>
-                @if ($caseSubTypeList->isEmpty())
+                @if ($courtList->isEmpty())
                     <tr>
                         <td colspan="12">
                             <div class="flex justify-center items-center text-center gap-2 py-10 w-full">
-                                <x-icon name="information-circle" class="w-5 h-5" /><h1>No case type found.</h1>
+                                <x-icon name="information-circle" class="w-5 h-5" /><h1>No Court found.</h1>
                             </div>
                         </td>
                     </tr>
                 @else
-                    @foreach ($caseSubTypeList as $caseSubType)
+                    @foreach ($courtList as $court)
                         <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                             <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white" colspan="4">
-                                {{ $caseSubType->name }}
+                                {{ $court->name }}
                             </td>
                             <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white" colspan="4">
-                                {{ $caseSubType->caseType->name }}
+                                {{ $court->courtType->name }}
                             </td>
                             <td class="px-6 py-4" colspan="2">
-                                @if ($caseSubType->is_active)
+                                @if ($court->is_active)
                                     <span class="inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-800/30 dark:text-yellow-500">Active</span>
                                 @else
                                     <span class="inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-800/30 dark:text-red-500">Not Active</span>
                                 @endif
                             </td>
                             <td class="px-6 py-4 flex gap-4" colspan="2">
-                                <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline" onclick="$openModal('editCaseSubTypeModal')" wire:click="getSelectedCaseSubTypeId({{ $caseSubType->id }})">Edit</a>
-                                <a href="#" class="font-medium text-red-600 dark:text-red-500 hover:underline" wire:click="deleteConfirmation({{ $caseSubType->id }}, '{{ $caseSubType->name }}')">Delete</a>
+                                <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline" onclick="$openModal('editCourtModal')" wire:click="getSelectedCourtId({{ $court->id }})">Edit</a>
+                                <a href="#" class="font-medium text-red-600 dark:text-red-500 hover:underline" wire:click="deleteConfirmation({{ $court->id }}, '{{ $court->name }}')">Delete</a>
                             </td>
                         </tr>
                     @endforeach
@@ -76,28 +76,24 @@
             </tbody>
         </table>        
         <div class="w-full flex justify-end items-end py-5 px-2">
-            {{ $caseSubTypeList->links() }}
+            {{ $courtList->links() }}
         </div>
     </div>
 
     {{-- ADD MODAL --}}
-    <x-modal blur name="newCaseSubTypeModal" align="center" max-width="md">
-        <x-card title="Add New Case Sub Type">
+    <x-modal blur name="newCourtModal" align="center" max-width="md">
+        <x-card title="Add New Court">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div class="col-span-1 sm:col-span-2">
                     <div class="grid grid-cols-1 gap-5">
-                        <x-input label="Case Sub Type Name" placeholder="Ex: Murder" class="py-3 mt-1" wire:model="name" />
+                        <x-input label="Court Name" placeholder="Ex: RTC - Branch II" class="py-3 mt-1" wire:model="name" />
                         <x-select
-                            label="Select Case Type"
-                            wire:model.blur="caseTypeId"
-                            placeholder="Ex: Civil Case"
-                            :async-data="route('api.case.types')"
-                            {{-- :template="[
-                                'name'   => 'user-option',
-                            ]" --}}
+                            label="Select Court Type"
+                            wire:model.blur="courtTypeId"
+                            placeholder="Ex: Regional Trial Court"
+                            :async-data="route('api.court.types')"
                             option-label="name"
                             option-value="id"
-                            option-description="name"
                         />
                         <x-toggle lg wire:model.defer="isActive" left-label="Is Active"/>
                     </div>
@@ -107,7 +103,7 @@
                 <div class="flex justify-end gap-x-4">
                     <div class="flex">
                         <x-button flat label="Cancel" x-on:click="close" />
-                        <x-button primary label="Save" wire:click="addNewCaseSubType" />
+                        <x-button primary label="Save" wire:click="addNewCourt" />
                     </div>
                 </div>
             </x-slot>
@@ -115,16 +111,16 @@
     </x-modal>
 
     {{-- EDIT MODAL --}}
-    <x-modal blur name="editCaseSubTypeModal" align="center" max-width="md" persistent>
-        <x-card title="Edit Case Sub Type Details" >
+    <x-modal blur name="editCourtModal" align="center" max-width="md" persistent>
+        <x-card title="Edit Court Details" >
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div class="col-span-1 sm:col-span-2">
                     <div class="grid grid-cols-1 gap-5">
                         @if ($editName)
-                            <x-input label="Case Sub Type Name" placeholder="Ex: Murder" class="py-3 mt-1" wire:model="editName" />
+                            <x-input label="Court Name" placeholder="Ex: RTC - Branch II" class="py-3 mt-1" wire:model="editName" />
                         @else
                             <div class="relative w-full h-full">
-                                <x-input label="Case Type Name" placeholder="" wire:model="editName" disabled />
+                                <x-input label="Court Name" placeholder="" wire:model="editName" disabled />
                                 <div role="status" class="absolute top-6.5 left-4 pt-1">
                                     <svg aria-hidden="true" class="inline w-4 h-4 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
@@ -135,16 +131,12 @@
                             </div>
                         @endif
                         <x-select
-                            label="Select Case Type"
-                            wire:model.blur="editCaseTypeId"
-                            placeholder="Ex: Civil Case"
-                            :async-data="route('api.case.types')"
-                            :template="[
-                                'name'   => 'user-option',
-                            ]"
+                            label="Select Court Type"
+                            wire:model.blur="editCourtTypeId"
+                            placeholder="Ex: Regional Trial Court"
+                            :async-data="route('api.court.types')"
                             option-label="name"
                             option-value="id"
-                            option-description="name"
                         />
                         <x-toggle lg wire:model="editIsActive" left-label="Is Active"/>
                     </div>
@@ -155,7 +147,7 @@
                 <div class="flex justify-end gap-x-4">
                     <div class="flex">
                         <x-button flat label="Cancel" x-on:click="close" wire:click="resetModal" />
-                        <x-button primary label="Save" wire:click="updateCaseSubTypeDetails({{ $selectedCaseSubTypeId }})" />
+                        <x-button primary label="Save" wire:click="updateCourtDetails({{ $selectedCourtId }})" />
                     </div>
                 </div>
             </x-slot>

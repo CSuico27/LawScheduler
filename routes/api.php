@@ -8,6 +8,7 @@ use App\Livewire\Pages\CasePage;
 use App\Livewire\Pages\CaseStagePage;
 use App\Livewire\Pages\CaseSubType;
 use App\Livewire\Pages\ClientPage;
+use App\Livewire\Pages\CourtPage;
 use App\Models\AppointmentsModel;
 use App\Models\PHRegions;
 use Illuminate\Http\Request;
@@ -46,6 +47,11 @@ Route::get('/api/case/sub-types', [CasePage::class, 'getCaseSubTypes'])->name('a
 
 // CASE STAGE 
 Route::get('/api/case/stage', [CasePage::class, 'getCaseStage'])->name('api.case.stage');
+
+// COURT TYPE
+Route::get('/court/types', [CourtPage::class, 'getCourtTypes'])->name('api.court.types');
+Route::get('/courts', [CasePage::class, 'getCourts'])->name('api.courts');
+Route::get('/courts/{courtTypeId}', [CasePage::class, 'getCourtsByType'])->name('api.court.byType');
 
 // USER
 Route::get('/api/user/participant', [AppointmentPage::class, 'getParticipant'])->name('api.user.participant');

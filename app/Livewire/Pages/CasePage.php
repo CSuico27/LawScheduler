@@ -4,12 +4,14 @@ namespace App\Livewire\Pages;
 
 use App\Models\Cases;
 use App\Models\CaseStage;
+use App\Models\Court;
 use App\Models\SubCaseType;
 use App\Models\User;
 use Filament\Notifications\Notification;
 use Livewire\Component;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Http;
 use Livewire\WithPagination;
 use WireUi\Traits\Actions;
 
@@ -82,6 +84,8 @@ class CasePage extends Component
 
     public $selectedCaseId;
     public $selectedCase;
+
+    public $courts = [];
 
     public function mount(){
         $this->initialData();
@@ -198,8 +202,11 @@ class CasePage extends Component
                 $this->editJudgeType = $caseInfo->judge_type;
                 $this->editJudgeName = $caseInfo->judge_name;
                 $this->editRemarks = $caseInfo->remarks;
+
             }
         }
+
+        
     }
 
     public function updateCaseDetails($id){
@@ -281,7 +288,7 @@ class CasePage extends Component
         $selected = $request->input('selected');
 
         if ($search) {
-            $caseSubTypes = SubCaseType::where('name', 'like', '%' . $search . '%')->get();
+            $caseSubTypes = SubCaseType::where('name', 'like', '%' . $search . '%')->where('is_active', 1)->get();
         } elseif ($selected) {
 
             $selectedCaseSubType = SubCaseType::where('id', $selected)->get();
@@ -289,7 +296,7 @@ class CasePage extends Component
             return response()->json($selectedCaseSubType);
             
         } else {
-            $caseSubTypes = SubCaseType::all();
+            $caseSubTypes = SubCaseType::where('is_active', 1)->get();
         }
 
         return response()->json($caseSubTypes);
@@ -300,7 +307,7 @@ class CasePage extends Component
         $selected = $request->input('selected');
 
         if ($search) {
-            $caseStage = CaseStage::where('name', 'like', '%' . $search . '%')->get();
+            $caseStage = CaseStage::where('name', 'like', '%' . $search . '%')->where('is_active', 1)->get();
         } elseif ($selected) {
 
             $selectedCaseStage= CaseStage::where('id', $selected)->get();
@@ -308,7 +315,7 @@ class CasePage extends Component
             return response()->json($selectedCaseStage);
             
         } else {
-            $caseStage = CaseStage::all();
+            $caseStage = CaseStage::where('is_active', 1)->get();
         }
 
         return response()->json($caseStage);
@@ -335,6 +342,45 @@ class CasePage extends Component
             'icon'        => 'error',
             'params'      => $id,
         ]);
+    }
+    
+    public function getCourtsByType(Request $request, $courtTypeId)
+    {
+        $search = $request->input('search');
+        $selected = $request->input('selected');
+
+        if ($search) {
+            $courts = Court::where('name', 'like', '%' . $search . '%')->where('is_active', 1)->get();
+        } elseif ($selected) {
+
+            $selectedCourt = Court::where('id', $selected)->get();
+
+            return response()->json($selectedCourt);
+            
+        } else {
+            $courts = Court::where('court_type_id', $courtTypeId)->where('is_active', 1)->get();
+        }
+
+        return response()->json($courts);
+    }
+
+    public function getCourts(Request $request){
+        $search = $request->input('search');
+        $selected = $request->input('selected');
+
+        if ($search) {
+            $courts = Court::where('name', 'like', '%' . $search . '%')->where('is_active', 1)->get();
+        } elseif ($selected) {
+
+            $selectedCourt = Court::where('id', $selected)->get();
+
+            return response()->json($selectedCourt);
+
+        } else {
+            $courts = Court::where('is_active', 1)->get();
+        }
+
+        return response()->json($courts);
     }
 
     public function cancel(){

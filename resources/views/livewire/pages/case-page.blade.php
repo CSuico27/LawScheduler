@@ -341,48 +341,42 @@
                     @elseif($currentStep == 2)
                         <div class="w-full rounded-md dashed-container">
                             <div class="col-span-1 sm:col-span-2">
-                                <div class="mb-3">
-                                    <h1>FIR Details</h1>
-                                    <div class="w-24 h-1 rounded-full bg-blue-950"></div>
-                                </div>
-                                <div class="grid grid-cols-3 gap-4 mb-3">
-                                    <x-input label="Police Station" placeholder="Ex: Police District II" wire:model.blur="policeStation" />
-                                    <x-input label="FIR Number" placeholder="Ex: 0000000" wire:model.blur="FIRNumber" />
-                                    <x-datetime-picker
-                                        label="FIR Date"
-                                        placeholder="Ex: 23-07-2024"
-                                        display-format="DD-MM-YYYY"
-                                        wire:model.blur="FIRDate"
-                                        without-time
-                                    />
-                                </div>
-                            </div>
-                            <div class="col-span-1 sm:col-span-2">
-                                <div class="w-full rounded-md dashed-container-light">
+                                <div class="w-full">
                                     <div class="mb-3">
                                         <h1>Court Details</h1>
                                         <div class="w-24 h-1 rounded-full bg-blue-950"></div>
                                     </div>
                                     <div class="grid grid-cols-3 gap-4 mb-3">
                                         <x-input label="Court No." placeholder="Ex: 2024111000" wire:model.blur="courtNumber" />
-                                        <x-input label="Court Type" placeholder="Ex: 2024111000" wire:model.blur="courtType" />
-                                        <x-input label="Court" placeholder="Ex: 2024111000" wire:model.blur="court" />
-                                        {{-- <x-select
+                                        <x-select
                                             label="Court Type"
                                             wire:model.blur="courtType"
-                                            placeholder="Ex: Criminal Case"
-                                            :async-data="route('api.case.types')"
+                                            placeholder="Ex: Regional Trial Court"
+                                            :async-data="route('api.court.types')"
                                             option-label="name"
                                             option-value="id"
                                         />
-                                        <x-select
-                                            label="Court"
-                                            wire:model.blur="court"
-                                            placeholder="Ex: Murder"
-                                            :async-data="route('api.case.sub-types')"
-                                            option-label="name"
-                                            option-value="id"
-                                        /> --}}
+                                        @if ($courtType)
+                                            <x-select
+                                                label="Court"
+                                                wire:model.blur="court"
+                                                placeholder="Ex: RTC - Branch IV-A"
+                                                :async-data="$courtType ? route('api.court.byType', ['courtTypeId' => $courtType]) : ''"
+                                                option-label="name"
+                                                option-value="id"
+                                            />
+                                        @else
+                                            <x-select
+                                                label="Court"
+                                                wire:model.blur="court"
+                                                placeholder="Ex: RTC - Branch IV-A"
+                                                :async-data="$courtType ? route('api.court.byType', ['courtTypeId' => $courtType]) : ''"
+                                                option-label="name"
+                                                option-value="id"
+                                                disabled
+                                            />
+                                        @endif
+                                        
                                     </div>
                                     <div class="col-span-1 sm:col-span-2 mb-3">
                                         <div class="grid grid-cols-2 gap-4">
@@ -403,11 +397,30 @@
                                     </div>
                                 </div>                    
                             </div>
+                            <div class="col-span-1 sm:col-span-2">
+                                <div class="rounded-md dashed-container-light">
+                                    <div class="mb-3">
+                                        <h1>FIR Details</h1>
+                                        <div class="w-24 h-1 rounded-full bg-blue-950"></div>
+                                    </div>
+                                    <div class="grid grid-cols-3 gap-4 mb-3">
+                                        <x-input label="Police Station" placeholder="Ex: Police District II" wire:model.blur="policeStation" />
+                                        <x-input label="FIR Number" placeholder="Ex: 0000000" wire:model.blur="FIRNumber" />
+                                        <x-datetime-picker
+                                            label="FIR Date"
+                                            placeholder="Ex: 23-07-2024"
+                                            display-format="DD-MM-YYYY"
+                                            wire:model.blur="FIRDate"
+                                            without-time
+                                        />
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     @endif
                     <div class="flex">
                         @if ($currentStep > 1)
-                            <button wire:click="backStep" type="button" class="justify-start py-1 px-3 inline-flex items-center gap-x-1 text-sm font-semibold rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none"
+                            <button wire:click="backStep" type="button" class="justify-start py-2 px-3 inline-flex items-center gap-x-1 text-sm font-semibold rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none"
                             {{  $currentStep == 1 ? 'disabled="disabled"' : '' }}
                             >
                                 <svg class="flex-shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -444,243 +457,246 @@
     </x-modal.card>
     
     {{-- EDIT CASE MODAL --}}
-    <x-modal.card title="Edit Case" name="editCaseModal" blur wire:model.defer="editCaseModal" align="center" max-width="6xl">
-        <form >
-            <div class="grid grid-cols-12 sm:grid-cols-1 gap-4">
-                <div  class="max-h-[500px] overflow-y-auto
-                [&::-webkit-scrollbar]:w-2
-                [&::-webkit-scrollbar-track]:rounded-full
-                [&::-webkit-scrollbar-track]:bg-gray-100
-                [&::-webkit-scrollbar-thumb]:rounded-full
-                [&::-webkit-scrollbar-thumb]:bg-gray-300
-                dark:[&::-webkit-scrollbar-track]:bg-neutral-700
-                dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500">
-                    <div class="w-full rounded-md dashed-container">
-                        <div class="col-span-1 sm:col-span-2 my-3">
-                            <div class="flex">
-                                <div class="w-1/2">
-                                    <x-select
-                                        label="Petitioner"
-                                        wire:model="editPetitioner"
-                                        placeholder="Ex: Dela Cruz, Juan"
-                                        :async-data="route('api.user.participant')"
-                                        :template="[
-                                            'name'   => 'user-option',
-                                            'config' => [
-                                                'src' => 'profile_picture'
-                                            ]
-                                        ]"
-                                        option-label="name"
-                                        option-value="id"
-                                        option-description="email"
-                                    />
-                                </div>
-                                <div class="w-1 bg-slate-300 rounded-full mx-5">
-        
-                                </div>
-                                <div class="w-1/2">
-                                    <!-- Input Group -->
-                                    <div id="hs-wrapper-for-copy" class="space-y-3">
-                                        <p class="-mb-2 text-sm font-medium">Respondent</p>
-                                        @foreach ($editRespondents as $index => $respondent)
-                                            <div id="copy-markup-item-{{ $index }}" class="space-y-3">
-                                                <div class="flex space-x-3">
-                                                    <input type="text" wire:model.blur="editRespondents.{{ $index }}" class="py-2 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600" placeholder="Enter Name">
-                                                    
-                                                    <!-- Only show delete button for inputs other than the first one -->
-                                                    @if ($index > 0)
-                                                        <button type="button" wire:click="removeRespondent({{ $index }})" class="py-2 px-3 inline-flex items-center gap-x-1 text-xs font-medium rounded-full border border-dashed border-gray-200 bg-white text-gray-800 hover:bg-gray-50 focus:outline-none focus:bg-gray-50 dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700">
-                                                            <svg class="shrink-0 size-3.5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                                                <path d="M19 13H5"></path>
-                                                            </svg>
-                                                            Delete
-                                                        </button>
-                                                    @endif
-                                                </div>
-                                            </div>
-                                        @endforeach
-                                    </div>
-                                    
-                                    <p class="mt-3 text-end">
-                                        <button type="button" wire:click="addRespondent" class="py-1.5 px-2 inline-flex items-center gap-x-1 text-xs font-medium rounded-full border border-dashed border-gray-200 bg-white text-gray-800 hover:bg-gray-50 focus:outline-none focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700">
-                                        <svg class="shrink-0 size-3.5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                            <path d="M5 12h14"></path>
-                                            <path d="M12 5v14"></path>
-                                        </svg>
-                                        Add Respondent
-                                        </button>
-                                    </p>
-                                    <!-- End Input Group -->
-                                </div>
-                            </div>                     
-                        </div>
-                        <div class="col-span-1 sm:col-span-2">
-                            <div class="w-full rounded-md dashed-container-light">
-                                <div class="mb-3">
-                                    <h1>Case Details</h1>
-                                    <div class="w-24 h-1 rounded-full bg-blue-950"></div>
-                                </div>
-                                <div class="grid grid-cols-3 gap-4 mb-3">
-                                    <x-input label="Case No." placeholder="Ex: 2024111000" wire:model="editCaseNumber" />
-                                    <x-select
-                                        label="Case Type"
-                                        wire:model="editCaseType"
-                                        placeholder="Ex: Criminal Case"
-                                        :async-data="route('api.case.types')"
-                                        option-label="name"
-                                        option-value="id"
-                                    />
-                                    <x-select
-                                        label="Case Sub Type"
-                                        wire:model="editCaseSubType"
-                                        placeholder="Ex: Murder"
-                                        :async-data="route('api.case.sub-types')"
-                                        option-label="name"
-                                        option-value="id"
-                                    />
-                                </div>
-                                <div class="col-span-1 sm:col-span-2 mb-3">
-                                    <div class="grid grid-cols-2 gap-4">
+    <x-modal name="editCaseModal" blur wire:model.defer="editCaseModal" align="center" max-width="6xl">
+        <x-card title="Edit Case">
+            <form >
+                <div class="grid grid-cols-12 sm:grid-cols-1 gap-4">
+                    <div  class="max-h-[500px] overflow-y-auto
+                    [&::-webkit-scrollbar]:w-2
+                    [&::-webkit-scrollbar-track]:rounded-full
+                    [&::-webkit-scrollbar-track]:bg-gray-100
+                    [&::-webkit-scrollbar-thumb]:rounded-full
+                    [&::-webkit-scrollbar-thumb]:bg-gray-300
+                    dark:[&::-webkit-scrollbar-track]:bg-neutral-700
+                    dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500">
+                        <div class="w-full rounded-md dashed-container">
+                            <div class="col-span-1 sm:col-span-2 my-3">
+                                <div class="flex">
+                                    <div class="w-1/2">
                                         <x-select
-                                            label="Case Stage"
-                                            wire:model="editCaseStage"
-                                            placeholder="Ex: On-Trial"
-                                            :async-data="route('api.case.stage')"
-                                            option-label="name"
-                                            option-value="id"
-                                        />
-                                        <x-select
-                                            wire:ignore
-                                            label="Priority Level"
-                                            placeholder="Ex: High"
-                                            wire:model="editPriorityLevel"
-                                            :options="[
-                                                ['name' => 'High',  'id' => 1],
-                                                ['name' => 'Medium', 'id' => 2],
-                                                ['name' => 'Low',   'id' => 3],
+                                            label="Petitioner"
+                                            wire:model="editPetitioner"
+                                            placeholder="Ex: Dela Cruz, Juan"
+                                            :async-data="route('api.user.participant')"
+                                            :template="[
+                                                'name'   => 'user-option',
+                                                'config' => [
+                                                    'src' => 'profile_picture'
+                                                ]
                                             ]"
                                             option-label="name"
-                                            option-value="name"
+                                            option-value="id"
+                                            option-description="email"
                                         />
                                     </div>
-                                </div>
-                                <div class="col-span-1 sm:col-span-2 mb-3">
-                                    <div class="grid grid-cols-3 gap-4">
-                                        <x-input label="Act" placeholder="Ex: Find Evidences" wire:model="editAct" />
-                                        <x-input label="Filing Number" placeholder="Ex: 2024111000" wire:model="editFilingNumber" />
-                                        <x-datetime-picker
-                                            label="Filing Date"
-                                            placeholder="Ex: 23-07-2024"
-                                            display-format="DD-MM-YYYY"
-                                            wire:model.defer="editFilingDate"
-                                            without-time
-                                        />
+                                    <div class="w-1 bg-slate-300 rounded-full mx-5">
+            
                                     </div>
-                                </div>
-                                <div class="col-span-1 sm:col-span-2 mb-3">
-                                    <div class="grid grid-cols-3 gap-4">
-                                        <x-input label="Registration Number" placeholder="Ex: 2024111000" wire:model="editRegistrationNumber" />
-                                        <x-datetime-picker
-                                            label="Registration Date"
-                                            placeholder="Ex: 23-07-2024"
-                                            display-format="DD-MM-YYYY"
-                                            wire:model="editRegistrationDate"
-                                            without-time
-                                        />
-                                        <x-datetime-picker
-                                            label="First Hearing Date"
-                                            placeholder="Ex: 23-07-2024"
-                                            display-format="DD-MM-YYYY"
-                                            wire:model="editFirstHearingDate"
-                                            without-time
-                                        />
+                                    <div class="w-1/2">
+                                        <!-- Input Group -->
+                                        <div id="hs-wrapper-for-copy" class="space-y-3">
+                                            <p class="-mb-2 text-sm font-medium">Respondent</p>
+                                            @foreach ($editRespondents as $index => $respondent)
+                                                <div id="copy-markup-item-{{ $index }}" class="space-y-3">
+                                                    <div class="flex space-x-3">
+                                                        <input type="text" wire:model.blur="editRespondents.{{ $index }}" class="py-2 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600" placeholder="Enter Name">
+                                                        
+                                                        <!-- Only show delete button for inputs other than the first one -->
+                                                        @if ($index > 0)
+                                                            <button type="button" wire:click="removeRespondent({{ $index }})" class="py-2 px-3 inline-flex items-center gap-x-1 text-xs font-medium rounded-full border border-dashed border-gray-200 bg-white text-gray-800 hover:bg-gray-50 focus:outline-none focus:bg-gray-50 dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700">
+                                                                <svg class="shrink-0 size-3.5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                                    <path d="M19 13H5"></path>
+                                                                </svg>
+                                                                Delete
+                                                            </button>
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                        
+                                        <p class="mt-3 text-end">
+                                            <button type="button" wire:click="addRespondent" class="py-1.5 px-2 inline-flex items-center gap-x-1 text-xs font-medium rounded-full border border-dashed border-gray-200 bg-white text-gray-800 hover:bg-gray-50 focus:outline-none focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700">
+                                            <svg class="shrink-0 size-3.5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <path d="M5 12h14"></path>
+                                                <path d="M12 5v14"></path>
+                                            </svg>
+                                            Add Respondent
+                                            </button>
+                                        </p>
+                                        <!-- End Input Group -->
                                     </div>
-                                </div>
-                                <div class="col-span-1 sm:col-span-2 mb-3">
-                                    <div class="grid grid-cols-2 gap-4">
-                                        <x-input label="CNR Number" placeholder="Ex: 2024111000" wire:model="editCNRNumber" />
-                                        <x-textarea label="Description" placeholder="write a description" wire:model="editDescription" />
-                                    </div>
-                                </div>
-                            </div>                    
-                        </div>
-                    </div>
-                        
-                    <div class="w-full rounded-md dashed-container">
-                        <div class="col-span-1 sm:col-span-2">
-                            <div class="mb-3">
-                                <h1>FIR Details</h1>
-                                <div class="w-24 h-1 rounded-full bg-blue-950"></div>
+                                </div>                     
                             </div>
-                            <div class="grid grid-cols-3 gap-4 mb-3">
-                                <x-input label="Police Station" placeholder="Ex: Police District II" wire:model="editPoliceStation" />
-                                <x-input label="FIR Number" placeholder="Ex: 0000000" wire:model="editFIRNumber" />
-                                <x-datetime-picker
-                                    label="FIR Date"
-                                    placeholder="Ex: 23-07-2024"
-                                    display-format="DD-MM-YYYY"
-                                    wire:model="editFIRDate"
-                                    without-time
-                                />
+                            <div class="col-span-1 sm:col-span-2">
+                                <div class="w-full rounded-md dashed-container-light">
+                                    <div class="mb-3">
+                                        <h1>Case Details</h1>
+                                        <div class="w-24 h-1 rounded-full bg-blue-950"></div>
+                                    </div>
+                                    <div class="grid grid-cols-3 gap-4 mb-3">
+                                        <x-input label="Case No." placeholder="Ex: 2024111000" wire:model="editCaseNumber" />
+                                        <x-select
+                                            label="Case Type"
+                                            wire:model="editCaseType"
+                                            placeholder="Ex: Criminal Case"
+                                            :async-data="route('api.case.types')"
+                                            option-label="name"
+                                            option-value="id"
+                                        />
+                                        <x-select
+                                            label="Case Sub Type"
+                                            wire:model="editCaseSubType"
+                                            placeholder="Ex: Murder"
+                                            :async-data="route('api.case.sub-types')"
+                                            option-label="name"
+                                            option-value="id"
+                                        />
+                                    </div>
+                                    <div class="col-span-1 sm:col-span-2 mb-3">
+                                        <div class="grid grid-cols-2 gap-4">
+                                            <x-select
+                                                label="Case Stage"
+                                                wire:model="editCaseStage"
+                                                placeholder="Ex: On-Trial"
+                                                :async-data="route('api.case.stage')"
+                                                option-label="name"
+                                                option-value="id"
+                                            />
+                                            <x-select
+                                                wire:ignore
+                                                label="Priority Level"
+                                                placeholder="Ex: High"
+                                                wire:model="editPriorityLevel"
+                                                :options="[
+                                                    ['name' => 'High',  'id' => 1],
+                                                    ['name' => 'Medium', 'id' => 2],
+                                                    ['name' => 'Low',   'id' => 3],
+                                                ]"
+                                                option-label="name"
+                                                option-value="name"
+                                            />
+                                        </div>
+                                    </div>
+                                    <div class="col-span-1 sm:col-span-2 mb-3">
+                                        <div class="grid grid-cols-3 gap-4">
+                                            <x-input label="Act" placeholder="Ex: Find Evidences" wire:model="editAct" />
+                                            <x-input label="Filing Number" placeholder="Ex: 2024111000" wire:model="editFilingNumber" />
+                                            <x-datetime-picker
+                                                label="Filing Date"
+                                                placeholder="Ex: 23-07-2024"
+                                                display-format="DD-MM-YYYY"
+                                                wire:model.defer="editFilingDate"
+                                                without-time
+                                            />
+                                        </div>
+                                    </div>
+                                    <div class="col-span-1 sm:col-span-2 mb-3">
+                                        <div class="grid grid-cols-3 gap-4">
+                                            <x-input label="Registration Number" placeholder="Ex: 2024111000" wire:model="editRegistrationNumber" />
+                                            <x-datetime-picker
+                                                label="Registration Date"
+                                                placeholder="Ex: 23-07-2024"
+                                                display-format="DD-MM-YYYY"
+                                                wire:model="editRegistrationDate"
+                                                without-time
+                                            />
+                                            <x-datetime-picker
+                                                label="First Hearing Date"
+                                                placeholder="Ex: 23-07-2024"
+                                                display-format="DD-MM-YYYY"
+                                                wire:model="editFirstHearingDate"
+                                                without-time
+                                            />
+                                        </div>
+                                    </div>
+                                    <div class="col-span-1 sm:col-span-2 mb-3">
+                                        <div class="grid grid-cols-2 gap-4">
+                                            <x-input label="CNR Number" placeholder="Ex: 2024111000" wire:model="editCNRNumber" />
+                                            <x-textarea label="Description" placeholder="write a description" wire:model="editDescription" />
+                                        </div>
+                                    </div>
+                                </div>                    
                             </div>
                         </div>
-                        <div class="col-span-1 sm:col-span-2">
-                            <div class="w-full rounded-md dashed-container-light">
+                            
+                        <div class="w-full rounded-md dashed-container">
+                            <div class="col-span-1 sm:col-span-2">
                                 <div class="mb-3">
-                                    <h1>Court Details</h1>
+                                    <h1>FIR Details</h1>
                                     <div class="w-24 h-1 rounded-full bg-blue-950"></div>
                                 </div>
                                 <div class="grid grid-cols-3 gap-4 mb-3">
-                                    <x-input label="Court No." placeholder="Ex: 2024111000" wire:model="editCourtNumber" />
-                                    <x-input label="Court Type" placeholder="Ex: 2024111000" wire:model="editCourtType" />
-                                    <x-input label="Court" placeholder="Ex: 2024111000" wire:model="editCourt" />
-                                    {{-- <x-select
-                                        label="Court Type"
-                                        wire:model.blur="courtType"
-                                        placeholder="Ex: Criminal Case"
-                                        :async-data="route('api.case.types')"
-                                        option-label="name"
-                                        option-value="id"
+                                    <x-input label="Police Station" placeholder="Ex: Police District II" wire:model="editPoliceStation" />
+                                    <x-input label="FIR Number" placeholder="Ex: 0000000" wire:model="editFIRNumber" />
+                                    <x-datetime-picker
+                                        label="FIR Date"
+                                        placeholder="Ex: 23-07-2024"
+                                        display-format="DD-MM-YYYY"
+                                        wire:model="editFIRDate"
+                                        without-time
                                     />
-                                    <x-select
-                                        label="Court"
-                                        wire:model.blur="court"
-                                        placeholder="Ex: Murder"
-                                        :async-data="route('api.case.sub-types')"
-                                        option-label="name"
-                                        option-value="id"
-                                    /> --}}
                                 </div>
-                                <div class="col-span-1 sm:col-span-2 mb-3">
-                                    <div class="grid grid-cols-2 gap-4">
-                                        {{-- <x-select
-                                            label="Judge Type"
-                                            wire:model.blur="judgeType"
-                                            placeholder="Ex: On-Trial"
-                                            :async-data="route('api.case.stage')"
+                            </div>
+                            <div class="col-span-1 sm:col-span-2">
+                                <div class="w-full rounded-md dashed-container-light">
+                                    <div class="mb-3">
+                                        <h1>Court Details</h1>
+                                        <div class="w-24 h-1 rounded-full bg-blue-950"></div>
+                                    </div>
+                                    <div class="grid grid-cols-3 gap-4 mb-3">
+                                        <x-input label="Court No." placeholder="Ex: 2024111000" wire:model="editCourtNumber" />
+                                        <x-select
+                                            label="Court Type"
+                                            wire:model="editCourtType"
+                                            placeholder="Ex: Regional Trial Court"
+                                            :async-data="route('api.court.types')"
                                             option-label="name"
                                             option-value="id"
-                                        /> --}}
-                                        <x-input label="Judge Type" placeholder="Ex: 2024111000" wire:model="editJudgeType" />
-                                        <x-input label="Judge Name" placeholder="Ex: Atty. Juan Dela Cruz" wire:model="editJudgeName" />
+                                        />
+                                
+                                        <x-select
+                                            label="Court"
+                                            wire:model="editCourt"
+                                            placeholder="Ex: RTC - Branch III"
+                                            :async-data="route('api.courts')"
+                                            {{-- :async-data="$editCourtType ? route('api.court.byType', ['courtTypeId' => $editCourtType]) : ''" --}}
+                                            option-label="name"
+                                            option-value="id"
+                                            always-fetch="true"
+                                        />
                                     </div>
-                                </div>
-                                <div class="col-span-1 sm:col-span-2 mb-3">
-                                    <x-textarea label="Remarks" placeholder="write a remarks" wire:model="editRemarks" />
-                                </div>
-                            </div>                    
+                                    <div class="col-span-1 sm:col-span-2 mb-3">
+                                        <div class="grid grid-cols-2 gap-4">
+                                            {{-- <x-select
+                                                label="Judge Type"
+                                                wire:model.blur="judgeType"
+                                                placeholder="Ex: On-Trial"
+                                                :async-data="route('api.case.stage')"
+                                                option-label="name"
+                                                option-value="id"
+                                            /> --}}
+                                            <x-input label="Judge Type" placeholder="Ex: 2024111000" wire:model="editJudgeType" />
+                                            <x-input label="Judge Name" placeholder="Ex: Atty. Juan Dela Cruz" wire:model="editJudgeName" />
+                                        </div>
+                                    </div>
+                                    <div class="col-span-1 sm:col-span-2 mb-3">
+                                        <x-textarea label="Remarks" placeholder="write a remarks" wire:model="editRemarks" />
+                                    </div>
+                                </div>                    
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <x-slot name="footer">
-                <div class="flex justify-end gap-x-4">
-                    <div class="flex">
-                        <x-button flat label="Cancel" x-on:click="close" />
-                        <x-button primary label="Save" wire:click="updateCaseDetails({{ $selectedCaseId }})" />
+                <x-slot name="footer">
+                    <div class="flex justify-end gap-x-4">
+                        <div class="flex">
+                            <x-button flat label="Cancel" x-on:click="close" wire:click="cancel" />
+                            <x-button primary label="Save" wire:click="updateCaseDetails({{ $selectedCaseId }})" />
+                        </div>
                     </div>
-                </div>
-            </x-slot>
-        </form>
-    </x-modal.card>
+                </x-slot>
+            </form>
+        </x-card>
+    </x-modal>
 </div>
