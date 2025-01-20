@@ -1,7 +1,8 @@
 <x-filament-panels::page>
+    
+    <wireui:scripts />
     @livewireScripts
     @livewireStyles
-    <wireui:scripts />
     @vite(['resources/css/custom.css', 'resources/css/app.css', 'resources/js/app.js'])
     
     <livewire:pages.case-page />

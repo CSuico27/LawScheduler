@@ -41,7 +41,7 @@ Route::get('/api/client/municipalities', [ClientPage::class, 'getMunicipalities'
 Route::get('/api/client/barangays', [ClientPage::class, 'getBarangays'])->name('api.barangays.client');
 
 // CASE SUB TYPE
-Route::get('/api/case/types', [CaseSubType::class, 'getCaseTypes'])->name('api.case.types');
+Route::get('/case/types', [CaseSubType::class, 'getCaseTypes'])->name('api.case.types');
 Route::get('/api/case/sub-types', [CasePage::class, 'getCaseSubTypes'])->name('api.case.sub-types');
 
 // CASE STAGE 

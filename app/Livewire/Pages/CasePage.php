@@ -48,11 +48,40 @@ class CasePage extends Component
     public $judgeName;
     public $remarks;
 
+    public $editRespondents = [''];
+    public $editPetitioner;
+    public $editCaseNumber;
+    public $editCaseType;
+    public $editCaseSubType;
+    public $editCaseStage;
+    public $editPriorityLevel;
+    public $editAct;
+    public $editFilingNumber;
+    public $editFilingDate;
+    public $editRegistrationNumber;
+    public $editRegistrationDate;
+    public $editFirstHearingDate;
+    public $editCNRNumber;
+    public $editDescription;
+    // STEP 2
+    public $editPoliceStation;
+    public $editFIRNumber;
+    public $editFIRDate;
+    public $editCourtNumber;
+    public $editCourtType;
+    public $editCourt;
+    public $editJudgeType;
+    public $editJudgeName;
+    public $editRemarks;
+
     public $newCaseModal;
 
     public int $currentStep;
     public bool $isFinishedStepOne;
     public bool $isFinishedStepTwo;
+
+    public $selectedCaseId;
+    public $selectedCase;
 
     public function mount(){
         $this->initialData();
@@ -119,8 +148,97 @@ class CasePage extends Component
             'remarks' => $this->remarks
         ]);
 
+        Notification::make()
+            ->title('Success!')
+            ->body('Case has been created.')
+            ->success()
+            ->send();
+
         $this->dispatch('reload');
         $this->reset();
+        return redirect()->back();
+    }
+
+    public function getSelectedCaseId($id)
+    {
+        $this->selectedCaseId = $id;
+    
+        if ($this->selectedCaseId) {
+            $this->selectedCase = Cases::with('user')->find($id);
+        }
+
+        if (!$this->selectedCase) {
+            $this->selectedCase = null;
+        } else {
+            $caseInfo = $this->selectedCase;
+            
+            if ($caseInfo) {
+                $this->editPetitioner = $caseInfo->petitioner_id;
+                
+                $this->editRespondents = json_decode($caseInfo->respondents);
+                $this->editCaseNumber = $caseInfo->case_no;
+                $this->editCaseType = $caseInfo->case_type;
+                $this->editCaseSubType = $caseInfo->case_sub_type;
+                $this->editCaseStage = $caseInfo->case_stage;
+                $this->editPriorityLevel = $caseInfo->priority_level;
+                $this->editAct = $caseInfo->act;
+                $this->editFilingNumber = $caseInfo->filing_number;
+                $this->editFilingDate = $caseInfo->filing_date;
+                $this->editRegistrationNumber = $caseInfo->registration_number;
+                $this->editRegistrationDate = $caseInfo->registration_date;
+                $this->editFirstHearingDate = $caseInfo->first_hearing_date;
+                $this->editCNRNumber = $caseInfo->cnr_number;
+                $this->editDescription = $caseInfo->description;
+                $this->editPoliceStation = $caseInfo->police_station;
+                $this->editFIRNumber = $caseInfo->fir_number;
+                $this->editFIRDate = $caseInfo->fir_date;
+                $this->editCourtNumber = $caseInfo->court_number;
+                $this->editCourtType = $caseInfo->court_type;
+                $this->editCourt = $caseInfo->court;
+                $this->editJudgeType = $caseInfo->judge_type;
+                $this->editJudgeName = $caseInfo->judge_name;
+                $this->editRemarks = $caseInfo->remarks;
+            }
+        }
+    }
+
+    public function updateCaseDetails($id){
+        $this->selectedCase = Cases::findOrFail($id);
+
+        $this->selectedCase->update([
+            'petitioner_id' => $this->editPetitioner,
+            'respondents' => json_encode($this->editRespondents),
+            'case_no' => $this->editCaseNumber,
+            'case_type' => $this->editCaseType,
+            'case_sub_type' => $this->editCaseSubType,
+            'case_stage' => $this->editCaseStage,
+            'priority_level' => $this->editPriorityLevel,
+            'act' => $this->editAct,
+            'filing_number' => $this->editFilingNumber,
+            'filing_date' => $this->editFilingDate,
+            'registration_number' => $this->editRegistrationNumber,
+            'registration_date' => $this->editRegistrationDate,
+            'first_hearing_date' => $this->editFirstHearingDate,
+            'cnr_number' => $this->editCNRNumber,
+            'description' => $this->editDescription,
+            'police_station' => $this->editPoliceStation,
+            'fir_number' => $this->editFIRNumber,
+            'fir_date' => $this->editFIRDate,
+            'court_number' => $this->editCourtNumber,
+            'court_type' => $this->editCourtType,
+            'court' => $this->editCourt,
+            'judge_type' => $this->editJudgeType,
+            'judge_name' => $this->editJudgeName,
+            'remarks' => $this->editRemarks
+        ]);
+
+        Notification::make()
+            ->title('Success!')
+            ->body('Client details has been updated.')
+            ->success()
+            ->send();
+
+        $this->dispatch('reload');
         return redirect()->back();
     }
     
@@ -142,6 +260,7 @@ class CasePage extends Component
     public function addRespondent()
     {
         $this->respondents[] = '';  
+        $this->editRespondents[] = '';  
     }
 
     public function removeRespondent($index)
@@ -149,6 +268,11 @@ class CasePage extends Component
         if (count($this->respondents) > 1) {
             unset($this->respondents[$index]);
             $this->respondents = array_values($this->respondents);
+        }
+
+        if (count($this->editRespondents) > 1) {
+            unset($this->editRespondents[$index]);
+            $this->editRespondents = array_values($this->editRespondents);
         }
     }
 
@@ -213,19 +337,29 @@ class CasePage extends Component
         ]);
     }
 
+    public function cancel(){
+        $this->dispatch('reload');
+    }
+
     public function render()
     {
         if ($this->searchTerm) {
             $searchItems = Cases::where('case_no', 'like', '%' . $this->searchTerm . '%')
-            ->with('user') // Eager load the petitioner (user) relationship
+            ->with('user')
+            ->with('caseType')
+            ->with('caseSubType')
+            ->with('caseStage') // Eager load the petitioner (user) relationship
             ->latest()
-            ->paginate(8);;
+            ->paginate(5);
 
             $caseList = $searchItems;
         } else {
-            $caseList = Cases::with('user') // Eager load the petitioner (user) relationship
+            $caseList = Cases::with('user')
+            ->with('caseType')
+            ->with('caseSubType')
+            ->with('caseStage') // Eager load the petitioner (user) relationship
             ->latest()
-            ->paginate(8);
+            ->paginate(5);
         }
 
         return view('livewire.pages.case-page', [

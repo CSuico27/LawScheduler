@@ -5,9 +5,9 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
         <title>{{ $title ?? 'Page Title' }}</title>
+        @wireUiScripts
         @vite(['resources/css/custom.css', 'resources/css/app.css', 'resources/js/app.js'])
         @livewireStyles
-        <wireui:scripts />
     </head>
     <body class="bg-[#f1f4f6]">
         <x-notifications />
