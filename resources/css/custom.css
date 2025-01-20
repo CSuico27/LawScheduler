@@ -29,6 +29,12 @@
     border-radius: 10px;
     margin-bottom: 20px;
 }
+.dashed-container-no-padding{
+    padding: 5px 10px;
+    height: auto;
+    border: 1px dashed gray;
+    border-radius: 10px;
+}
 .dashed-container-light{
     padding-top: 20px;
     height: auto;
