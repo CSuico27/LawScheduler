@@ -36,12 +36,15 @@ class AppointmentPage extends LivewireCalendar
     public $title;
     public $description;
     public $date;
-    public $time;
+    // public $time;
     public $payment_method;
     public $payment_status;
     public $grand_total;
     public $status;
     public $services = [''];
+
+    public $timeSlots = [];
+    public $selectedTimeSlot;
     
     // EDIT
     public $editTitle;
@@ -77,6 +80,63 @@ class AppointmentPage extends LivewireCalendar
     // Click Event
     public $selectedMeetingId;
     public $meetingFullDetails;
+
+    public function slots(){
+        $this->generateTimeSlots();
+    }
+    public function updatedDate()
+    {
+        $this->generateTimeSlots();
+    }
+
+    public function generateTimeSlots()
+    {
+        $this->timeSlots = [];
+        
+        $start = Carbon::createFromTimeString('09:00', 'Asia/Manila'); 
+        $end = Carbon::createFromTimeString('18:00', 'Asia/Manila');
+
+        $bookedSlots = [];
+        $isToday = false;
+
+        $manilaTimeZone = 'Asia/Manila';
+        Carbon::setLocale('en'); 
+
+        if ($this->date) {
+            try {
+                $formattedDate = Carbon::createFromFormat('Y-m-d', $this->date)->format('d-m-Y');
+                $isToday = Carbon::createFromFormat('Y-m-d', $this->date)
+                    ->timezone($manilaTimeZone)
+                    ->isToday();
+                $bookedSlots = AppointmentDetails::where('date', $formattedDate)
+                    ->pluck('time')
+                    ->map(function ($time) {
+                        return Carbon::createFromFormat('H:i:s', $time)->format('H:i');
+                    })
+                    ->toArray();
+                    
+            } catch (\Exception $e) {
+                $this->addError('date', 'Invalid date format.');
+                return;
+            }
+        }
+
+        while ($start->lessThanOrEqualTo($end)) {
+            $timeSlotStorage = $start->format('H:i');
+            
+            $isPastSlot = $isToday && $start->timezone($manilaTimeZone)->isBefore(Carbon::now()->timezone($manilaTimeZone)); 
+            $isDisabled = in_array($timeSlotStorage, $bookedSlots) || $isPastSlot;
+
+            $this->timeSlots[] = [
+                'display' => $start->format('h:i A'),  
+                'storage' => $timeSlotStorage,
+                'disabled' => $isDisabled,
+            ];
+
+            $start->addMinutes(30);
+        }
+    }
+
 
     public function getSelectedMeetingId($id){
         $this->selectedMeetingId = $id;
@@ -154,7 +214,7 @@ class AppointmentPage extends LivewireCalendar
             'description' => 'required|max:255',
             'date' => 'required|date',
             'client' => 'required|exists:users,id', 
-            'time' => 'required|date_format:H:i',
+            'selectedTimeSlot' => 'required|date_format:H:i',
             'services.*' => 'required|max:255',
             'payment_status' => 'required'
         ]);
@@ -169,8 +229,8 @@ class AppointmentPage extends LivewireCalendar
             'appointment_id' => $event->id,
             'client_id' => $this->client,
             'title' => $this->title,
-            'date' => $this->date,
-            'time' => $this->time,
+            'date' => Carbon::createFromFormat('Y-m-d', $this->date)->format('d-m-Y'),
+            'time' => $this->selectedTimeSlot,
             'description' => $this->description,
             'is_viewed' => 'new'
         ]);

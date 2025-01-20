@@ -375,15 +375,16 @@
                             <x-datetime-picker
                                 label="Appointment Date"
                                 placeholder="Appointment Date"
-                                wire:model.defer="date"
+                                wire:model.live="date"
                                 without-time="true"
                                 without-tips="true"
                                 parse-format="YYYY-MM-DD"
                                 display-format="YYYY-MM-DD"
+                                :min="now()"
                             />
                         </div>
                         <div class="col-span-1 sm:col-span-2 mt-3 gap-2">
-                            <p class="text-sm font-medium mb-1">Select Time 
+                            {{-- <p class="text-sm font-medium mb-1">Select Time 
                                 @if ($time)
                                     <span class="text-xs italic text-green-500">
                                         ({{ \Carbon\Carbon::createFromFormat('H:i', trim($time))->format('h:i A') }})
@@ -397,7 +398,36 @@
                                 parseFormat="HH:mm:ss"
                                 displayFormat="HH:mm:ss"
                                 format="24"
-                            />
+                            /> --}}
+                            <div class="col-span-1 sm:col-span-2 mt-5">
+                                <span class="text-sm font-medium text-gray-700">Select Time:</span>
+                                <ul class="grid w-full grid-cols-3 gap-4 md:grid-cols-6 mt-1">
+                                    @foreach($timeSlots as $index => $time)
+                                        <li>
+                                            <input 
+                                                wire:model.live="selectedTimeSlot" 
+                                                class="hidden peer" 
+                                                id="timeslot-{{ $index }}" 
+                                                type="radio" 
+                                                value="{{ $time['storage'] }}" 
+                                                @if($time['disabled'] || !$date) disabled @endif
+                                                onchange="console.log('Selected:', this.value)"
+                                            />
+                                            <label 
+                                                class="inline-flex items-center justify-between w-full p-3 border border-gray-200 rounded-lg  dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-blue-500 peer-checked:border-blue-600 peer-checked:text-blue-600  dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700 
+                                                @if($time['disabled'] || !$date) bg-gray-300 text-gray-500 cursor-not-allowed @else hover:bg-blue-500 hover:text-white @endif"
+                                                for="timeslot-{{ $index }}"
+                                            >
+                                                <div class="block w-full">
+                                                    <div class="w-full text-sm md:text-base font-medium text-center">
+                                                        <span>{{ $time['display'] }}</span>
+                                                    </div>
+                                                </div>
+                                            </label>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </div>
                         </div>
                         <div class="col-span-1 sm:col-span-2 mt-3">
                             <x-textarea label="Description" placeholder="write appointment desctiption" wire:model="description" />

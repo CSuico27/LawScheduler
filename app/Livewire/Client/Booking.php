@@ -39,17 +39,60 @@ class Booking extends Component
         $this->isFinishedStepOne = false;
         $this->isFinishedStepTwo = false;
 
-        $start = Carbon::createFromTimeString('08:00');
-        $end = Carbon::createFromTimeString('17:00');
+        $this->generateTimeSlots();
 
-        while ($start->lessThanOrEqualTo($end)) {
-            $this->timeSlots[] = [
-            'display' => $start->format('h:i A'),
-            'storage' => $start->format('H:i')
-        ];
-        $start->addMinutes(30);
+    }
+
+    public function updatedAppointmentDate()
+    {
+        $this->generateTimeSlots();
+    }
+
+    public function generateTimeSlots()
+    {
+        $this->timeSlots = [];
+        
+        $start = Carbon::createFromTimeString('09:00', 'Asia/Manila'); 
+        $end = Carbon::createFromTimeString('18:00', 'Asia/Manila');
+
+        $bookedSlots = [];
+        $isToday = false;
+
+        $manilaTimeZone = 'Asia/Manila';
+        Carbon::setLocale('en'); 
+
+        if ($this->appointmentDate) {
+            try {
+                $formattedDate = Carbon::createFromFormat('d-m-Y', $this->appointmentDate)->format('d-m-Y');
+                $isToday = Carbon::createFromFormat('d-m-Y', $this->appointmentDate)
+                    ->timezone($manilaTimeZone)
+                    ->isToday();
+                $bookedSlots = AppointmentDetails::where('date', $formattedDate)
+                    ->pluck('time')
+                    ->map(function ($time) {
+                        return Carbon::createFromFormat('H:i:s', $time)->format('H:i');
+                    })
+                    ->toArray();
+            } catch (\Exception $e) {
+                $this->addError('appointmentDate', 'Invalid date format.');
+                return;
+            }
         }
 
+        while ($start->lessThanOrEqualTo($end)) {
+            $timeSlotStorage = $start->format('H:i');
+            
+            $isPastSlot = $isToday && $start->timezone($manilaTimeZone)->isBefore(Carbon::now()->timezone($manilaTimeZone)); 
+            $isDisabled = in_array($timeSlotStorage, $bookedSlots) || $isPastSlot;
+
+            $this->timeSlots[] = [
+                'display' => $start->format('h:i A'),  
+                'storage' => $timeSlotStorage,
+                'disabled' => $isDisabled,
+            ];
+
+            $start->addMinutes(30);
+        }
     }
 
     public function nextStep(){
@@ -154,7 +197,7 @@ class Booking extends Component
         ]);
         
         Mail::to(request()->user())->send(new AppointmentSuccess($appointDetails));
-        self::sendSMS($appointDetails->id,$this->appointmentDate);
+        // self::sendSMS($appointDetails->id,$this->appointmentDate);
         return redirect($redirect_url);
 
     }

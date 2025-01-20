@@ -52,7 +52,7 @@
                                 without-time="true"
                             />
             
-                            <div class="col-span-1 sm:col-span-2 mt-5">
+                            {{-- <div class="col-span-1 sm:col-span-2 mt-5">
                                 <span class="text-sm font-medium text-gray-700">Select Time:</span>
                                 <ul class="grid w-full grid-cols-3 gap-4 md:grid-cols-6 mt-1">
                                     @foreach($timeSlots as $index => $time)
@@ -68,7 +68,37 @@
                                         </li>
                                     @endforeach
                                 </ul>
+                            </div> --}}
+                            <div class="col-span-1 sm:col-span-2 mt-5">
+                                <span class="text-sm font-medium text-gray-700">Select Time:</span>
+                                <ul class="grid w-full grid-cols-3 gap-4 md:grid-cols-6 mt-1">
+                                    @foreach($timeSlots as $index => $time)
+                                        <li>
+                                            <input 
+                                                wire:model.live="selectedTimeSlot" 
+                                                class="hidden peer" 
+                                                id="timeslot-{{ $index }}" 
+                                                type="radio" 
+                                                value="{{ $time['storage'] }}" 
+                                                @if($time['disabled'] || !$appointmentDate) disabled @endif
+                                            />
+                                            <label 
+                                                class="inline-flex items-center justify-between w-full p-3 border border-gray-200 rounded-lg  dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-blue-500 peer-checked:border-blue-600 peer-checked:text-blue-600  dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700 
+                                                @if($time['disabled'] || !$appointmentDate) bg-gray-300 text-gray-500 cursor-not-allowed @else hover:bg-blue-500 hover:text-white @endif"
+                                                for="timeslot-{{ $index }}"
+                                            >
+                                                <div class="block w-full">
+                                                    <div class="w-full text-sm md:text-base font-medium text-center">
+                                                        <span>{{ $time['display'] }}</span>
+                                                    </div>
+                                                </div>
+                                            </label>
+                                        </li>
+                                    @endforeach
+                                </ul>
                             </div>
+                            
+                            
                             <div class="mt-6 text-sm font-medium border-t border-1 border-gray-400 pt-6">
                                 Selected Date & Time: 
                                 <span class="font-bold text-base text-blue-700">

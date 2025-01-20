@@ -37,7 +37,7 @@
                         </svg> 
                         New Meeting
                     </button>
-                    <button type="button" onclick="$openModal('cardModal')" class="w-full py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent text-blue-600 hover:bg-blue-100 focus:outline-none focus:bg-blue-100 hover:text-blue-800 focus:outline-none focus:bg-blue-100 focus:text-blue-800 disabled:opacity-50 disabled:pointer-events-none dark:text-blue-500 dark:hover:bg-blue-800/30 dark:hover:text-blue-400 dark:focus:bg-blue-800/30 dark:focus:text-blue-400">
+                    <button type="button" onclick="$openModal('cardModal')" wire:click="slots" class="w-full py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent text-blue-600 hover:bg-blue-100 focus:outline-none focus:bg-blue-100 hover:text-blue-800 focus:outline-none focus:bg-blue-100 focus:text-blue-800 disabled:opacity-50 disabled:pointer-events-none dark:text-blue-500 dark:hover:bg-blue-800/30 dark:hover:text-blue-400 dark:focus:bg-blue-800/30 dark:focus:text-blue-400">
                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                         New Appointment
                     </button>
@@ -407,20 +407,43 @@
                             <x-datetime-picker
                                 label="Appointment Date"
                                 placeholder="Appointment Date"
-                                wire:model.defer="date"
+                                wire:model.live="date"
                                 without-time="true"
                                 without-tips="true"
                                 parse-format="YYYY-MM-DD"
                                 display-format="YYYY-MM-DD"
+                                :min="now()"
                             />
                         </div>
                         <div class="col-span-1 sm:col-span-2 mt-4">
-                            <x-time-picker
-                                label="Time"
-                                placeholder="12:00 AM"
-                                wire:model.defer="time"
-                                format="24"
-                            />
+                            <div class="col-span-1 sm:col-span-2 mt-5">
+                                <span class="text-sm font-medium text-gray-700">Select Time:</span>
+                                <ul class="grid w-full grid-cols-3 gap-4 md:grid-cols-6 mt-1">
+                                    @foreach($timeSlots as $index => $time)
+                                        <li>
+                                            <input 
+                                                wire:model.live="selectedTimeSlot" 
+                                                class="hidden peer" 
+                                                id="timeslot-{{ $index }}" 
+                                                type="radio" 
+                                                value="{{ $time['storage'] }}" 
+                                                @if($time['disabled'] || !$date) disabled @endif
+                                            />
+                                            <label 
+                                                class="inline-flex items-center justify-between w-full p-3 border border-gray-200 rounded-lg  dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-blue-500 peer-checked:border-blue-600 peer-checked:text-blue-600  dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700 
+                                                @if($time['disabled'] || !$date) bg-gray-300 text-gray-500 cursor-not-allowed @else hover:bg-blue-500 hover:text-white @endif"
+                                                for="timeslot-{{ $index }}"
+                                            >
+                                                <div class="block w-full">
+                                                    <div class="w-full text-sm md:text-base font-medium text-center">
+                                                        <span>{{ $time['display'] }}</span>
+                                                    </div>
+                                                </div>
+                                            </label>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </div>
                         </div>
                         <div class="col-span-1 sm:col-span-2 mt-4">
                             <x-textarea label="Description" placeholder="write appointment desctiption" wire:model="description" />

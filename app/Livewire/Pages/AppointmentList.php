@@ -22,13 +22,16 @@ class AppointmentList extends Component
     public $title;
     public $description;
     public $date;
-    public $time;
+    // public $time;
     public $payment_method;
     public $payment_status;
     public $grand_total;
     public $status;
     public $services = [''];
     public bool $isActive;
+
+    public $timeSlots = [];
+    public $selectedTimeSlot;
 
     public $servicePrices = [];
 
@@ -37,7 +40,61 @@ class AppointmentList extends Component
     public $selectedMeetingId;
     public $meetingFullDetails;
 
+    public function updatedDate()
+    {
+        $this->generateTimeSlots();
+    }
+
+    public function generateTimeSlots()
+    {
+        $this->timeSlots = [];
+        
+        $start = Carbon::createFromTimeString('09:00', 'Asia/Manila'); 
+        $end = Carbon::createFromTimeString('18:00', 'Asia/Manila');
+
+        $bookedSlots = [];
+        $isToday = false;
+
+        $manilaTimeZone = 'Asia/Manila';
+        Carbon::setLocale('en'); 
+
+        if ($this->date) {
+            try {
+                $formattedDate = Carbon::createFromFormat('Y-m-d', $this->date)->format('d-m-Y');
+                $isToday = Carbon::createFromFormat('Y-m-d', $this->date)
+                    ->timezone($manilaTimeZone)
+                    ->isToday();
+                $bookedSlots = AppointmentDetails::where('date', $formattedDate)
+                    ->pluck('time')
+                    ->map(function ($time) {
+                        return Carbon::createFromFormat('H:i:s', $time)->format('H:i');
+                    })
+                    ->toArray();
+                    
+            } catch (\Exception $e) {
+                $this->addError('date', 'Invalid date format.');
+                return;
+            }
+        }
+
+        while ($start->lessThanOrEqualTo($end)) {
+            $timeSlotStorage = $start->format('H:i');
+            
+            $isPastSlot = $isToday && $start->timezone($manilaTimeZone)->isBefore(Carbon::now()->timezone($manilaTimeZone)); 
+            $isDisabled = in_array($timeSlotStorage, $bookedSlots) && $timeSlotStorage !== $this->selectedTimeSlot || $isPastSlot;
+
+            $this->timeSlots[] = [
+                'display' => $start->format('h:i A'),  
+                'storage' => $timeSlotStorage,
+                'disabled' => $isDisabled,
+            ];
+
+            $start->addMinutes(30);
+        }
+    }
+
     public function getSelectedMeetingId($id){
+       
         $this->selectedMeetingId = $id;
     
         if ($this->selectedMeetingId) {
@@ -50,7 +107,7 @@ class AppointmentList extends Component
                 $this->title = $this->meetingFullDetails[0]->title;
                 $this->description = $this->meetingFullDetails[0]->description;
                 $this->date = $this->meetingFullDetails[0]->date;
-                $this->time = Carbon::createFromFormat('H:i:s', $this->meetingFullDetails[0]->appointmentDetails->time)->format('H:i');
+                $this->selectedTimeSlot = Carbon::createFromFormat('H:i:s', $this->meetingFullDetails[0]->appointmentDetails->time)->format('H:i');
                 $this->isActive = $this->meetingFullDetails[0]->is_active;
                 $this->services = json_decode($this->meetingFullDetails[0]->appointmentDetails->orders->services_ids, true);
                 $this->payment_status = $this->meetingFullDetails[0]->appointmentDetails->orders->payment_status;
@@ -85,6 +142,7 @@ class AppointmentList extends Component
                 }
             }
         }
+        $this->generateTimeSlots();
     }
 
     public function addService()
@@ -137,7 +195,7 @@ class AppointmentList extends Component
             'client_id' => $this->client,
             'title' => $this->title,
             'date' => $this->date,
-            'time' => $this->time,
+            'time' => $this->selectedTimeSlot,
             'description' => $this->description,
         ]);
 
