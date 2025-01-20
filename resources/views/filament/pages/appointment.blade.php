@@ -67,6 +67,4 @@
         });
     });
     </script>
-    
-
 </x-filament-panels::page>

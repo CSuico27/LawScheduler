@@ -3,6 +3,7 @@
 namespace App\Livewire\Pages;
 
 use App\Models\BeneficiariesModel;
+use Filament\Notifications\Notification;
 use Livewire\Component;
 use Livewire\WithPagination;
 use WireUi\Traits\Actions;
@@ -79,6 +80,13 @@ class BeneficiaryPage extends Component
         ]);
         $this->dispatch('reload');
         $this->reset();
+
+        Notification::make()
+            ->title('Success!')
+            ->body('New client has been added.')
+            ->success()
+            ->send();
+
         return redirect()->back();
     }
 
@@ -119,6 +127,11 @@ class BeneficiaryPage extends Component
         ]);
 
         $this->dispatch('reload');
+        Notification::make()
+            ->title('Success!')
+            ->body('Client has been deleted.')
+            ->success()
+            ->send();
         return redirect()->back();
     }
 

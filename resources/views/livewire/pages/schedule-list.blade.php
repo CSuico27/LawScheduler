@@ -70,7 +70,7 @@
                                     </div>
                                 </th>
                                 <td class="px-4 py-2">
-                                    {{ \Carbon\Carbon::createFromTimestamp($schedule->zoomMeet->start_time)->format('F j, Y') }}
+                                    {{ \Carbon\Carbon::parse($schedule->zoomMeet->start_time)->format('F j, Y') }}
                                 </td>
                                 <td class="px-4 py-2">
                                     @foreach($schedule->participantsDetails as $participant)

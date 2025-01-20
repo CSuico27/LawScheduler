@@ -10,6 +10,7 @@ use App\Models\PHRegions;
 use App\Models\TemporaryClient;
 use App\Models\User;
 use App\Models\UserInfo;
+use Filament\Notifications\Notification;
 use Illuminate\Http\Request;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -103,6 +104,13 @@ class ClientPage extends Component
         
         $this->dispatch('reload');
         $this->reset();
+        
+        Notification::make()
+            ->title('Success!')
+            ->body('New client has been added.')
+            ->success()
+            ->send();
+
         return redirect()->back();
     }
 
@@ -160,6 +168,13 @@ class ClientPage extends Component
         ]);
 
         $this->dispatch('reload');
+
+        Notification::make()
+            ->title('Success!')
+            ->body('Client details has been updated.')
+            ->success()
+            ->send();
+
         return redirect()->back();
     }
 
@@ -191,6 +206,11 @@ class ClientPage extends Component
             $user->delete();
         }
 
+        Notification::make()
+            ->title('Success!')
+            ->body('Client has been deleted.')
+            ->success()
+            ->send();
         return redirect()->back();
     }
 

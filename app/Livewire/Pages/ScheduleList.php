@@ -3,6 +3,7 @@
 namespace App\Livewire\Pages;
 
 use App\Models\AppointmentsModel;
+use Filament\Notifications\Notification;
 use App\Models\User;
 use Livewire\Component;
 use Illuminate\Http\Request;
@@ -51,10 +52,11 @@ class ScheduleList extends Component
 
         $appointment->delete();
 
-        $this->notification()->success(
-            $title = 'Meeting delete',
-            $description = 'Your meeting was deleted!'
-        );
+        Notification::make()
+            ->title('Success!')
+            ->body('Meeting has been deleted.')
+            ->success()
+            ->send();
         
         return redirect()->back();
     }

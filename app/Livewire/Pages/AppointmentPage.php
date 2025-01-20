@@ -4,6 +4,7 @@ namespace App\Livewire\Pages;
 
 use App\Models\AppointmentsModel;
 use App\Models\BeneficiariesModel;
+use Filament\Notifications\Notification;
 use App\Models\User;
 use App\Models\ZoomMeeting;
 use App\Models\ZoomToken;
@@ -53,6 +54,26 @@ class AppointmentPage extends LivewireCalendar
     public $meetingHostId;
     public $meetingPassword;
     public $meetingAgenda;
+
+    // Click Event
+    public $selectedMeetingId;
+    public $meetingFullDetails;
+
+    public function getSelectedMeetingId($id){
+        $this->selectedMeetingId = $id;
+    
+        if ($this->selectedMeetingId) {
+            $this->meetingFullDetails = AppointmentsModel::where('id', $this->selectedMeetingId)
+                ->with('zoomMeet')
+                ->get();
+    
+            foreach ($this->meetingFullDetails as $detail) {
+                $participantIds = json_decode($detail->zoomMeet->participants, true);
+                $participants = User::with('info')->whereIn('id', $participantIds)->get();
+                $detail->participantsDetails = $participants;
+            }
+        }
+    }
 
 
     public function resetModal(){
@@ -106,17 +127,28 @@ class AppointmentPage extends LivewireCalendar
         $event = $this->events()->firstWhere('id', $eventId);
 
         if ($event) {
-            $eventDate = Carbon::parse($event['date']);
-            $this->dispatch('editEvent', [
-                $this->editTitle => $event->title,
-                $this->editDescription => $event->description,
-                $this->eventID => $event->id,
-                $this->isActive = $event->is_active,
+            // Get the meeting details with Zoom meeting data
+            $this->meetingFullDetails = AppointmentsModel::where('id', $eventId)
+                ->with('zoomMeet')
+                ->get();
+        
+            // Prepare data to pass to the event
+            $eventData = [];
+            foreach ($this->meetingFullDetails as $detail) {
+                $participantIds = json_decode($detail->zoomMeet->participants, true);
+                $participants = User::with('info')->whereIn('id', $participantIds)->get();
+                $detail->participantsDetails = $participants;
+                
+                $eventData[] = [
+                    'meetingDetails' => $detail,
+                    'participants' => $participants
+                ];
+            }
+        
+            // Dispatch the event with the structured data
+            $this->dispatch('showFullDetails', [
+                'eventData' => $eventData
             ]);
-            $this->editTitle = $event->title;
-            $this->editDescription = $event->description;
-            $this->eventID = $event->id;
-            $this->isActive = $event->is_active;
         }
     }
     public function deleteConfirmation($id, $eventTitle){
@@ -138,12 +170,61 @@ class AppointmentPage extends LivewireCalendar
 
     public function onEventDropped($eventId, $year, $month, $day)
     {   
-        AppointmentsModel::where('id', $eventId)->update(['date' => $year . '-' . $month . '-' . $day]);
-        $event = AppointmentsModel::where('id',  $eventId)->first();
+        $appointment  = AppointmentsModel::where('id', $eventId)->update(['date' => $year . '-' . $month . '-' . $day]);
+        $event = AppointmentsModel::where('id', $eventId)->with('zoomMeet')->first();
 
-        $this->sendSingleUpdatedSMS($event->title, $event->date);
+        // $this->sendSingleUpdatedSMS($event->title, $event->date);
+
+        $newDate = Carbon::create($year, $month, $day)->toDateString();
+
+        if ($event->zoomMeet) {
+            
+            $zoomMeetingId = $event->zoomMeet->meeting_id;
+
+             
+            if (is_numeric($event->zoomMeet->start_time)) {
+                $startTime = Carbon::createFromTimestamp($event->zoomMeet->start_time);
+            } else {
+                $startTime = Carbon::parse($event->zoomMeet->start_time);
+            }
+
+            $newStartTime = Carbon::parse("$newDate {$startTime->format('H:i:s')}")->format('Y-m-d\TH:i:s\Z');
         
+            try {
+                $zoomTokenResponse = $this->generateToken();
+                if ($zoomTokenResponse && isset($zoomTokenResponse['access_token'])) {
+                    $zoomToken = $zoomTokenResponse['access_token'];
+
+                    $response = Http::withHeaders([
+                        'Authorization' => 'Bearer ' . $zoomToken,
+                        'Content-Type' => 'application/json',
+                    ])->patch("https://api.zoom.us/v2/meetings/{$zoomMeetingId}", [
+                        'start_time' => $newStartTime,
+                    ]);
+
+                    if ($response->successful()) {
+                        ZoomMeeting::where('appointment_id', $eventId)->update([
+                            'start_time' => $newStartTime,
+                        ]);
+                        Notification::make()
+                            ->title('Success!')
+                            ->body('Meeting Date has been moved.')
+                            ->success()
+                            ->send();
+                        return $response->json();
+                    } else {
+                        return response()->json(['error' => 'Failed to create Zoom meeting'], 500);
+                    }
+
+                } else {
+
+                }
+            } catch (\Throwable $th) {
+                throw $th;
+            }
+        } 
     }
+    
     public function events() : Collection
     {
         return AppointmentsModel::whereNotNull('date')->get();
@@ -213,14 +294,6 @@ class AppointmentPage extends LivewireCalendar
                     ]
                 ]);
                 
-                // $response = Http::withHeaders([
-                //     'Authorization' => 'Bearer ' . $zoomToken,
-                //     // 'Content-Type' => 'application/x-www-form-urlencoded',
-                // ])->get("https://api.zoom.us/v2/users/me");
-
-                // Check for successful response
-                
-
                 if ($response->successful()) {
                     // Handle the successful response
                     $responseData = $response->json();
@@ -239,7 +312,7 @@ class AppointmentPage extends LivewireCalendar
                         'appointment_id' => $appointment->id,
                         'meeting_id' => strval($responseData['id']),
                         'topic' => $responseData['topic'],
-                        'start_time' => strtotime($responseData['start_time']),
+                        'start_time' => $responseData['start_time'],
                         'duration' => $responseData['duration'],
                         'timezone' => $responseData['timezone'],
                         'join_url' => $responseData['join_url'],
@@ -248,6 +321,12 @@ class AppointmentPage extends LivewireCalendar
                         'agenda' => $this->meetingDescription,
                         'participants' => $participantToString
                     ]);
+
+                    Notification::make()
+                            ->title('Success!')
+                            ->body('Meeting has been created.')
+                            ->success()
+                            ->send();
 
                     $this->dispatch('reload');
                    
@@ -340,7 +419,7 @@ class AppointmentPage extends LivewireCalendar
         $twilioNumber = env('TWILIO_FROM');
 
         $client = new Client($sid, $token);
-        $message = "CSWD\nThere's an upcoming program titled '{$eventTitle}' \n Date: {$eventDate}";
+        $message = "LawScheduler\nYou have upcoming meeting titled '{$eventTitle}' \n Date: {$eventDate}";
         $client->messages->create(
             '+63 930 655 8025',
             [
