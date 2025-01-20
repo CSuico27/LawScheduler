@@ -1,9 +1,9 @@
 <div class="w-full h-full">
     <div class="container dashed-container flex flex-col-reverse md:flex-row md:flex">
         <div class="w-full flex md:justify-start md:mt-0 items-center justify-center mt-3 ">
-            <button type="button" wire:loading.attr="disabled" wire:loading.class="!cursor-wait" wire:click="initialData" onclick="$openModal('newBeneficiaryModal')" class="text-white bg-[#4285F4] hover:bg-[#4285F4]/90 focus:ring-4 focus:outline-none focus:ring-[#4285F4]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-[#4285F4]/55">
+            <button type="button" wire:loading.attr="disabled" wire:loading.class="!cursor-wait" wire:click="initialData" onclick="$openModal('newClientModal')" class="text-white bg-[#4285F4] hover:bg-[#4285F4]/90 focus:ring-4 focus:outline-none focus:ring-[#4285F4]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-[#4285F4]/55">
                 <x-icon name="user-add" class="w-5 h-5" />
-                New Beneficiary
+                New Client
             </button>
         </div>
 
@@ -42,29 +42,29 @@
                 </tr>
             </thead>
             <tbody>
-                @if ($beneficiariesList->isEmpty())
+                @if ($clientList->isEmpty())
                     <tr>
                         <td colspan="12">
                             <div class="flex justify-center items-center text-center gap-2 py-10 w-full">
-                                <x-icon name="information-circle" class="w-5 h-5" /><h1>No beneficiaries found.</h1>
+                                <x-icon name="information-circle" class="w-5 h-5" /><h1>No client found.</h1>
                             </div>
                         </td>
                     </tr>
                 @else
-                    @foreach ($beneficiariesList as $beneficiary)
+                    @foreach ($clientList as $client)
                         <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                             <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                {{ $beneficiary->last_name }}, {{ $beneficiary->first_name }}
+                                {{ $client->last_name }}, {{ $client->first_name }}
                             </th>
                             <td class="px-6 py-4">
-                                {{ $beneficiary->barangay }} {{ $beneficiary->street_address }}, {{ $beneficiary->city }} ({{ $beneficiary->zip_code }}) - {{ $beneficiary->state }}
+                                {{ $client->barangay }} {{ $client->municipality }}, {{ $client->province }} - {{ $client->state }}
                             </td>
                             <td class="px-6 py-4">
-                                {{ $beneficiary->phone }} / {{ $beneficiary->email }}
+                                {{ $client->phone }} / {{ $client->email }}
                             </td>
                             <td class="px-12 py-4 flex gap-4">
-                                <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline" onclick="$openModal('editBeneficiaryModal')" wire:click="getSelectedBeneficiaryId({{ $beneficiary->id }})">Edit</a>
-                                <a href="#" class="font-medium text-red-600 dark:text-red-500 hover:underline" wire:click="deleteConfirmation({{ $beneficiary->id }}, '{{ $beneficiary->last_name }}, {{ $beneficiary->first_name }}')">Delete</a>
+                                <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline" onclick="$openModal('editClientModal')" wire:click="getSelectedClientId({{ $client->id }})">Edit</a>
+                                <a href="#" class="font-medium text-red-600 dark:text-red-500 hover:underline" wire:click="deleteConfirmation({{ $client->id }}, '{{ $client->last_name }}, {{ $client->first_name }}')">Delete</a>
                             </td>
                         </tr>
                     @endforeach
@@ -72,88 +72,151 @@
             </tbody>            
         </table>
         <div class="w-full flex justify-end items-end py-5 px-2">
-            {{ $beneficiariesList->links() }}
+            {{ $clientList->links() }}
         </div>
         
     </div>
 
     {{-- ADD MODAL --}}
-    <x-modal blur name="newBeneficiaryModal" align="center" max-width="3xl">
-        <x-card title="Add New Beneficiary">
+    <x-modal blur name="newClientModal" align="center" max-width="3xl">
+        <x-card title="Add New Client">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div class="col-span-1 sm:col-span-2">
                     <div class="grid grid-cols-3 gap-3">
-                        <x-input label="First name" placeholder="Your first name" wire:model="firstName" />
-                        <x-input label="Middle name" placeholder="Your middle name" wire:model="middleName" />
-                        <x-input label="Last name" placeholder="Your last name" wire:model="lastName" />
+                        {{-- <x-input label="First name" placeholder="Your first name" wire:model="firstName" /> --}}
+                        <x-input label="First name" placeholder="Ex: Juan" class="py-3 -mt-1" wire:model="firstName" />
+                        <x-input label="Middle name" placeholder="Ex: Reyes" class="py-3 -mt-1" wire:model="middleName" />
+                        <x-input label="Last name" placeholder="Ex: Cruz" class="py-3 -mt-1" wire:model="lastName" />
                     </div>
                 </div>
 
-                <x-inputs.maskable
-                    label="Phone"
-                    mask="###########"
-                    wire:model="phone"
-                    placeholder="Phone number"
-                />
-                <x-input label="Email" placeholder="example@mail.com" wire:model="email"/>
+                <x-inputs.phone label="Mobile No." placeholder="Ex: +63 912 345 6789" mask="['+63 ### ### ####']" class="py-3 -mt-1" wire:model="phone" />
+                <x-input label="Email" placeholder="Ex: juanreyes@gmai.com" class="py-3 -mt-1" wire:model="email" />
                 
-                <x-select
-                    label="Street Address"
-                    placeholder="Select Street Address"
-                    wire:model.defer="streetAddress"
-                >
-                    <x-select.user-option src="https://via.placeholder.com/500" label="St. Zone 1" value="St. Zone 1" />
-                    <x-select.user-option src="https://via.placeholder.com/500" label="St. Zone 1" value="St. Zone 2" />
-                    <x-select.user-option src="https://via.placeholder.com/500" label="St. Zone 3" value="St. Zone 3" />
-                    <x-select.user-option src="https://via.placeholder.com/500" label="St. Zone 4" value="St. Zone 4" />
-                </x-select>
-
-                <x-select
-                    label="Barangay"
-                    placeholder="Select Barangay"
-                    wire:model.defer="barangay"
-                >
-                    <x-select.user-option src="https://via.placeholder.com/500" label="Brgy. 1" value="Brgy. 1" />
-                    <x-select.user-option src="https://via.placeholder.com/500" label="Brgy. 2" value="Brgy. 2" />
-                    <x-select.user-option src="https://via.placeholder.com/500" label="Brgy. 3" value="Brgy. 3" />
-                    <x-select.user-option src="https://via.placeholder.com/500" label="Brgy. 4" value="Brgy. 4" />
-                </x-select>
-                
-                <x-select
-                    label="City"
-                    placeholder="Select City"
-                    wire:model.defer="city"
-                    disabled
-                >
-                <x-select.user-option src="https://via.placeholder.com/500" label="Tayabas City" value="Tayabas City" />
-                </x-select>
-
-                <x-select
-                    label="State"
-                    placeholder="Select State"
-                    wire:model.defer="state"
-                    disabled
-                >
-                    <x-select.user-option src="https://via.placeholder.com/500" label="Philippines" value="Philippines" />
-                </x-select>
 
                 <div class="col-span-1 sm:col-span-2">
-                    <x-select
-                        label="Zip Code"
-                        placeholder="Select Zip Code"
-                        wire:model.defer="zipCode"
-                        disabled
-                    >
-                        <x-select.user-option src="https://via.placeholder.com/500" label="4306" value="4306" />
-                    </x-select>
+                    <div class="grid grid-cols-2 gap-3">
+                        <x-select
+                            label="Select Region"
+                            wire:model.blur="region"
+                            placeholder="Ex: REGION IV-A (CALABARZON)"
+                            :async-data="route('api.regions.index')"
+                            :template="[
+                                'region_description'   => 'user-option',
+                            ]"
+                            option-label="region_description"
+                            option-value="region_description"
+                            option-description="region_description"
+                        
+                        />
+                        @if (!$region)
+                            <x-select
+                                label="Select City/Province"
+                                wire:model.blur="province"
+                                placeholder="Ex: CITY OF MANILA"
+                                :async-data="route('api.provinces.index')"
+                                :template="[
+                                    'province_description'   => 'user-option',
+                                ]"
+                                option-label="province_description"
+                                option-value="province_description"
+                                option-description="province_description"
+                                disabled
+                            />
+                        @else
+                            <x-select
+                                label="Select City/Province"
+                                wire:model.blur="province"
+                                placeholder="Ex: CITY OF MANILA"
+                                :async-data="route('api.provinces.index')"
+                                :template="[
+                                    'province_description'   => 'user-option',
+                                ]"
+                                option-label="province_description"
+                                option-value="province_description"
+                                option-description="province_description"
+                            />
+                        @endif
+                    </div>
+                </div>
+
+                <div class="col-span-1 sm:col-span-2">
+                    <div class="grid grid-cols-3 gap-3">
+                        @if (!$region || !$province)
+                            <x-select
+                                label="Select Municipality"
+                                wire:model.blur="municipality"
+                                placeholder="Ex: ATIMONAN"
+                                :async-data="route('api.municipalities.index')"
+                                :template="[
+                                    'city_municipality_description'   => 'user-option',
+                                ]"
+                                option-label="city_municipality_description"
+                                option-value="city_municipality_description"
+                                option-description="city_municipality_description"
+                                disabled
+                            />
+                        @else
+                            <x-select
+                                label="Select Municipality"
+                                wire:model.blur="municipality"
+                                placeholder="Ex: ATIMONAN"
+                                :async-data="route('api.municipalities.index')"
+                                :template="[
+                                    'city_municipality_description'   => 'user-option',
+                                ]"
+                                option-label="city_municipality_description"
+                                option-value="city_municipality_description"
+                                option-description="city_municipality_description"
+                            />
+                        @endif
+                        
+                        @if (!$region || !$province || !$municipality)
+                            <x-select
+                                label="Select Barangay"
+                                wire:model.blur="barangay"
+                                placeholder="Ex: Poblacion II"
+                                :async-data="route('api.barangays.index')"
+                                :template="[
+                                    'barangay_description'   => 'user-option',
+                                ]"
+                                option-label="barangay_description"
+                                option-value="barangay_description"
+                                option-description="barangay_description"
+                                disabled
+                            />
+                        @else
+                            <x-select
+                                label="Select Barangay"
+                                wire:model.blur="barangay"
+                                placeholder="Ex: Poblacion II"
+                                :async-data="route('api.barangays.index')"
+                                :template="[
+                                    'barangay_description'   => 'user-option',
+                                ]"
+                                option-label="barangay_description"
+                                option-value="barangay_description"
+                                option-description="barangay_description"
+                            />
+                        @endif
+
+                        <x-select
+                            label="State"
+                            placeholder="Select State"
+                            wire:model.defer="state"
+                            disabled
+                            
+                        >
+                            <x-select.user-option src="https://via.placeholder.com/500" label="Philippines" value="Philippines" />
+                        </x-select>
+                    </div>
                 </div>
             </div>
-        
             <x-slot name="footer">
                 <div class="flex justify-end gap-x-4">
                     <div class="flex">
                         <x-button flat label="Cancel" x-on:click="close" />
-                        <x-button primary label="Save" wire:click="addNewBeneficiary" />
+                        <x-button primary label="Save" wire:click="addNewClient" />
                     </div>
                 </div>
             </x-slot>
@@ -161,13 +224,13 @@
     </x-modal>
 
     {{-- EDIT MODAL --}}
-    <x-modal blur name="editBeneficiaryModal" align="center" max-width="3xl" persistent>
-        <x-card title="Edit Beneficiary Details" >
+    <x-modal blur name="editClientModal" align="center" max-width="3xl" persistent>
+        <x-card title="Edit Client Details" >
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div class="col-span-1 sm:col-span-2">
                     <div class="grid grid-cols-3 gap-3">
                         @if ($editFirstName)
-                            <x-input label="First name" placeholder="Your first name" wire:model="editFirstName"/>
+                            <x-input label="First name" class="py-3 -mt-1" placeholder="Ex: Juan" wire:model="editFirstName"/>
                         @else
                             <div class="relative w-full h-full">
                                 <x-input label="First name" placeholder="" wire:model="editFirstName" disabled />
@@ -248,54 +311,123 @@
                     </div>
                 @endif
                 
-                <x-select
-                    label="Street Address"
-                    placeholder="Select Street Address"
-                    wire:model.defer="editStreetAddress"
-                >
-                    <x-select.user-option src="https://via.placeholder.com/500" label="St. Zone 1" value="St. Zone 1" />
-                    <x-select.user-option src="https://via.placeholder.com/500" label="St. Zone 2" value="St. Zone 2" />
-                    <x-select.user-option src="https://via.placeholder.com/500" label="St. Zone 3" value="St. Zone 3" />
-                    <x-select.user-option src="https://via.placeholder.com/500" label="St. Zone 4" value="St. Zone 4" />
-                </x-select>
-                
-                <x-select
-                    label="Barangay"
-                    placeholder="Select Barangay"
-                    wire:model.defer="editBarangay"
-                >
-                    <x-select.user-option src="https://via.placeholder.com/500" label="Brgy. 1" value="Brgy. 1" />
-                    <x-select.user-option src="https://via.placeholder.com/500" label="Brgy. 2" value="Brgy. 2" />
-                    <x-select.user-option src="https://via.placeholder.com/500" label="Brgy. 3" value="Brgy. 3" />
-                    <x-select.user-option src="https://via.placeholder.com/500" label="Brgy. 4" value="Brgy. 4" />
-                </x-select>
-               
-                <x-select
-                    label="City"
-                    placeholder="Select City"
-                    wire:model.defer="editCity"
-                    disabled
-                >
-                <x-select.user-option src="https://via.placeholder.com/500" label="Tayabas City" value="Tayabas City" />
-                </x-select>
-
-                <x-select
-                    label="State"
-                    placeholder="Select State"
-                    wire:model.defer="editState"
-                    disabled
-                >
-                    <x-select.user-option src="https://via.placeholder.com/500" label="Philippines" value="Philippines" />
-                </x-select>
+                <div class="col-span-1 sm:col-span-2">
+                    <div class="grid grid-cols-2 gap-3">
+                        
+                        <x-select
+                            label="Select Region"
+                            wire:model="editRegion"
+                            option-key-value="id"
+                            placeholder="Ex: REGION IV-A (CALABARZON)"
+                            :async-data="route('api.regions.client')"
+                            :template="[
+                                'region_description'   => 'user-option',
+                            ]"
+                            option-label="region_description"
+                            option-value="region_description"
+                            option-description="region_description"
+                            
+                        />
+                        @if (!$editRegion)
+                            <x-select
+                                label="Select City/Province"
+                                wire:model.blur="editProvince"
+                                placeholder="Ex: CITY OF MANILA"
+                                :async-data="route('api.provinces.client')"
+                                :template="[
+                                    'province_description'   => 'user-option',
+                                ]"
+                                option-label="province_description"
+                                option-value="province_description"
+                                option-description="province_description"
+                                disabled
+                            />
+                        @else
+                            <x-select
+                                label="Select City/Province"
+                                wire:model.blur="editProvince"
+                                placeholder="Ex: CITY OF MANILA"
+                                :async-data="route('api.provinces.client')"
+                                :template="[
+                                    'province_description'   => 'user-option',
+                                ]"
+                                option-label="province_description"
+                                option-value="province_description"
+                                option-description="province_description"
+                            />
+                        @endif
+                    </div>
+                </div>
 
                 <div class="col-span-1 sm:col-span-2">
-                <x-select
-                        label="Zip Code"
-                        placeholder="Select Zip Code"
-                        wire:model.defer="editZipCode"
+                    <div class="grid grid-cols-2 gap-3">
+                        @if (!$editRegion || !$editProvince)
+                            <x-select
+                                label="Select Municipality"
+                                wire:model.blur="editMunicipality"
+                                placeholder="Ex: ATIMONAN"
+                                :async-data="route('api.municipalities.client')"
+                                :template="[
+                                    'city_municipality_description'   => 'user-option',
+                                ]"
+                                option-label="city_municipality_description"
+                                option-value="city_municipality_description"
+                                option-description="city_municipality_description"
+                                disabled
+                            />
+                        @else
+                            <x-select
+                                label="Select Municipality"
+                                wire:model.blur="editMunicipality"
+                                placeholder="Ex: ATIMONAN"
+                                :async-data="route('api.municipalities.client')"
+                                :template="[
+                                    'city_municipality_description'   => 'user-option',
+                                ]"
+                                option-label="city_municipality_description"
+                                option-value="city_municipality_description"
+                                option-description="city_municipality_description"
+                            />
+                        @endif
+
+                        @if (!$editRegion || !$editProvince || !$editMunicipality)
+                            <x-select
+                                label="Select Barangay"
+                                wire:model.blur="editBarangay"
+                                placeholder="Ex: Poblacion II"
+                                :async-data="route('api.barangays.client')"
+                                :template="[
+                                    'barangay_description'   => 'user-option',
+                                ]"
+                                option-label="barangay_description"
+                                option-value="barangay_description"
+                                option-description="barangay_description"
+                                disabled
+                            />
+                        @else
+                            <x-select
+                                label="Select Barangay"
+                                wire:model.blur="editBarangay"
+                                placeholder="Ex: Poblacion II"
+                                :async-data="route('api.barangays.client')"
+                                :template="[
+                                    'barangay_description'   => 'user-option',
+                                ]"
+                                option-label="barangay_description"
+                                option-value="barangay_description"
+                                option-description="barangay_description"
+                            />
+                        @endif
+                    </div>
+                </div>
+                <div class="col-span-1 sm:col-span-2">
+                    <x-select
+                        label="State"
+                        placeholder="Select State"
+                        wire:model.defer="editState"
                         disabled
                     >
-                        <x-select.user-option src="https://via.placeholder.com/500" label="4306" value="4306" />
+                        <x-select.user-option src="https://via.placeholder.com/500" label="Philippines" value="Philippines" />
                     </x-select>
                 </div>
             </div>
@@ -304,7 +436,7 @@
                 <div class="flex justify-end gap-x-4">
                     <div class="flex">
                         <x-button flat label="Cancel" x-on:click="close" wire:click="resetModal" />
-                        <x-button primary label="Save" wire:click="updateBeneficiaryDetails({{ $selectedBeneficiaryId }})" />
+                        <x-button primary label="Save" wire:click="updateClientDetails({{ $selectedClientId }})" />
                     </div>
                 </div>
             </x-slot>

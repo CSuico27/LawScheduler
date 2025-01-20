@@ -47,7 +47,7 @@ class AppointmentPage extends LivewireCalendar
             'date' => $this->date
         ]);
 
-        $this->sendSingleSMS($this->title, $this->date);
+        // $this->sendSingleSMS($this->title, $this->date);
 
         $this->title = "";
         $this->description = "";

@@ -24,8 +24,8 @@ class EgivemoAdminPanelProvider extends PanelProvider
     {
         return $panel
             ->default()
-            ->id('egivemo-admin')
-            ->path('egivemo-admin')
+            ->id('law-sched-admin')
+            ->path('law-sched-admin')
             ->login()
             ->colors([
                 'primary' => Color::Amber,

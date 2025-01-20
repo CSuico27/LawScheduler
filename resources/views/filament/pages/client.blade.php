@@ -4,7 +4,7 @@
     <wireui:scripts />
     @vite(['resources/css/custom.css', 'resources/css/app.css'])
 
-    <livewire:pages.beneficiary-page />
+    <livewire:pages.client-page />
     
     <x-dialog z-index="z-50" blur="md" align="center" />
     <script>
