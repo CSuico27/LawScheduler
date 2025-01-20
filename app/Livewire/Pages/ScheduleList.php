@@ -5,6 +5,7 @@ namespace App\Livewire\Pages;
 use App\Models\AppointmentsModel;
 use Filament\Notifications\Notification;
 use App\Models\User;
+use App\Models\ZoomMeeting;
 use Livewire\Component;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
@@ -120,6 +121,7 @@ class ScheduleList extends Component
 
     public function render()
     {
+        $zoomMeetingCount = ZoomMeeting::all()->count();
        if ($this->searchTerm) {
             $searchItems = AppointmentsModel::whereHas('zoomMeet', function ($query) {
                 $query->where('meeting_id', 'like', '%' . $this->searchTerm . '%');
@@ -149,7 +151,8 @@ class ScheduleList extends Component
 
         
         return view('livewire.pages.schedule-list',[
-            'scheduleList' => $scheduleList
+            'scheduleList' => $scheduleList,
+            'zoomCount' => $zoomMeetingCount
         ]);
     }
 }

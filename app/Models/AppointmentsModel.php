@@ -20,4 +20,8 @@ class AppointmentsModel extends Model
     public function zoomMeet(): HasOne{
         return $this->hasOne(ZoomMeeting::class, 'appointment_id');
     }
+
+    public function appointmentDetails(): HasOne{
+        return $this->hasOne(AppointmentDetails::class, 'appointment_id');
+    }
 }

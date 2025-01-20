@@ -1,122 +1,90 @@
-<div class="container dashed-container md:flex block">
-    <div class="container">
+<div class="w-full h-full">
+    <div class="container dashed-container flex flex-col-reverse md:flex-row md:flex">
+        <div class="w-full flex md:justify-start md:mt-0 items-center justify-center mt-3 ">
+            {{-- <button type="button" wire:loading.attr="disabled" wire:loading.class="!cursor-wait" wire:click="initialData" onclick="$openModal('newClientModal')" class="text-white bg-[#4285F4] hover:bg-[#4285F4]/90 focus:ring-4 focus:outline-none focus:ring-[#4285F4]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-[#4285F4]/55">
+                <x-icon name="user-add" class="w-5 h-5" />
+                New Client
+            </button> --}}
+        </div>
+
         <div class="container md:justify-start justify-center">
-            <button wire:click="goToPreviousMonth" type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 mr-3">
-                <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
-                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5H1m0 0 4 4M1 5l4-4"/>
-                </svg>
-                <span class="sr-only">Icon description</span>
-            </button>
-            <h1 class="header-text md:text-[24px] text-base">{{ $endsAt->format('F, Y') }}</h1>
-            <button wire:click="goToNextMonth" type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 ml-3">
-                <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
-                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
-                </svg>
-                <span class="sr-only">Icon description</span>
-            </button>
-            <button wire:click="goToCurrentMonth" type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-1.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 ml-1">Current Month</button>
+            <form class="w-full">   
+                <label for="search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                        <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                        </svg>
+                    </div>
+                    <input type="text" wire:model.live="searchTerm" class="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search" required />
+                    {{-- <button wire:click.defer="searchBeneficiary" class="text-white absolute end-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Search</button> --}}
+                </div>
+            </form>
         </div>
     </div>
-    <div class="w-full flex md:justify-end md:mt-0 items-center justify-center mt-3 gap-2">
-        <button type="button" onclick="$openModal('newMeetingModal')" class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-800">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-                <path stroke-linecap="round" stroke-linejoin="round" d="m15.75 10.5 4.72-4.72a.75.75 0 0 1 1.28.53v11.38a.75.75 0 0 1-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 0 0 2.25-2.25v-9a2.25 2.25 0 0 0-2.25-2.25h-9A2.25 2.25 0 0 0 2.25 7.5v9a2.25 2.25 0 0 0 2.25 2.25Z" />
-            </svg>               
-            Create Meeting
-        </button>
-        <button type="button" wire:loading.attr="disabled" wire:loading.class="!cursor-wait" onclick="$openModal('cardModal')" class="text-white bg-[#4285F4] hover:bg-[#4285F4]/90 focus:ring-4 focus:outline-none focus:ring-[#4285F4]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-[#4285F4]/55">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            New Appointment
-        </button>
-    </div>
+    <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+        <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                <tr>
+                    <th scope="col" class="px-4 py-2 text-blue-950">Title</th>
+                    <th scope="col" class="px-4 py-2 text-blue-950">Start Date</th>
+                    <th scope="col" class="px-4 py-2 text-blue-950">Client</th>
+                    <th scope="col" class="px-4 py-2 text-blue-950">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if($appointmentList->isEmpty())
+                    <tr>
+                        <td colspan="4">
+                            <div class="flex justify-center items-center text-center gap-2 py-10 w-full">
+                                <x-icon name="information-circle" class="w-5 h-5" />
+                                <h1>No appointments found.</h1>
+                            </div>
+                        </td>
+                    </tr>
+                @else
+                    @foreach ($appointmentList as $schedule)
+                        @if ($schedule->appointmentDetails)
+                            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                                <td class="px-4 py-2">
+                                    <div class="hs-tooltip inline-block">
+                                        <a onclick="$openModal('showFullDetails')" wire:click="getSelectedMeetingId({{ $schedule->id }})"  class="hs-tooltip-toggle underline cursor-pointer hover:text-blue-600 font-semibold text-gray-950">
+                                            {{ $schedule->appointmentDetails->title }}
+                                            <span class="hs-tooltip-content hs-tooltip-shown:opacity-100 hs-tooltip-shown:visible opacity-0 transition-opacity inline-block absolute invisible z-10 py-1 px-2 bg-gray-900 text-xs font-medium text-white rounded shadow-sm dark:bg-neutral-700" role="tooltip">
+                                                Full Details
+                                            </span>
+                                        </a>
+                                    </div>
+                                </td>
+                                <td class="px-4 py-2">
+                                    {{ \Carbon\Carbon::parse($schedule->date)->format('F j, Y') }}
+                                </td>
+                                <td class="px-4 py-2">
+                                    @foreach($schedule->participantsDetails as $participant)
+                                        <div class="flex items-center gap-2">
+                                            <img src="{{ asset($participant->profile_picture) }}" alt="{{ $participant->profile_picture }}" class="w-8 h-8 rounded-full">
+                                            {{ $participant->name }}
+                                        </div>
+                                    @endforeach
+                                </td>
+                                <td class="px-4 py-2 flex gap-4">
+                                    <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline" onclick="$openModal('editAppointmentModal')" wire:click="getSelectedMeetingId({{ $schedule->id }})">Edit</a>
+                                    <a href="#" class="font-medium text-red-600 dark:text-red-500 hover:underline" wire:click="deleteConfirmation({{ $schedule->id }}, '{{  $schedule->title }}')">Delete</a>
+                                </td>
+                            </tr>
+                        @endif
+                    @endforeach
+                @endif
+            </tbody>
+        </table>
+            
+        <div class="w-full flex justify-end items-end py-5 px-2">
+            {{ $appointmentList->links() }}
+        </div>
+    </div>  
 
-    <x-modal.card title="New Meeting" blur wire:model.defer="newMeetingModal" align="center" max-width="md">
-        <form >
-            <div class="grid grid-cols-12 sm:grid-cols-1 gap-4">
-                <div class="col-span-1 sm:col-span-2 flex items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 mt-5 mr-3">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M8.625 12a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H8.25m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H12m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 0 1-2.555-.337A5.972 5.972 0 0 1 5.41 20.97a5.969 5.969 0 0 1-.474-.065 4.48 4.48 0 0 0 .978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25Z" />
-                    </svg>
-                    <div class="w-full">
-                        <x-input label="Subject" placeholder="Ex: Meeting with client" wire:model="meetingTopic" />
-                    </div>
-                </div>
-                <div class="col-span-1 sm:col-span-2 flex justify-center items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 mt-5 mr-3">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z" />
-                    </svg>                      
-                    <x-select
-                        label="Participant"
-                        wire:model="meetingParticipant"
-                        placeholder="Ex: Dela Cruz, Juan"
-                        :async-data="route('api.user.participant')"
-                        :template="[
-                            'name'   => 'user-option',
-                            'config' => [
-                                'src' => 'profile_picture'
-                            ]
-                        ]"
-                        option-label="name"
-                        option-value="id"
-                        option-description="email"
-                    />
-                </div>
-                <div class="col-span-1 sm:col-span-2 flex justify-center items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 mt-5 mr-3">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5m-9-6h.008v.008H12v-.008ZM12 15h.008v.008H12V15Zm0 2.25h.008v.008H12v-.008ZM9.75 15h.008v.008H9.75V15Zm0 2.25h.008v.008H9.75v-.008ZM7.5 15h.008v.008H7.5V15Zm0 2.25h.008v.008H7.5v-.008Zm6.75-4.5h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V15Zm0 2.25h.008v.008h-.008v-.008Zm2.25-4.5h.008v.008H16.5v-.008Zm0 2.25h.008v.008H16.5V15Z" />
-                    </svg>
-                      
-                    <x-datetime-picker
-                        label="Appointment Date"
-                        placeholder="Appointment Date"
-                        wire:model="meetingStartDate"
-                        without-time="false"
-                        parse-format="YYYY-MM-DD"
-                        display-format="YYYY-MM-DD"
-                    />
-                    
-                </div>
-                <div class="col-span-1 sm:col-span-2 flex justify-center items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 mt-5 mr-3">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                    </svg>
-                    <div class="flex gap-3">
-                        <x-time-picker
-                            label="From"
-                            placeholder="12:00 AM"
-                            interval="60"
-                            wire:model.defer="meetingDurationFrom"
-                        />
-                        <x-time-picker
-                            label="To"
-                            placeholder="12:00 AM"
-                            interval="60"
-                            wire:model.defer="meetingDurationTo"
-                        />
-                    </div>
-                    
-                </div>
-                <div class="col-span-1 sm:col-span-2 flex justify-center items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 -mt-10 mr-3">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
-                    </svg>
-                    <div class="w-full">
-                        <x-textarea label="Details" placeholder="Write a meeting details" wire:model="meetingDescription" />
-                    </div>
-                </div>
-            </div>
-            <x-slot name="footer">
-                <div class="flex justify-end gap-x-4">
-                    <div class="flex">
-                        <x-button flat label="Cancel" x-on:click="close" />
-                        <x-button primary label="Save" wire:click="createMeeting" />
-                    </div>
-                </div>
-            </x-slot>
-        </form>
-    </x-modal.card>
     {{-- SHOW FULL DETAILS --}}
-    <x-modal blur name="showFullDetailsCalendar" align="center" max-width="xl">
+    <x-modal blur name="showFullDetails" align="center" max-width="xl">
         @if ($meetingFullDetails)
             @foreach ($meetingFullDetails as $detail)
                 @if ($detail->zoomMeet)
@@ -225,7 +193,7 @@
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 2.994v2.25m10.5-2.25v2.25m-14.252 13.5V7.491a2.25 2.25 0 0 1 2.25-2.25h13.5a2.25 2.25 0 0 1 2.25 2.25v11.251m-18 0a2.25 2.25 0 0 0 2.25 2.25h13.5a2.25 2.25 0 0 0 2.25-2.25m-18 0v-7.5a2.25 2.25 0 0 1 2.25-2.25h13.5a2.25 2.25 0 0 1 2.25 2.25v7.5m-6.75-6h2.25m-9 2.25h4.5m.002-2.25h.005v.006H12v-.006Zm-.001 4.5h.006v.006h-.006v-.005Zm-2.25.001h.005v.006H9.75v-.006Zm-2.25 0h.005v.005h-.006v-.005Zm6.75-2.247h.005v.005h-.005v-.005Zm0 2.247h.006v.006h-.006v-.006Zm2.25-2.248h.006V15H16.5v-.005Z" />
                                         </svg>
-                                        {{ \Carbon\Carbon::parse($detail->appointmentDetails->date)->format('F j, Y') }}
+                                        {{ \Carbon\Carbon::parse($detail->date)->format('F j, Y') }}
                                     </span>
                                     <span class="inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-xs font-medium border border-blue-600 text-blue-600 dark:text-blue-500">
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
@@ -248,24 +216,27 @@
                                     </span>
                                 </div>
                             </div>
+                            {{-- <hr> --}}
+                            
                         </div>
                         <x-slot name="footer">
                             <div class="flex justify-end gap-x-4">
                                 <div class="flex">
-                                    <x-button flat label="Close" x-on:click="close" />
+                                    <x-button flat label="Close" x-on:click="close" wire:click="cancel"/>
+                                    {{-- <x-button primary label="Save"/> --}}
                                 </div>
                             </div>
                         </x-slot>
                     </x-card>
                 @endif
-                
             @endforeach
         @endif
     </x-modal>
 
-    <x-modal title="Add New Appointment" blur wire:model.defer="cardModal" align="center" persistent>
-        <x-card title="Add New Appointment">
-            <form >
+    {{-- EDIT APPOINTMENT --}}
+    <x-modal title="Edit Appointment" blur wire:model.defer="editAppointmentModal" align="center" persistent>
+        <x-card title="Edit Appointment">
+            <form>
                 <div class="grid grid-cols-12 sm:grid-cols-1 gap-4">
                     <div class="col-span-1 sm:col-span-2">
                         <x-select
@@ -308,49 +279,17 @@
                     <div class="col-span-1 sm:col-span-2">
                         <x-textarea label="Description" placeholder="write appointment desctiption" wire:model="description" />
                     </div>
+                    <x-toggle lg wire:model="isActive" left-label="Is Active"/>
                 </div>
                 <x-slot name="footer">
                     <div class="flex justify-end gap-x-4">
                         <div class="flex">
                             <x-button flat label="Cancel" x-on:click="close" wire:click="cancel" />
-                            <x-button primary label="Save" wire:click="newEvent" />
+                            <x-button primary label="Save" wire:click="editAppointment({{$selectedMeetingId}})" />
                         </div>
                     </div>
                 </x-slot>
             </form>
         </x-card>
     </x-modal>
-
-    <x-modal.card title="Edit Appointment" blur wire:model.defer="editModal" align="center">
-        <form >
-            <div class="grid grid-cols-12 sm:grid-cols-1 gap-4">
-                <div class="col-span-1 sm:col-span-2">
-                    <x-input label="Title" placeholder="Appointment Title" wire:model="editTitle" />
-                </div>
-                <div class="col-span-1 sm:col-span-2">
-                    <x-textarea label="Description" placeholder="write appointment desctiption" wire:model="editDescription" />
-                </div>
-                <div class="col-span-1 sm:col-span-2">
-                    <x-toggle lg wire:model="isActive" left-label="Is Active" />
-                </div>
-            </div>
-            <x-slot name="footer">
-                <div class="flex justify-between gap-x-4">
-                    <x-button flat negative label="Delete" wire:click="deleteConfirmation({{ $eventID }}, '{{ $editTitle }}')" />
-                    <div class="flex">
-                        <x-button flat label="Cancel" x-on:click="close" />
-                        <x-button primary label="Save" wire:click="editEvent({{ $eventID }})" />
-                    </div>
-                </div>
-            </x-slot>
-        </form>
-    </x-modal.card>
-    <script>
-        window.addEventListener('showFullDetails', event => {
-            $openModal('showFullDetailsCalendar');
-        })
-        window.addEventListener('reload', event => {
-            window.location.reload();
-        })
-    </script>
 </div>

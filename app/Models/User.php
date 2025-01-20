@@ -6,6 +6,7 @@ use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -54,6 +55,11 @@ class User extends Authenticatable implements FilamentUser
     public function cases(): HasMany
     {
         return $this->hasMany(Cases::class, 'petitioner_id');
+    }
+
+    public function appointmentDetails(): BelongsTo
+    {
+        return $this->belongsTo(AppointmentDetails::class, 'client_id');
     }
 
     public function canAccessPanel(Panel $panel): bool
