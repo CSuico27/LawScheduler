@@ -1,0 +1,44 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
+class Cases extends Model
+{
+    use HasFactory;
+
+    protected $fillable = [
+        'petitioner_id',
+        'respondents',
+        'case_no',
+        'case_type',
+        'case_sub_type',
+        'case_stage',
+        'priority_level',
+        'act',
+        'filing_number',
+        'filing_date',
+        'registration_number',
+        'registration_date',
+        'first_hearing_date',
+        'cnr_number',
+        'description',
+        'police_station',
+        'fir_number',
+        'fir_date',
+        'court_number',
+        'court_type',
+        'court',
+        'judge_type',
+        'judge_name',
+        'remarks',
+    ];
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'petitioner_id');
+    }
+}

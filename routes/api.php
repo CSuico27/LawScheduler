@@ -4,6 +4,8 @@ use App\Http\Controllers\Api\BarangaysController;
 use App\Http\Controllers\Api\RegionsController;
 use App\Livewire\Auth\RegisterPage;
 use App\Livewire\Pages\AppointmentPage;
+use App\Livewire\Pages\CasePage;
+use App\Livewire\Pages\CaseStagePage;
 use App\Livewire\Pages\CaseSubType;
 use App\Livewire\Pages\ClientPage;
 use App\Models\AppointmentsModel;
@@ -40,6 +42,10 @@ Route::get('/api/client/barangays', [ClientPage::class, 'getBarangays'])->name('
 
 // CASE SUB TYPE
 Route::get('/api/case/types', [CaseSubType::class, 'getCaseTypes'])->name('api.case.types');
+Route::get('/api/case/sub-types', [CasePage::class, 'getCaseSubTypes'])->name('api.case.sub-types');
+
+// CASE STAGE 
+Route::get('/api/case/stage', [CasePage::class, 'getCaseStage'])->name('api.case.stage');
 
 // USER
 Route::get('/api/user/participant', [AppointmentPage::class, 'getParticipant'])->name('api.user.participant');

@@ -247,10 +247,10 @@ class AppointmentPage extends LivewireCalendar
             return response()->json($selectedUsers);
             
         } else {
-            $caseTypes = User::whereNotNull('profile_picture')->get();
+            $users = User::whereNotNull('profile_picture')->get();
         }
 
-        return response()->json($caseTypes);
+        return response()->json($users);
     }
 
     public function createMeeting()

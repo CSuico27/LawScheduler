@@ -27,7 +27,7 @@
                 :event-click-enabled="true"
                 :drag-and-drop-enabled="true"
                 before-calendar-view="components/before"
-                drag-and-drop-classes="drag-border-color"
+                drag-and-drop-classes="drag-border-color" 
             />
         </div>
         <div id="tabs-with-icons-2" class="hidden" role="tabpanel" aria-labelledby="tabs-with-icons-item-2">
