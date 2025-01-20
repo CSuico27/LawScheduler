@@ -105,11 +105,155 @@
                         </li>
                         <!-- End Item -->
                     </ul>
-                    @if ($currentStep == 2)
+                    @if ($currentStep == 1)
                         <div class="p-4 h-auto bg-gray-50 flex justify-center items-center border border-dashed border-gray-200 rounded-xl dark:bg-neutral-800 dark:border-neutral-700">
                             <div class="w-[90%]">
-                                {{ $streetAddress }}
-                                {{ $barangay }}
+                                <div class="w-full flex gap-2">
+                                    <div class="w-full space-y-3">
+                                        <div>
+                                            <label for="hs-trailing-icon" class="block text-sm font-medium mb-2 dark:text-white"></label>
+                                            <div class="relative">
+                                                <x-input label="First name" placeholder="Ex: Juan" class="py-3 -mt-1" wire:model.blur="firstName" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="w-full space-y-3">
+                                        <div>
+                                            <label for="hs-trailing-icon" class="block text-sm font-medium mb-2 dark:text-white"></label>
+                                            <div class="relative">
+                                                <x-input label="Middle name" placeholder="Ex: Reyes" class="py-3 -mt-1" wire:model.blur="middleName" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="w-full space-y-3">
+                                        <div>
+                                            <label for="hs-trailing-icon" class="block text-sm font-medium mb-2 dark:text-white"></label>
+                                            <div class="relative">
+                                                <x-input label="Last name" placeholder="Ex: Dela Cruz" class="py-3 -mt-1" wire:model.blur="lastName" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="w-full flex gap-5 mt-5">
+                                    <x-select
+                                        label="Select Region"
+                                        wire:model.blur="region"
+                                        placeholder="Ex: REGION IV-A (CALABARZON)"
+                                        :async-data="route('api.regions.index')"
+                                        :template="[
+                                            'region_description'   => 'user-option',
+                                        ]"
+                                        option-label="region_description"
+                                        option-value="region_description"
+                                        option-description="region_description"
+                                        
+                                    />
+
+                                    @if (!$region)
+                                        <x-select
+                                            label="Select City/Province"
+                                            wire:model.blur="province"
+                                            placeholder="Ex: CITY OF MANILA"
+                                            :async-data="route('api.provinces.index')"
+                                            :template="[
+                                                'province_description'   => 'user-option',
+                                            ]"
+                                            option-label="province_description"
+                                            option-value="province_description"
+                                            option-description="province_description"
+                                            disabled
+                                        />
+                                    @else
+                                        <x-select
+                                            label="Select City/Province"
+                                            wire:model.blur="province"
+                                            placeholder="Ex: CITY OF MANILA"
+                                            :async-data="route('api.provinces.index')"
+                                            :template="[
+                                                'province_description'   => 'user-option',
+                                            ]"
+                                            option-label="province_description"
+                                            option-value="province_description"
+                                            option-description="province_description"
+                                        />
+                                    @endif
+                                </div>
+
+                                <div class="w-full flex gap-5 mt-5 mb-4">
+
+                                    @if (!$region || !$province)
+                                        <x-select
+                                            label="Select Municipality"
+                                            wire:model.blur="municipality"
+                                            placeholder="Ex: ATIMONAN"
+                                            :async-data="route('api.municipalities.index')"
+                                            :template="[
+                                                'city_municipality_description'   => 'user-option',
+                                            ]"
+                                            option-label="city_municipality_description"
+                                            option-value="city_municipality_description"
+                                            option-description="city_municipality_description"
+                                            disabled
+                                        />
+                                    @else
+                                        <x-select
+                                            label="Select Municipality"
+                                            wire:model.blur="municipality"
+                                            placeholder="Ex: ATIMONAN"
+                                            :async-data="route('api.municipalities.index')"
+                                            :template="[
+                                                'city_municipality_description'   => 'user-option',
+                                            ]"
+                                            option-label="city_municipality_description"
+                                            option-value="city_municipality_description"
+                                            option-description="city_municipality_description"
+                                        />
+                                    @endif
+                                    
+                                    @if (!$region || !$province || !$municipality)
+                                        <x-select
+                                            label="Select Barangay"
+                                            wire:model.blur="barangay"
+                                            placeholder="Ex: Poblacion II"
+                                            :async-data="route('api.barangays.index')"
+                                            :template="[
+                                                'barangay_description'   => 'user-option',
+                                            ]"
+                                            option-label="barangay_description"
+                                            option-value="barangay_description"
+                                            option-description="barangay_description"
+                                            disabled
+                                        />
+                                    @else
+                                        <x-select
+                                            label="Select Barangay"
+                                            wire:model.blur="barangay"
+                                            placeholder="Ex: Poblacion II"
+                                            :async-data="route('api.barangays.index')"
+                                            :template="[
+                                                'barangay_description'   => 'user-option',
+                                            ]"
+                                            option-label="barangay_description"
+                                            option-value="barangay_description"
+                                            option-description="barangay_description"
+                                        />
+                                    @endif
+
+                                    <x-select
+                                        label="State"
+                                        placeholder="Select State"
+                                        wire:model.defer="state"
+                                        disabled
+                                        
+                                    >
+                                        <x-select.user-option src="https://via.placeholder.com/500" label="Philippines" value="Philippines" />
+                                    </x-select>
+                                </div>
+                            </div>
+                        </div>
+                    @elseif($currentStep == 2)
+                        <div class="p-4 h-auto bg-gray-50 flex justify-center items-center border border-dashed border-gray-200 rounded-xl dark:bg-neutral-800 dark:border-neutral-700">
+                            <div class="w-[90%]">
                                 <div class="w-full flex flex-col gap-2">
                                     <div class="w-full space-y-3 mb-2">
                                         <div>
@@ -148,95 +292,11 @@
                                 </div>
                             </div>
                         </div>
-                    @else
-                        <div class="p-4 h-auto bg-gray-50 flex justify-center items-center border border-dashed border-gray-200 rounded-xl dark:bg-neutral-800 dark:border-neutral-700">
-                            <div class="w-[90%]">
-                                {{ $streetAddress }}
-                                {{ $barangay }}
-                                <div class="w-full flex gap-2">
-                                    <div class="w-full space-y-3">
-                                        <div>
-                                            <label for="hs-trailing-icon" class="block text-sm font-medium mb-2 dark:text-white"></label>
-                                            <div class="relative">
-                                                <x-input label="First name" placeholder="ex: John" class="py-3 -mt-1" wire:model.blur="firstName" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="w-full space-y-3">
-                                        <div>
-                                            <label for="hs-trailing-icon" class="block text-sm font-medium mb-2 dark:text-white"></label>
-                                            <div class="relative">
-                                                <x-input label="Middle name" placeholder="ex: Kramer" class="py-3 -mt-1" wire:model.blur="middleName" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="w-full space-y-3">
-                                        <div>
-                                            <label for="hs-trailing-icon" class="block text-sm font-medium mb-2 dark:text-white"></label>
-                                            <div class="relative">
-                                                <x-input label="Last name" placeholder="ex: Doe" class="py-3 -mt-1" wire:model.blur="lastName" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="w-full flex gap-5 mt-5">
-                                    <x-select
-                                        label="Select Street"
-                                        placeholder="ex: Malabana St."
-                                        wire:model.blur="streetAddress"
-                                    >
-                                        <x-select.user-option src="https://via.placeholder.com/500" label="Street 1" value="Street 1" />
-                                        <x-select.user-option src="https://via.placeholder.com/500" label="Street 2" value="Street 2" />
-                                        <x-select.user-option src="https://via.placeholder.com/500" label="Street 3" value="Street 3" />
-                                        <x-select.user-option src="https://via.placeholder.com/500" label="Street 4" value="Street 4" />
-                                    </x-select>
-
-                                    <x-select
-                                        label="Select Barangay"
-                                        placeholder="ex: Zone 1"
-                                        wire:model.blur="barangay"
-                                    >
-                                        <x-select.user-option src="https://via.placeholder.com/500" label="Zone 1" value="Zone 1" />
-                                        <x-select.user-option src="https://via.placeholder.com/500" label="Zone 2" value="Zone 2" />
-                                        <x-select.user-option src="https://via.placeholder.com/500" label="Zone 3" value="Zone 3" />
-                                        <x-select.user-option src="https://via.placeholder.com/500" label="Zone 4" value="Zone 4" />
-                                    </x-select>
-                                </div>
-
-                                <div class="w-full flex gap-5 mt-5 mb-4">
-                                    <x-select
-                                        label="City"
-                                        placeholder="Select City"
-                                        wire:model.defer="city"
-                                        disabled
-                                    >
-                                        <x-select.user-option src="https://via.placeholder.com/500" label="Tayabas City" value="Tayabas City" />
-                                    </x-select>
-
-                                    <x-select
-                                        label="State"
-                                        placeholder="Select State"
-                                        wire:model.defer="state"
-                                        disabled
-                                    >
-                                        <x-select.user-option src="https://via.placeholder.com/500" label="Philippines" value="Philippines" />
-                                    </x-select>
-
-                                    <x-select
-                                        label="Zip Code"
-                                        placeholder="Select Zip Code"
-                                        wire:model.defer="zipCode"
-                                        disabled
-                                    >
-                                        <x-select.user-option src="https://via.placeholder.com/500" label="4306" value="4306" />
-                                    </x-select>
-                                </div>
-                            </div>
-                        </div>
+                        
                     @endif
                     <div class="flex">
                         @if ($currentStep > 1)
-                            <button wire:click="backStep" type="button" class="ml-auto mt-4 py-2 px-3 inline-flex items-center gap-x-1 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
+                            <button wire:click="backStep" type="button" class="justify-start mt-4 py-2 px-3 inline-flex items-center gap-x-1 text-sm font-semibold rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none"
                             {{  $currentStep == 1 ? 'disabled="disabled"' : '' }}
                             >
                                 <svg class="flex-shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -248,7 +308,7 @@
 
                         @if ($currentStep < 2)
                             <button wire:click="nextStep" type="button" class="ml-auto mt-4 py-2 px-3 inline-flex items-center gap-x-1 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
-                            {{ !$firstName || !$middleName || !$lastName || !$streetAddress || !$barangay  ? 'disabled="disabled"' : '' }}
+                            {{ !$firstName || !$middleName || !$lastName  ? 'disabled="disabled"' : '' }}
                             >
                                 Next
                                 <svg class="flex-shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

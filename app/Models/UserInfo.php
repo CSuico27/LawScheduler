@@ -16,11 +16,11 @@ class UserInfo extends Model
         'middle_name', 
         'last_name', 
         'phone', 
-        'street_address',
+        'region',
+        'province',
+        'municipality',
         'barangay',
-        'city',
-        'state',
-        'zip_code'
+        'state'
     ];
 
     public function user(): BelongsTo

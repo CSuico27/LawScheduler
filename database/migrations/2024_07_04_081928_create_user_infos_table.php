@@ -18,11 +18,11 @@ return new class extends Migration
             $table->string('middle_name');
             $table->string('last_name');
             $table->string('phone');
-            $table->text('street_address')->nullable();
+            $table->string('region')->nullable();
+            $table->string('province')->nullable();
+            $table->string('municipality')->nullable();
             $table->string('barangay')->nullable();
-            $table->string('city')->nullable();
             $table->string('state')->nullable();
-            $table->string('zip_code')->nullable();
             $table->timestamps();
         });
     }

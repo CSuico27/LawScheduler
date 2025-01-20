@@ -7,7 +7,7 @@
         <title>{{ $title ?? 'Page Title' }}</title>
         @vite(['resources/css/custom.css', 'resources/css/app.css', 'resources/js/app.js'])
         @livewireStyles
-        @wireUiScripts
+        <wireui:scripts />
     </head>
     <body class="bg-[#f1f4f6]">
         <x-notifications />
