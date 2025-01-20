@@ -47,7 +47,7 @@
                     </svg>                      
                     <x-select
                         label="Participant"
-                        wire:model.blur="meetingParticipant"
+                        wire:model="meetingParticipant"
                         placeholder="Ex: Dela Cruz, Juan"
                         :async-data="route('api.user.participant')"
                         :template="[

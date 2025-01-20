@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('host_id');
             $table->string('password')->nullable();
             $table->text('agenda')->nullable();
+            $table->text('participants');
             $table->foreign('appointment_id')->references('id')->on('appointments_models')->onDelete('cascade');
             $table->timestamps();
         });

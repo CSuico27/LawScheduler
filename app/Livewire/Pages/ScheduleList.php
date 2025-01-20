@@ -3,6 +3,7 @@
 namespace App\Livewire\Pages;
 
 use App\Models\AppointmentsModel;
+use App\Models\User;
 use Livewire\Component;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
@@ -16,22 +17,24 @@ class ScheduleList extends Component
 
     // SEARCH
     public $searchTerm;
-    public $selectedScheduleId;
+    public $selectedMeetingId;
+    public $meetingFullDetails;
 
-    // public function getSelectedScheduleId($id){
-    //     $this->selectedScheduleId = $id;
-
-    //     if($this->selectedScheduleId){
-    //         $this->selectedCaseType = ModelsCaseType::find($id);
-    //     }
-
-    //     if (!$this->selectedCaseType) {
-    //         $this->selectedCaseType = null;
-    //     } else {
-    //         $this->editName = $this->selectedCaseType->name;
-    //         $this->editIsActive = $this->selectedCaseType->is_active;
-    //     }
-    // }
+    public function getSelectedMeetingId($id){
+        $this->selectedMeetingId = $id;
+    
+        if ($this->selectedMeetingId) {
+            $this->meetingFullDetails = AppointmentsModel::where('id', $this->selectedMeetingId)
+                ->with('zoomMeet')
+                ->get();
+    
+            foreach ($this->meetingFullDetails as $detail) {
+                $participantIds = json_decode($detail->zoomMeet->participants, true);
+                $participants = User::with('info')->whereIn('id', $participantIds)->get();
+                $detail->participantsDetails = $participants;
+            }
+        }
+    }
 
     public function deleteMeeting($id){
         $appointment = AppointmentsModel::with('zoomMeet')->findOrFail($id);
@@ -115,17 +118,34 @@ class ScheduleList extends Component
 
     public function render()
     {
-        if ($this->searchTerm) {
+       if ($this->searchTerm) {
             $searchItems = AppointmentsModel::whereHas('zoomMeet', function ($query) {
                 $query->where('meeting_id', 'like', '%' . $this->searchTerm . '%');
             })
             ->latest()
-            ->paginate(8);            
+            ->paginate(8);
 
             $scheduleList = $searchItems;
         } else {
             $scheduleList = AppointmentsModel::with('zoomMeet')->latest()->paginate(8);
         }
+
+        foreach ($scheduleList as $appointment) {
+            if ($appointment->zoomMeet) {
+                $participantIds = json_decode($appointment->zoomMeet->participants, true);
+
+                // Fetch participants details along with user_info
+                $participants = User::with('info')->whereIn('id', $participantIds)->get();
+
+                // Attach participants details to the appointment
+                $appointment->participantsDetails = $participants;
+            } else {
+                // Handle case where zoomMeet is null
+                $appointment->participantsDetails = [];
+            }
+        }
+
+        
         return view('livewire.pages.schedule-list',[
             'scheduleList' => $scheduleList
         ]);

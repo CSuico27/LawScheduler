@@ -43,7 +43,7 @@ class AppointmentPage extends LivewireCalendar
     // MEETING
     public $meetingTopic;
     public $meetingDescription;
-    public $meetingParticipant;
+    public $meetingParticipant = [];
     public $meetingDate;
     public $meetingId;
     public $meetingStartDate;
@@ -219,6 +219,8 @@ class AppointmentPage extends LivewireCalendar
                 // ])->get("https://api.zoom.us/v2/users/me");
 
                 // Check for successful response
+                
+
                 if ($response->successful()) {
                     // Handle the successful response
                     $responseData = $response->json();
@@ -229,7 +231,10 @@ class AppointmentPage extends LivewireCalendar
                         'date' => $this->meetingStartDate,
                         'is_active' => 1
                     ]);
-                    
+
+                    $participantArray = [$this->meetingParticipant];
+                    $participantToString = json_encode($participantArray);
+
                     ZoomMeeting::create([
                         'appointment_id' => $appointment->id,
                         'meeting_id' => strval($responseData['id']),
@@ -241,6 +246,7 @@ class AppointmentPage extends LivewireCalendar
                         'host_id' => $responseData['host_id'],
                         'password' => $responseData['password'] ?? null,
                         'agenda' => $this->meetingDescription,
+                        'participants' => $participantToString
                     ]);
 
                     $this->dispatch('reload');

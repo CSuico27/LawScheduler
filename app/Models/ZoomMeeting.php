@@ -20,7 +20,8 @@ class ZoomMeeting extends Model
         'join_url',
         'host_id',
         'password',
-        'agenda'
+        'agenda',
+        'participants'
     ];
 
     public function appointment(): BelongsTo
