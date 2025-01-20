@@ -22,3 +22,9 @@ Clone this repository to your local machine:
 ```bash
 git clone https://github.com/CSuico27/LawScheduler.git
 cd LawScheduler
+```
+
+```bash
+php artisan install
+npm install
+```
