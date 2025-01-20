@@ -6,6 +6,9 @@ use App\Livewire\Auth\LoginPage;
 use App\Livewire\Auth\RegisterPage;
 use App\Livewire\Auth\ResetPasswordPage;
 use App\Livewire\Client\AccountPage;
+use App\Livewire\Client\Booking;
+use App\Livewire\Client\CancelPage;
+use App\Livewire\Client\SuccessPage;
 use App\Livewire\HomePage;
 use App\Livewire\Pages\AppointmentPage;
 use App\Models\AccountActivation;
@@ -31,6 +34,8 @@ Route::middleware('guest')->group(function () {
     Route::get('/reset/{token}', ResetPasswordPage::class)->name('password.reset');
     Route::post('/create-meeting', [AppointmentPage::class, 'createMeeting']);
     Route::get('/activate-account/{token}', AccountActivationPage::class)->name('activate-account');
+
+    
 });
 
 Route::middleware('auth')->group(function (){
@@ -40,4 +45,7 @@ Route::middleware('auth')->group(function (){
     });
 
     Route::get('/my-account', AccountPage::class)->name('client.account');
+    Route::get('/booking/create', Booking::class)->name('client.booking');
+    Route::get('/success', SuccessPage::class)->name('success');
+    Route::get('/cancel', CancelPage::class)->name('cancel');
 });

@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('client_id');
             $table->string('title');
             $table->string('date');
-            $table->string('time');
+            $table->time('time');
             $table->string('description');
             $table->timestamps();
 

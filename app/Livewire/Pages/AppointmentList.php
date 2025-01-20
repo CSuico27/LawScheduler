@@ -7,6 +7,7 @@ use App\Models\AppointmentsModel;
 use App\Models\Orders;
 use App\Models\Services;
 use App\Models\User;
+use Carbon\Carbon;
 use Filament\Notifications\Notification;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -49,7 +50,7 @@ class AppointmentList extends Component
                 $this->title = $this->meetingFullDetails[0]->title;
                 $this->description = $this->meetingFullDetails[0]->description;
                 $this->date = $this->meetingFullDetails[0]->date;
-                $this->time = $this->meetingFullDetails[0]->appointmentDetails->time;
+                $this->time = Carbon::createFromFormat('H:i:s', $this->meetingFullDetails[0]->appointmentDetails->time)->format('H:i');
                 $this->isActive = $this->meetingFullDetails[0]->is_active;
                 $this->services = json_decode($this->meetingFullDetails[0]->appointmentDetails->orders->services_ids, true);
                 $this->payment_status = $this->meetingFullDetails[0]->appointmentDetails->orders->payment_status;

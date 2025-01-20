@@ -178,7 +178,7 @@ class AppointmentPage extends LivewireCalendar
             'payment_method' => 'Cash',
             'payment_status' => $this->payment_status,
             'grand_total' => self::getTotalPriceProperty(),
-            'status' => 'unclaimed'
+            'status' => 'Unclaimed'
         ]);
 
         // $this->sendSingleSMS($this->title, $this->date);

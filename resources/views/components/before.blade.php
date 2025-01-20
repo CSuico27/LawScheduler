@@ -419,6 +419,7 @@
                                 label="Time"
                                 placeholder="12:00 AM"
                                 wire:model.defer="time"
+                                format="24"
                             />
                         </div>
                         <div class="col-span-1 sm:col-span-2 mt-4">
