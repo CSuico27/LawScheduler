@@ -1,6 +1,6 @@
 <div class="w-full h-full flex flex-row justify-center">
-    <div class="w-[90%] md:w-[50%] h-screen flex flex-col justify-center items-center gap-3 mt-28 md:mt-0 md:pt-12">
-        <h1 class="text-3xl font-medium text-center">Create your account</h1>
+    <div class="w-[90%] md:w-[50%] h-screen flex flex-col justify-center items-center gap-1 md:gap-0 mt-28 md:mt-0 md:pt-12">
+        <h1 class="md:text-3xl text-2xl font-medium text-center">Create your account</h1>
         <p class="text-center">Sign up now and get an appointment.</p>
         <div class="w-full flex flex-col justify-center items-center">
             {{-- <div class="space-y-6 w-[50%]">
@@ -73,7 +73,7 @@
             </div> --}}
             <form wire:submit.prevent="register" class="w-full flex justify-center">
                 <div  class="w-full md:w-[90%]">
-                    <ul class="relative flex flex-row gap-x-2 mb-5">
+                    <ul class="relative flex flex-row gap-x-2 mb-3 md:mb-2">
                         <li class="flex items-center gap-x-2 shrink basis-0 flex-1 group">
                             <span class="min-w-7 min-h-7 group inline-flex items-center text-xs align-middle">
                             <span class="size-7 flex justify-center items-center flex-shrink-0 font-medium text-gray-800 rounded-full {{ $currentStep == 1 || $isFinishedStepOne == true ? 'bg-blue-600 text-white' : 'text-gray-800'}}">
@@ -106,7 +106,7 @@
                         <!-- End Item -->
                     </ul>
                     @if ($currentStep == 1)
-                        <div class="p-4 h-auto bg-gray-50 flex justify-center items-center border border-dashed border-gray-200 rounded-xl dark:bg-neutral-800 dark:border-neutral-700">
+                        <div class="md:p-2 p-4 h-auto bg-gray-50 flex justify-center items-center border border-dashed border-gray-200 rounded-xl dark:bg-neutral-800 dark:border-neutral-700">
                             <div class="w-full md:w-[95%]">
                                 <div class="w-full flex flex-col md:flex-row gap-2">
                                     <div class="w-full space-y-3">
@@ -252,7 +252,7 @@
                             </div>
                         </div>
                     @elseif($currentStep == 2)
-                        <div class="p-4 h-auto bg-gray-50 flex justify-center items-center border border-dashed border-gray-200 rounded-xl dark:bg-neutral-800 dark:border-neutral-700">
+                        <div class="md:p-2 p-4 h-auto bg-gray-50 flex justify-center items-center border border-dashed border-gray-200 rounded-xl dark:bg-neutral-800 dark:border-neutral-700">
                             <div class="w-[90%]">
                                 <div class="w-full flex flex-col gap-2">
                                     <div class="w-full space-y-3 mb-2">
@@ -272,7 +272,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="w-full flex gap-2 mt-4 mb-5">
+                                <div class="w-full flex gap-2 mt-4 mb-4">
                                     <div class="w-full space-y-3">
                                         <div>
                                             <label for="hs-trailing-icon" class="block text-sm font-medium mb-2 dark:text-white"></label>
@@ -284,7 +284,7 @@
                                     <div class="w-full space-y-3">
                                         <div>
                                             <label for="hs-trailing-icon" class="block text-sm font-medium mb-2 dark:text-white"></label>
-                                            <div class="relative">
+                                            <div class="relative whitespace-nowrap">
                                                 <x-input type="password" label="Confirm Password" placeholder="Confirm password" class="py-3 -mt-1" wire:model="confirmPassword" />
                                             </div>
                                         </div>
@@ -330,7 +330,7 @@
                 </div>
             </form>
         </div>
-        <div class="flex flex-col mt-5 lg:-mt-11 pb-5">
+        <div class="flex flex-col mt-2 -mb-3 md:mb-2 lg:-mt-11 pb-5">
             <div class="flex gap-1">
                 <p>Already have an account?</p>
                 <a href="{{ route('login')}}" class="font-bold">Sign in</a>
@@ -338,9 +338,9 @@
             <img src="{{ asset('images/sign-2.png')}}" alt="" class="w-20 self-end pl-6">
         </div>
         
-        <div class="flex flex-col mt-5 w-[50%]">
+        <div class="flex flex-col w-[90%] md:w-[80%] md:mt-0">
             <hr>
-            <div class="flex mt-3">
+            <div class="flex my-3 text-justify">
                 <p>By signing in, creating an account, or checking out as a Guest you are agreeing to our <a href="{{ route('terms&condition')}}" class="font-base underline text-blue-500">Terms and Conditions.</a></p>
             </div>
         </div>
@@ -349,7 +349,7 @@
         <img src="{{ asset('images/building2.jpg') }}" alt="" class="object-cover object-right-bottom w-auto h-full">
         <a class="flex items-center justify-center text-white font-medium text-5xl absolute inset-0 m-auto">
             <img src="{{ asset('images/logo-white.png') }}" alt="">
-            Law Scheduler
+            LawScheduler
         </a>
     </div>
 </div>

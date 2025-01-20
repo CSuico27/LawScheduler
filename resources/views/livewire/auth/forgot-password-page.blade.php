@@ -22,7 +22,7 @@
         <img src="{{ asset('images/building2.jpg') }}" alt="" class="object-cover object-right-bottom w-auto h-full">
         <a class="flex items-center justify-center text-white font-medium text-5xl absolute inset-0 m-auto">
             <img src="{{ asset('images/logo-white.png') }}" alt="">
-            Law Scheduler
+            LawScheduler
         </a>
     </div>
 </div>
