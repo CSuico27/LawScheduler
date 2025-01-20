@@ -37,6 +37,7 @@ return new class extends Migration
             $table->string('is_no');
             $table->string('handling_prosecutor');
             
+            $table->boolean('is_archived')->default(false);
             $table->timestamps();
         });
     }

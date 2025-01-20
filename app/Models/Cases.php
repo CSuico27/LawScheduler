@@ -30,7 +30,8 @@ class Cases extends Model
         'question_two',
         'question_three',
         'is_no',
-        'handling_prosecutor'
+        'handling_prosecutor',
+        'is_archived',
     ];
 
     public function user(): BelongsTo

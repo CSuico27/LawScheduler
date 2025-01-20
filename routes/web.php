@@ -8,6 +8,7 @@ use App\Livewire\Auth\ResetPasswordPage;
 use App\Livewire\Client\AccountPage;
 use App\Livewire\Client\Booking;
 use App\Livewire\Client\CancelPage;
+use App\Livewire\Client\InvoicePage as ClientInvoicePage;
 use App\Livewire\Client\SuccessPage;
 use App\Livewire\HomePage;
 use App\Livewire\Pages\AppointmentPage;
@@ -50,4 +51,5 @@ Route::middleware('auth')->group(function (){
     Route::get('/booking/create', Booking::class)->name('client.booking');
     Route::get('/success', SuccessPage::class)->name('success');
     Route::get('/cancel', CancelPage::class)->name('cancel');
+    Route::get('/invoice', ClientInvoicePage::class)->name('client.invoice');
 });

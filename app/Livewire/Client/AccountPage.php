@@ -4,20 +4,28 @@ namespace App\Livewire\Client;
 
 use App\Models\AppointmentDetails;
 use App\Models\Cases;
+use App\Models\Invoice;
+use App\Models\Services;
 use App\Models\SubCaseType;
 use App\Models\User;
 use App\Models\ZoomMeeting;
 use Livewire\Attributes\Title;
 use Livewire\Component;
+use Livewire\WithPagination;
+use WireUi\Traits\Actions;
 
 #[Title('My Account')]
 class AccountPage extends Component
 {
+    use Actions;
+    use WithPagination;
+    
+    public $searchTerm;
+    
     public $accountDetails = [];
     public $selectedClientFullDetails;
-    
-    public function mount(){
 
+    public function mount(){
         if(auth()->check()){
             $user_id = auth()->user()->id;
             $this->accountDetails = User::where('id',  $user_id)->with('info')->get();
@@ -53,7 +61,7 @@ class AccountPage extends Component
             ];
         }
     }
-
+    
     public function render()
     {
         return view('livewire.client.account-page', [

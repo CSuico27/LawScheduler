@@ -4,19 +4,14 @@ namespace App\Livewire\Pages;
 
 use App\Helpers\RespondentHelper;
 use App\Models\Cases;
-use App\Models\CaseStage;
-use App\Models\Court;
 use App\Models\SubCaseType;
 use App\Models\User;
 use Filament\Notifications\Notification;
 use Livewire\Component;
-use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Http;
 use Livewire\WithPagination;
 use WireUi\Traits\Actions;
 
-class CasePage extends Component
+class ArchivedPage extends Component
 {
     use Actions;
     use WithPagination;
@@ -99,86 +94,89 @@ class CasePage extends Component
         $this->isFinishedStepTwo = false;
     }
 
-    public function createCase(){
-    
-        $this->validate([
-            'NPSDocketNumber' => 'required|max:255',
-            'dateReceived' => 'required|max:255',
-            'timeReceived' => 'required|max:255',
-            'receivingStaff' => 'required|max:255',
-            'assignTo' => 'required|max:255',
-            'dateAssigned' => 'required|max:255',
-            'caseStage' => 'required|max:255',
-            'priorityLevel' => 'required|max:255',
+    // public function createCase(){
+    //     $this->validate([
+    //         'NPSDocketNumber' => 'required|max:255',
+    //         'dateReceived' => 'required|max:255',
+    //         'timeReceived' => 'required|max:255',
+    //         'receivingStaff' => 'required|max:255',
+    //         'assignTo' => 'required|max:255',
+    //         'dateAssigned' => 'required|max:255',
+    //         'caseStage' => 'required|max:255',
+    //         'priorityLevel' => 'required|max:255',
 
-            'complainants.*' => 'required|max:255',
-            'respondents.*' => 'required|max:255',
-            'laws.*' => 'required|max:255',
-            'witnesses.*' => 'required|max:255',
+    //         'complainants.*' => 'required|max:255',
+    //         'respondents.*' => 'required|max:255',
+    //         'laws.*' => 'required|max:255',
+    //         'witnesses.*' => 'required|max:255',
             
-            'dateTimeCommission' => 'required|max:255',
-            'placeOfCommission' => 'required|max:255',
+    //         'dateTimeCommission' => 'required|max:255',
+    //         'placeOfCommission' => 'required|max:255',
 
-            'ISNo' => 'required|max:255',
-            'handlingProsecutor' => 'required|max:255',
-        ]);
+    //         'questionOne' => 'required|boolean',
+    //         'questionTwo' => 'required|boolean',
+    //         'questionThree' => 'required|boolean',
 
-        $parsedRespondents = array_map(function($respondent) {
-            $parts = explode(',', $respondent);
-            return [
-                'name' => trim($parts[0] ?? ''),
-                'sex' => trim($parts[1] ?? ''),
-                'age' => trim($parts[2] ?? ''),
-                'address' => trim($parts[3] ?? ''),
-            ];
-        }, $this->respondents);
+    //         'ISNo' => 'required|max:255',
+    //         'handlingProsecutor' => 'required|max:255',
+    //     ]);
 
-        $parsedWitnesses = array_map(function($witness) {
-            $parts = explode(',', $witness);
-            return [
-                'name' => trim($parts[0] ?? ''),
-                'sex' => trim($parts[1] ?? ''),
-                'age' => trim($parts[2] ?? ''),
-                'address' => trim($parts[3] ?? ''),
-            ];
-        }, $this->witnesses);
+    //     $parsedRespondents = array_map(function($respondent) {
+    //         $parts = explode(',', $respondent);
+    //         return [
+    //             'name' => trim($parts[0] ?? ''),
+    //             'sex' => trim($parts[1] ?? ''),
+    //             'age' => trim($parts[2] ?? ''),
+    //             'address' => trim($parts[3] ?? ''),
+    //         ];
+    //     }, $this->respondents);
 
-        $case = Cases::create([
-            'nps_docket_no' => $this->NPSDocketNumber,
-            'date_received' => $this->dateReceived,
-            'time_received' => $this->timeReceived,
-            'receiving_staff' => $this->receivingStaff,
-            'assign_to' => $this->assignTo,
-            'date_assigned' => $this->dateAssigned,
-            'case_stage' => $this->caseStage,
-            'priority_level' => $this->priorityLevel,
+    //     $parsedWitnesses = array_map(function($witness) {
+    //         $parts = explode(',', $witness);
+    //         return [
+    //             'name' => trim($parts[0] ?? ''),
+    //             'sex' => trim($parts[1] ?? ''),
+    //             'age' => trim($parts[2] ?? ''),
+    //             'address' => trim($parts[3] ?? ''),
+    //         ];
+    //     }, $this->witnesses);
 
-            'complainants' => json_encode($this->complainants),
-            'respondents' => json_encode($parsedRespondents),
-            'laws_violated' => json_encode($this->laws),
-            'witnesses' => json_encode($parsedWitnesses),
+    //     $case = Cases::create([
+    //         'nps_docket_no' => $this->NPSDocketNumber,
+    //         'date_received' => $this->dateReceived,
+    //         'time_received' => $this->timeReceived,
+    //         'receiving_staff' => $this->receivingStaff,
+    //         'assign_to' => $this->assignTo,
+    //         'date_assigned' => $this->dateAssigned,
+    //         'case_stage' => $this->caseStage,
+    //         'priority_level' => $this->priorityLevel,
+
+    //         'complainants' => json_encode($this->complainants),
+    //         'respondents' => json_encode($parsedRespondents),
+    //         'laws_violated' => json_encode($this->laws),
+    //         'witnesses' => json_encode($parsedWitnesses),
             
-            'date_time_commission' => $this->dateTimeCommission,
-            'place_of_commission' => $this->placeOfCommission,
+    //         'date_time_commission' => $this->dateTimeCommission,
+    //         'place_of_commission' => $this->placeOfCommission,
 
-            'question_one' => $this->questionOne,
-            'question_two' => $this->questionTwo,
-            'question_three' => $this->questionThree,
+    //         'question_one' => $this->questionOne,
+    //         'question_two' => $this->questionTwo,
+    //         'question_three' => $this->questionThree,
 
-            'is_no' => $this->ISNo,
-            'handling_prosecutor' => $this->handlingProsecutor
-        ]);
+    //         'is_no' => $this->ISNo,
+    //         'handling_prosecutor' => $this->handlingProsecutor
+    //     ]);
 
-        Notification::make()
-            ->title('Success!')
-            ->body('Case has been created.')
-            ->success()
-            ->send();
+    //     Notification::make()
+    //         ->title('Success!')
+    //         ->body('Case has been created.')
+    //         ->success()
+    //         ->send();
 
-        $this->dispatch('reload');
-        $this->reset();
-        return redirect()->back();
-    }
+    //     $this->dispatch('reload');
+    //     $this->reset();
+    //     return redirect()->back();
+    // }
 
     public function getSelectedCaseId($id)
     {
@@ -280,22 +278,23 @@ class CasePage extends Component
         return redirect()->back();
     }
     
-    public function archivedCase($id){
+    public function unarchivedCase($id){
         $case = Cases::findOrFail($id);
 
         $case->update([
-            'is_archived' => true,
+            'is_archived' => false,
         ]);
 
         Notification::make()
             ->title('Success!')
-            ->body('Case has been archived.')
+            ->body('Case has been unarchived.')
             ->success()
             ->send();
 
         $this->dispatch('reload');
         return redirect()->back();
     }
+
     public function nextStep(){
         if($this->currentStep < 2 && $this->respondents && $this->petitioner && $this->caseType && $this->caseSubType && $this->caseStage && $this->priorityLevel && $this->act && $this->filingNumber && $this->filingDate && $this->registrationNumber && $this->registrationDate && $this->firstHearingDate && $this->CNRNumber){
             $this->currentStep = $this->currentStep + 1;
@@ -401,7 +400,7 @@ class CasePage extends Component
     public function deleteConfirmation($id, $caseNumber){
         $this->dialog()->confirm([
             'title'       => 'Are you Sure?',
-            'description' => "Do you want to delete this case with NPS Docket No. " . html_entity_decode('<span class="text-red-600 underline">' . $caseNumber . '</span>') . " ?",
+            'description' => "Do you want to delete this case with no. " . html_entity_decode('<span class="text-red-600 underline">' . $caseNumber . '</span>') . " ?",
             'acceptLabel' => 'Yes, delete it',
             'method'      => 'deleteCase',
             'icon'        => 'error',
@@ -417,7 +416,7 @@ class CasePage extends Component
     {
         if ($this->searchTerm) {
             $searchItems = Cases::where('nps_docket_no', 'like', '%' . $this->searchTerm . '%')
-            ->where('is_archived', false)
+            ->where('is_archived', true)
             ->with('caseSubType')
             ->with('caseStage')
             ->latest()
@@ -437,7 +436,7 @@ class CasePage extends Component
             $caseList = $searchItems;
         } else {
             $caseList = Cases::with('caseSubType')
-                ->where('is_archived', false)
+                ->where('is_archived', true)
                 ->with('caseStage')
                 ->latest()
                 ->paginate(5);
@@ -454,7 +453,7 @@ class CasePage extends Component
             }
         }
 
-        return view('livewire.pages.case-page', [
+        return view('livewire.pages.archived-page', [
             'caseList' => $caseList
         ]);
     }

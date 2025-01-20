@@ -1,14 +1,13 @@
 <div class="w-full h-full">
     <div class="container dashed-container flex flex-col-reverse md:flex-row md:flex">
         <div class="w-full flex md:justify-start md:mt-0 items-center justify-center mt-3 ">
-            <button type="button" wire:loading.attr="disabled" wire:loading.class="!cursor-wait" onclick="$openModal('newCaseModal')" class="text-white bg-[#4285F4] hover:bg-[#4285F4]/90 focus:ring-4 focus:outline-none focus:ring-[#4285F4]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-[#4285F4]/55">
-                {{-- <x-icon name="user-add" class="w-5 h-5" /> --}}
+            {{-- <button type="button" wire:loading.attr="disabled" wire:loading.class="!cursor-wait" onclick="$openModal('newCaseModal')" class="text-white bg-[#4285F4] hover:bg-[#4285F4]/90 focus:ring-4 focus:outline-none focus:ring-[#4285F4]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-[#4285F4]/55">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v17.25m0 0c-1.472 0-2.882.265-4.185.75M12 20.25c1.472 0 2.882.265 4.185.75M18.75 4.97A48.416 48.416 0 0 0 12 4.5c-2.291 0-4.545.16-6.75.47m13.5 0c1.01.143 2.01.317 3 .52m-3-.52 2.62 10.726c.122.499-.106 1.028-.589 1.202a5.988 5.988 0 0 1-2.031.352 5.988 5.988 0 0 1-2.031-.352c-.483-.174-.711-.703-.59-1.202L18.75 4.971Zm-16.5.52c.99-.203 1.99-.377 3-.52m0 0 2.62 10.726c.122.499-.106 1.028-.589 1.202a5.989 5.989 0 0 1-2.031.352 5.989 5.989 0 0 1-2.031-.352c-.483-.174-.711-.703-.59-1.202L5.25 4.971Z" />
                 </svg>
                   
                 Create New Case
-            </button>
+            </button> --}}
         </div>
 
         <div class="container md:justify-start justify-center">
@@ -55,7 +54,7 @@
                     <tr>
                         <td colspan="6">
                             <div class="flex justify-center items-center text-center gap-2 py-10 w-full">
-                                <x-icon name="information-circle" class="w-5 h-5" /><h1>No case found.</h1>
+                                <x-icon name="information-circle" class="w-5 h-5" /><h1>No archived cases found.</h1>
                             </div>
                         </td>
                     </tr>
@@ -173,12 +172,12 @@
                                                     </span>
                                                     Edit
                                                 </a>
-                                                <a wire:click="archivedCase({{ $case->id }})" class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700" href="#">
+                                                <a wire:click="unarchivedCase({{ $case->id }})" class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700" href="#">
                                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
                                                         <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
                                                         <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
                                                     </svg>
-                                                    Move to Archive
+                                                    Unarchived
                                                 </a>
                                                 <div class="border-t border-gray-700">
                                                     <a wire:click="deleteConfirmation({{ $case->id }}, '{{  $case->nps_docket_no }}')" class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-red-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700" href="#">
@@ -206,7 +205,7 @@
     </div>  
     
     {{-- NEW CASE MODAL --}}
-    <x-modal.card title="New Case" name="newCaseModal" blur wire:model.defer="newCaseModal" align="center" max-width="6xl">
+    {{-- <x-modal.card title="New Case" name="newCaseModal" blur wire:model.defer="newCaseModal" align="center" max-width="6xl">
         <form >
             <div class="grid grid-cols-12 sm:grid-cols-1 gap-4">
                 <div class="max-h-[600px] w-full overflow-y-auto
@@ -433,23 +432,6 @@
                                             <!-- End Input Group -->
                                         </div>
                                     </div>   
-                                    {{-- <x-input label="Case No." placeholder="Ex: 2024111000" wire:model.blur="caseNumber" />
-                                    <x-select
-                                        label="Case Type"
-                                        wire:model.blur="caseType"
-                                        placeholder="Ex: Criminal Case"
-                                        :async-data="route('api.case.types')"
-                                        option-label="name"
-                                        option-value="id"
-                                    />
-                                    <x-select
-                                        label="Case Sub Type"
-                                        wire:model.blur="caseSubType"
-                                        placeholder="Ex: Murder"
-                                        :async-data="route('api.case.sub-types')"
-                                        option-label="name"
-                                        option-value="id"
-                                    /> --}}
                                 </div>
                             </div> 
                             <div class="w-full rounded-md mt-10 dashed-container-light">
@@ -500,7 +482,7 @@
                 </div>
             </x-slot>
         </form>
-    </x-modal.card>
+    </x-modal.card> --}}
     
     {{-- EDIT CASE MODAL --}}
     <x-modal name="editCaseModal" blur wire:model.defer="editCaseModal" align="center" max-width="6xl">

@@ -53,9 +53,14 @@ class Dashboard extends Component
 
     public function render()
     {
-        $upcomingZoomMeetings = AppointmentsModel::where('is_active', 1)->whereHas('zoomMeet')->with('zoomMeet')->get()->groupBy(function($item) {
+        $upcomingZoomMeetings = AppointmentsModel::where('is_active', 1)
+            ->whereHas('zoomMeet')
+            ->with('zoomMeet')
+            ->whereDate('date', '>=', Carbon::now())
+            ->get()
+            ->groupBy(function($item) {
             return $item->date;
-        });
+            });
 
         foreach ($upcomingZoomMeetings as $date => $meetings) {
             foreach ($meetings as $meeting) {
@@ -79,6 +84,7 @@ class Dashboard extends Component
             ->whereHas('appointmentDetails.orders', function ($query) {
                 $query->where('payment_status', '<>', 'Failed');
             })
+            ->whereDate('date', '>=', Carbon::now())
             ->with(['appointmentDetails.orders' => function ($query) {
                 $query->where('payment_status', '<>', 'Failed');
             }])
