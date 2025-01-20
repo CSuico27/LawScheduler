@@ -562,8 +562,9 @@
                         @if ($selectedClientFullDetails)
                             @if (count($selectedClientFullDetails['zoom_meetings']) > 0)
                                 <div class="flex flex-col bg-white border shadow-sm rounded-xl dark:bg-neutral-900 dark:border-neutral-700 dark:shadow-neutral-700/70 p-10">
+                                    <div class="py-3 flex items-center text-sm text-gray-800 after:flex-1 after:border-t after:border-gray-200 after:ms-6 dark:text-white dark:after:border-neutral-600">Upcoming Meetings</div>
                                     @foreach ($selectedClientFullDetails['zoom_meetings'] as $meeting)
-                                        @if (\Carbon\Carbon::parse($meeting->start_time)->gt(\Carbon\Carbon::now()))
+                                        @if (\Carbon\Carbon::parse($meeting->start_time)->startOfDay()->gte(\Carbon\Carbon::now()->startOfDay()))
                                             <div class="w-full rounded-lg shadow-md flex items-center p-2 gap-3 border mt-2">
                                                 <img src="{{ asset('/images/zoom-logo.webp') }}" alt="zoom" class="w-8 h-8">
                                                 <div>
@@ -576,8 +577,12 @@
                                                     {{ \Carbon\Carbon::parse($meeting->start_time)->format('F j, Y') }}
                                                 </div>
                                             </div>
-                                        @else
-                                        <div class="py-3 flex items-center text-sm text-gray-800 after:flex-1 after:border-t after:border-gray-200 after:ms-6 dark:text-white dark:after:border-neutral-600 mt-5">Appointments History</div>
+                                        @endif
+                                    @endforeach
+
+                                    <div class="py-3 flex items-center text-sm text-gray-800 after:flex-1 after:border-t after:border-gray-200 after:ms-6 dark:text-white dark:after:border-neutral-600 mt-5">Appointments History</div>
+                                    @foreach ($selectedClientFullDetails['zoom_meetings'] as $meeting)
+                                        @if (\Carbon\Carbon::parse($meeting->start_time)->startOfDay()->lt(\Carbon\Carbon::now()->startOfDay()))
                                             <div class="w-full rounded-lg shadow-md flex items-center p-2 gap-3 border mt-2">
                                                 <img src="{{ asset('/images/zoom-logo.webp') }}" alt="zoom" class="w-8 h-8">
                                                 <div>
@@ -608,8 +613,10 @@
                         @if ($selectedClientFullDetails)
                             @if (count($selectedClientFullDetails['appointments']) > 0)
                                 <div class="flex flex-col bg-white border shadow-sm rounded-xl dark:bg-neutral-900 dark:border-neutral-700 dark:shadow-neutral-700/70 p-10">
+                                    
+                                    <div class="py-3 flex items-center text-sm text-gray-800 after:flex-1 after:border-t after:border-gray-200 after:ms-6 dark:text-white dark:after:border-neutral-600 mt-5">Upcoming Appointments</div>
                                     @foreach ($selectedClientFullDetails['appointments'] as $appointment)
-                                        @if (\Carbon\Carbon::parse($appointment->date)->gt(\Carbon\Carbon::now()))
+                                        @if (\Carbon\Carbon::parse($appointment->date)->startOfDay()->gte(\Carbon\Carbon::now()->startOfDay()))
                                             <div class="w-full rounded-lg shadow-md flex items-center p-2 gap-3 border mt-2">
                                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                                                     <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 2.994v2.25m10.5-2.25v2.25m-14.252 13.5V7.491a2.25 2.25 0 0 1 2.25-2.25h13.5a2.25 2.25 0 0 1 2.25 2.25v11.251m-18 0a2.25 2.25 0 0 0 2.25 2.25h13.5a2.25 2.25 0 0 0 2.25-2.25m-18 0v-7.5a2.25 2.25 0 0 1 2.25-2.25h13.5a2.25 2.25 0 0 1 2.25 2.25v7.5m-6.75-6h2.25m-9 2.25h4.5m.002-2.25h.005v.006H12v-.006Zm-.001 4.5h.006v.006h-.006v-.005Zm-2.25.001h.005v.006H9.75v-.006Zm-2.25 0h.005v.005h-.006v-.005Zm6.75-2.247h.005v.005h-.005v-.005Zm0 2.247h.006v.006h-.006v-.006Zm2.25-2.248h.006V15H16.5v-.005Z" />
@@ -625,8 +632,12 @@
                                                     {{ \Carbon\Carbon::parse($appointment->date)->format('F j, Y') }}
                                                 </div>
                                             </div>
-                                        @else
-                                        <div class="py-3 flex items-center text-sm text-gray-800 after:flex-1 after:border-t after:border-gray-200 after:ms-6 dark:text-white dark:after:border-neutral-600 mt-5">Appointments History</div>
+                                        @endif
+                                    @endforeach
+
+                                    <div class="py-3 flex items-center text-sm text-gray-800 after:flex-1 after:border-t after:border-gray-200 after:ms-6 dark:text-white dark:after:border-neutral-600 mt-5">Appointments History</div>
+                                    @foreach ($selectedClientFullDetails['appointments'] as $appointment)
+                                        @if (\Carbon\Carbon::parse($appointment->date)->startOfDay()->lt(\Carbon\Carbon::now()->startOfDay()))
                                             <div class="w-full rounded-lg shadow-md flex items-center p-2 gap-3 border mt-2">
                                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                                                     <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 2.994v2.25m10.5-2.25v2.25m-14.252 13.5V7.491a2.25 2.25 0 0 1 2.25-2.25h13.5a2.25 2.25 0 0 1 2.25 2.25v11.251m-18 0a2.25 2.25 0 0 0 2.25 2.25h13.5a2.25 2.25 0 0 0 2.25-2.25m-18 0v-7.5a2.25 2.25 0 0 1 2.25-2.25h13.5a2.25 2.25 0 0 1 2.25 2.25v7.5m-6.75-6h2.25m-9 2.25h4.5m.002-2.25h.005v.006H12v-.006Zm-.001 4.5h.006v.006h-.006v-.005Zm-2.25.001h.005v.006H9.75v-.006Zm-2.25 0h.005v.005h-.006v-.005Zm6.75-2.247h.005v.005h-.005v-.005Zm0 2.247h.006v.006h-.006v-.006Zm2.25-2.248h.006V15H16.5v-.005Z" />
@@ -723,7 +734,7 @@
                             @else
                                 <div class="flex justify-center items-center bg-white border shadow-sm rounded-xl dark:bg-neutral-900 dark:border-neutral-700 dark:shadow-neutral-700/70 p-10">
                                     <x-icon name="information-circle" class="w-5 h-5" />
-                                    <h1>No Appointments found.</h1>
+                                    <h1>No Cases found.</h1>
                                 </div>
                             @endif
                         @endif

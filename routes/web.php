@@ -5,6 +5,7 @@ use App\Livewire\Auth\ForgotPasswordPage;
 use App\Livewire\Auth\LoginPage;
 use App\Livewire\Auth\RegisterPage;
 use App\Livewire\Auth\ResetPasswordPage;
+use App\Livewire\Client\AccountPage;
 use App\Livewire\HomePage;
 use App\Livewire\Pages\AppointmentPage;
 use App\Models\AccountActivation;
@@ -37,4 +38,6 @@ Route::middleware('auth')->group(function (){
         auth()->logout();
         return redirect('/');
     });
+
+    Route::get('/my-account', AccountPage::class)->name('client.account');
 });
