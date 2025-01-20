@@ -45,7 +45,7 @@
                 </tr>
             </thead>
             <tbody>
-                @if(!$clientList->isEmpty() && count($clientList) < 2)
+                @if($clientList->isEmpty() && count($clientList) < 2)
                     <tr>
                         <td colspan="12">
                             <div class="flex justify-center items-center text-center gap-2 py-10 w-full">
