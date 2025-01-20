@@ -28,7 +28,7 @@
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
                     <th scope="col" class="px-6 py-3 text-blue-950">
-                        Full name
+                        Full name 
                     </th>
                     <th scope="col" class="px-6 py-3 text-blue-950">
                         Address
@@ -42,14 +42,22 @@
                 </tr>
             </thead>
             <tbody>
-                @if ($beneficiariesList)
+                @if ($beneficiariesList->isEmpty())
+                    <tr>
+                        <td colspan="12">
+                            <div class="flex justify-center items-center text-center gap-2 py-10 w-full">
+                                <x-icon name="information-circle" class="w-5 h-5" /><h1>No beneficiaries found.</h1>
+                            </div>
+                        </td>
+                    </tr>
+                @else
                     @foreach ($beneficiariesList as $beneficiary)
                         <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                             <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                 {{ $beneficiary->last_name }}, {{ $beneficiary->first_name }}
                             </th>
                             <td class="px-6 py-4">
-                                {{ $beneficiary->barangay }} {{ $beneficiary->street_address }}, {{ $beneficiary->city }}({{ $beneficiary->zip_code }}) - {{ $beneficiary->state }}
+                                {{ $beneficiary->barangay }} {{ $beneficiary->street_address }}, {{ $beneficiary->city }} ({{ $beneficiary->zip_code }}) - {{ $beneficiary->state }}
                             </td>
                             <td class="px-6 py-4">
                                 {{ $beneficiary->phone }} / {{ $beneficiary->email }}
@@ -61,8 +69,9 @@
                         </tr>
                     @endforeach
                 @endif
-            </tbody>
+            </tbody>            
         </table>
+       
     </div>
 
     {{-- ADD MODAL --}}
